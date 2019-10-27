@@ -1,7 +1,7 @@
 Install latest stable release of Rstudio.
 Works best in Windows 10.
 
-Download 'Bioacoustics.zip' (325 mb) from Google Drive via this link:
+Download 'Bioacoustics.zip' (325 mb) from Google Drive via this link: https://drive.google.com/open?id=1r-6PD5r4luXMWMxx8i1h0_-Cvi0E7o7N
 Extract to 'Desktop', or wherever convenient.
 The archive contains old versions of 'Train_bats.r' and 'Deploy_bats.r' and can either be used 'as is' or updated from Github.
 
