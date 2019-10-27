@@ -1,1 +1,26 @@
-nothing yet
+Install latest stable release of Rstudio.
+Works best in Windows 10.
+
+Download 'Bioacoustics.zip' (325 mb) from Google Drive via this link:
+Extract to 'Desktop', or wherever convenient.
+The archive contains old versions of 'Train_bats.r' and 'Deploy_bats.r' and can either be used 'as is' or updated from Github.
+
+The working directory must be set at the top of 'Train_bats.r'.
+
+setwd() sets the working directory, eg:
+setwd("C:/Users/Patrick/Desktop/Bioacoustics")
+
+The working directory MUST include 'Train_bats.r', 'Deploy_bats.r', a directory called 'data' and a directory called 'unknown_bat_audio':
+
+Bioacoustics
+          -data (folder)
+          -unknown_bat_audio (folder)
+          -Train_bats.r
+          -Deploy_bats.r
+
+Open Train_bats.r in Rstudio and run.
+
+To classify your own bat call, copy and paste one (and only one) bat audio recording into the 'unknown_bat_audio' directory.
+There should only ever be one audio file in that directory at a time, so be sure to delete the original one.
+The recording should be 'full spectrum' ie something like 384Kb per second or 192 KHz, mono in '.wav' format.
+
