@@ -12,8 +12,11 @@ library(rstudioapi)
 setwd("C:/Users/Patrick/Desktop/Bioacoustics")
 wd <- getwd()         # Working directory
 wd
-data_dir <- file.path("c:", "Users", "Patrick" , "Desktop", "Bioacoustics", "data")
+data_dir <- file.path(wd, "data")
 data_dir
+
+data_dir_test <- file.path(wd, "unknown_bat_audio")
+data_dir_test
 
 BAT_wav <- read_audio(file.path(wd, "data/c_pip/c_pip_247.wav"))
 BAT_wav
@@ -249,9 +252,11 @@ NOCTULA
 PLECOTUS <- consolidate_results(rf_plecotus)
 PLECOTUS
 
-# The matrices are of type "double".
+# The matrices are of type "double", object of class "c('matrix', 'double', 'numeric')"
 
-Final_result <- rbind(C_PIP, S_PIP, NATTERERI, NOCTULA, PLECOTUS)
+penultimate <- rbind(C_PIP, S_PIP, NATTERERI, NOCTULA, PLECOTUS)
+
+Final_result <- penultimate[order(penultimate[,1], decreasing = FALSE),]
 Final_result
 
 
