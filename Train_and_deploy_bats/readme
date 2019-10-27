@@ -20,6 +20,17 @@ Bioacoustics
 
 Open Train_bats.r in Rstudio and run.
 
+Training should take about 2 minutes and the final output look like this:
+
+                 NO         YES
+NATTERERI 0.5955556 0.404444444
+C_PIP     0.6933333 0.306666667
+PLECOTUS  0.9484722 0.051527778
+S_PIP     0.9978056 0.002194444
+NOCTULA   0.9992500 0.000750000
+
+The unknown bat is probably a Nattereras !!!!
+
 To classify your own bat call, copy and paste one (and only one) bat audio recording into the 'unknown_bat_audio' directory.
 There should only ever be one audio file in that directory at a time, so be sure to delete the original one.
 The recording should be 'full spectrum' ie something like 384Kb per second or 192 KHz, mono in '.wav' format.
