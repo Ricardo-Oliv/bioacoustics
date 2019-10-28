@@ -52,18 +52,18 @@ For Unix-alikes, [FFTW](http://www.fftw.org/) (>= 3.3.1), [libsoxr-lsr](https://
 
 * **GPLv3**
 
-### Tutorial
+# Tutorial
 
 install.packages("bioacoustics")
 
-# The bioacoustics package may also be installed from GitHub using devtools as follows:
+### The bioacoustics package may also be installed from GitHub using devtools as follows:
 install.packages("devtools")
 devtools::install_github("wavx/bioacoustics") # For the latest, unstable version
 
 install.packages("warbleR")
 install.packages("randomForest")
 
-# Load the packages
+### Load the packages
 library(warbleR)
 library(bioacoustics)
 library(tools)
@@ -94,19 +94,19 @@ df3 = df3[1:9,]
 df = rbind(df1,df2,df3)
 rm(df1,df2,df3)
 
-# Visualize your data frame
+### Visualize your data frame
 View(df)
 
-# We will work in the R temp directory
+### We will work in the R temp directory
 wd <- tempdir()
 
-# Create a data directory if it does not exist
+### Create a data directory if it does not exist
 data_dir <- file.path(wd, "data")
 
 if(!dir.exists(data_dir))
   dir.create(data_dir)
 
-# Download the MP3 files into your data directory
+### Download the MP3 files into your data directory
 quer_xc(X = df, download = TRUE, path = data_dir)
 
 Now that we have recordings stored in the data directory, we can read one of them to look at its structure and content. Let's use the read_audio() function in bioacoustics to manually read a recording of Catharus bicknelli:
@@ -131,10 +131,10 @@ There are several options to display animal vocalizations in audio files with R.
 
 Next, we will search manually and display an audio event (here, a bird vocalization) from a recording of Catharus bicknelli. To display a Region Of Interest (ROI) of the recording we will use temporal and frequency filters. Let's start with a temporal slice from 1 to 10 secs and a FFT size of 512 samples.
 
-# Set plot margins to 0
+### Set plot margins to 0
 par(mar = c(0, 0, 0, 0), oma = c(0, 0, 0, 0))
 
-# Display with spectro()
+### Display with spectro()
 ticks <- c(from = 1000, to = 20000, by = 1000) # frequency tick marks from 1 to 
                                                # 20 kHz, and steps at each 1 kHz
 temp_slice <- c(from = 1, to = 10) # in seconds
@@ -142,25 +142,25 @@ spectro(CATBIC, tlim = temp_slice, FFT_size = 512, ticks_y = ticks)
 
 Let's display spectrograms with various time / frequency limits (with tlim= and flim= arguments). You can also play with other arguments in spectro() and fspec() functions such as the percent of overlap between two FFTs (with FFT_overlap=) and various FFT resolutions (with FFT_size=). Note that the arguments are briefly explained in the documentation of each function:
 
-# Access the arguments of the spectro function
+### Access the arguments of the spectro function
 ?spectro
 ?fspec
 
 First, let's shorten the temporal axis from 2 to 3.5 secs to work on a shorter time window and compare the outputs from spectro() and fspec() functions. Note that spectrograms can also be generated automatically while using the detection functions from bioacoustics. We will explore that in details in section 4.1.
 
-# Set plot margins to 0
+### Set plot margins to 0
 par(mar = c(0, 0, 0, 0), oma = c(0, 0, 0, 0))
 
-# Display the spectrogram with spectro()
+### Display the spectrogram with spectro()
 ticks <- c(from = 1000, to = 20000, by = 1000) # frequency tick marks from 1 to 
                                                # 20 kHz, 1 kHz steps
 temp_slice <- c(from = 2, to = 3.5) # in seconds
 spectro(CATBIC, tlim = temp_slice, FFT_size = 512, ticks_y = ticks)
 
-# fspec() gives you the spectrogram matrix with energy values (dB)
+### fspec() gives you the spectrogram matrix with energy values (dB)
 spec_mx <- fspec(CATBIC, tlim = temp_slice, FFT_size = 512, rotate = TRUE)
 
-# You can display the spectrogram with image()
+### You can display the spectrogram with image()
 image(spec_mx, xaxt = "n", yaxt = "n") 
 
 The tick marks on the (frequency) y-axis were defined in the spectro() function starting from 1 to 20 kHz with an interval at each 1 kHz. The FFT size was 512 samples with an overlap between two FFT windows set by default at 0.875. Now try these settings: FTT size = 256, 1024 and 2048; FFT overlap = 0.3, 0.6, 0.9…
@@ -171,17 +171,17 @@ temp_slice <- c(from = 2.5, to = 3.5)
 freq_slice <- c(from = 1500, to = 20000)
 spec_o <- fspec(CATBIC, tlim = temp_slice, flim = freq_slice, FFT_size = 512, rotate = TRUE)
 
-## min and max (range) dB intensity
+### min and max (range) dB intensity
 range(spec_o) # -120 (min) to 0 dB (max)
-# Note that the tolerance of your recorders depends on the number of bits. 
-# 16-bit recorders offer only around -96 dB tolerance and sound pressure above
-# this level is clipped to 0 dB.
+### Note that the tolerance of your recorders depends on the number of bits. 
+### 16-bit recorders offer only around -96 dB tolerance and sound pressure above
+### this level is clipped to 0 dB.
 
-## Let's try a filter by mean + sd intensity
+### Let's try a filter by mean + sd intensity
 spec_f <- fspec(CATBIC, tlim = temp_slice, flim = freq_slice, FFT_size = 512, rotate = TRUE)
 spec_f[spec_f < mean(spec_f) + sd(spec_f)] <- -120
-# Works well with high intensity audio events, but leads to
-# false negatives (missed events) otherwise.
+### Works well with high intensity audio events, but leads to
+### false negatives (missed events) otherwise.
 
 par(mar = c(0, 0, 0, 0), oma = c(0, 0, 0, 0))
 image(spec_o, xaxt="n", yaxt="n")
@@ -200,10 +200,10 @@ Threshold detection
 
 Let's start with the threshold_detection() function on a recording containing calls from Catharus bicknelli. This function is an amplitude threshold detector that picks up audio events above the Signal to Noise Ratio (SNR). It combines several algorithms for detection, filtering and audio feature extraction. We will play with the arguments of this function to understand their implication in the detection and extraction of audio events (here, calls of Catharus bicknelli).
 
-# Access the arguments of the threshold_detection function
+### Access the arguments of the threshold_detection function
 ?threshold_detection
 
-# Set each argument according to the targeted audio events
+### Set each argument according to the targeted audio events
 TD <- threshold_detection(
   CATBIC, # Either a path to an audio file (see ?read_audio), or a Wave object
   threshold = 12, # 12 dB SNR sensitivity for the detection algorithm
@@ -235,12 +235,12 @@ TD <- threshold_detection(
   ticks = TRUE # Tick marks and their intervals are drawn on the y-axis (frequencies) 
 ) 
 
-# Get the number of extracted audio events
+### Get the number of extracted audio events
 nrow(TD$data$event_data)
 
 Let the HTML page open with the 57 spectrograms (each representing an extracted audio event). These settings will be our benchmark for the number of audio events that can be extracted with the threshold_detection() function. In the following exercise, you will try to reach or beat this number by exploring different combinations of parameters for each argument of the function.
 
-# Let's try various settings, starting with 1024 FFT size instead of 256.
+### Let's try various settings, starting with 1024 FFT size instead of 256.
 TD <- threshold_detection(
   CATBIC, threshold = 12, time_exp = 1, min_dur = 140, max_dur = 440, 
   min_TBE = 10, max_TBE = 5000, EDG = 0.996, LPF = 10000, HPF = 1000, 
@@ -251,7 +251,7 @@ TD <- threshold_detection(
   ticks = c(1000, 10000, 1000) # Tick marks from 1 to 10 kHz with 1 kHz interval
 ) 
 
-# Take a look at the spectrograms and compare them with the previous extraction.
+### Take a look at the spectrograms and compare them with the previous extraction.
 nrow(TD$data$event_data) # Only three audio events!
 
 We will play with various detection thresholds: end_thr, SNR_thr, angle_thr, KPE and KME parameters. Try to reach 66 spectrograms extracted with a contour (i.e., Kalman curve) that best matches the audio event (answer below). The FFT size will be set at 256 samples.
@@ -266,28 +266,28 @@ TD <- threshold_detection(
 
 Let's take a look at the extracted audio features. Note that all the features are described and explained in the package vignette (vignette("bioacoustics")).
 
-# Acoustic features are stored in a data frame called event_data,
-# stored by order of detection.
+### Acoustic features are stored in a data frame called event_data,
+### stored by order of detection.
 
 View(TD$data$event_data) # Contains the filename and the time of detection in the 
                          # recording, and 26 extracted features.
 
 The location (in number of samples) of the audio event in the recording is saved in a list.
 
-# Start and end of the 5th extracted audio event (in samples)
+### Start and end of the 5th extracted audio event (in samples)
 c(TD$data$event_start[[5]], TD$data$event_end[[5]])
 
-# Remember you just have to divide by the sample rate to retrieve the time (s)
+### Remember you just have to divide by the sample rate to retrieve the time (s)
 c(TD$data$event_start[[5]], TD$data$event_end[[5]]) / slot(CATBIC, "samp.rate")
 
 The amplitude (dB) and frequency (Hz) tracks (or bins) are also saved in a list. These can be used to build your own acoustic features.
 
 par(mar = c(1,1, 1, 1), oma = c(1, 1, 1, 1))
 
-# Amplitude track of the 5th audio event
+### Amplitude track of the 5th audio event
 plot(TD$data$amp_track[[5]], type = "l")
 
-# Frequency track of the 5th audio event
+### Frequency track of the 5th audio event
 plot(TD$data$freq_track[[5]], type = "l")
 
 The whole energy and frequency content can also be used to classify audio events instead of using acoustic features that may result in a loss of information. We will get there soon, but first, let's discover another detection function, here applied on echolocation calls of bats.
@@ -295,13 +295,13 @@ Blob detection
 
 The blob_detection() function will be used on a recording containing 10 bat echolocation calls from the Myotis genus. This function combines several image processing, filtering and image feature extraction. A blur and contrast boost is applied after mean background subtraction to increase the SNR of the audio event. The blob detection algorithm is applied on the processed spectrogram to detect the ROI (i.e., each preprocessed audio event). The blob detector simultaneously labels the connected FFT values and their contours in the spectrogram. Labelling is done in a single pass over the spectrogram, while contour points are revisited more than once and up to four times (see Chang et al., 2004). We will play with the arguments of this function to extract bat echolocation calls.
 
-# Access the arguments of the blob_detection function
+### Access the arguments of the blob_detection function
 ?blob_detection
 
-# Use the bat recording stored in the package
+### Use the bat recording stored in the package
 data(myotis)
 
-# Set each argument according to the targeted audio events
+### Set each argument according to the targeted audio events
 BD <- blob_detection(
   myotis, # Either a path to an audio file (see ?read_audio), or a Wave object
   time_exp = 10, # Time expansion factor of 10 for time expanded recordings.
@@ -327,23 +327,23 @@ BD <- blob_detection(
   ticks = TRUE # Tick marks and their intervals are drawn on y-axis (frequencies)
 ) 
 
-# Get the number of extracted audio events
+### Get the number of extracted audio events
 nrow(BD$data$event_data)
 
 Do not close the HTML page and tune the FFT size at 512. Let's play with the blur, contrast boost and background subtraction parameters to retrieve a number of 10 extracted echolocation calls.
 
-# Let's try various settings, starting with 512 FFT size instead of 256.
+### Let's try various settings, starting with 512 FFT size instead of 256.
 BD <- blob_detection(
   myotis, time_exp = 10, FFT_size = 512, settings = FALSE, acoustic_feat = TRUE,
   metadata = FALSE, spectro_dir = file.path(tempdir(), "Spectros"), time_scale = 0.1, ticks = TRUE
 ) 
 
-# Take a look at the spectrograms and compare them with the previous extraction.
+### Take a look at the spectrograms and compare them with the previous extraction.
 nrow(BD$data$event_data) # Only 6 audio events!
 
 Let's take a look at the extracted audio features. All the features are described and explained in the package vignette.
 
-# Acoustic features
+### Acoustic features
 head(BD$data)
 
 This data frame is, for now, the only available set of acoustic features with the blob_detection() function. However, it combines well with the fspec() to make image analysis.
@@ -357,10 +357,10 @@ We will work with 27 recordings of Catharus-bicknelli (n = 9), Passerella iliaca
 
 Our target audio events are calls of Catharus-bicknelli. We will use the threshold detector previously configured for this species (see section 4.1.1).
 
-# Get the filepath for each MP3 file
+### Get the filepath for each MP3 file
 files <- dir(data_dir, recursive = TRUE, full.names = TRUE, pattern = "[.]mp3$")
 
-# Detect and extract audio events
+### Detect and extract audio events
 TDs <- setNames(
   lapply(
     files,
@@ -373,33 +373,33 @@ TDs <- setNames(
   basename(file_path_sans_ext(files))
 )
 
-# Keep only files with data in it
+### Keep only files with data in it
 TDs <- TDs[lapply(TDs, function(x) length(x$data)) > 0]
 
-# Keep the extracted feature and merge in a single data frame for further analysis
+### Keep the extracted feature and merge in a single data frame for further analysis
 Event_data <- do.call("rbind", c(lapply(TDs, function(x) x$data$event_data), list(stringsAsFactors = FALSE)))
 nrow(Event_data) # 355 audio events extracted
 
-# Compute the number of extracted CATBIC calls
+### Compute the number of extracted CATBIC calls
 sum(startsWith(Event_data$filename, "Cat"))
 
-# Add a "Class" column: "CATBIC" vs. other species of birds "OTHERS"
+### Add a "Class" column: "CATBIC" vs. other species of birds "OTHERS"
 classes <- as.factor(ifelse(startsWith(Event_data$filename, "Cat"), "CATBIC", "OTHERS"))
 Event_data <- cbind(data.frame(Class = classes), Event_data)
 
-# Get rid of the filename and time in the recording
+### Get rid of the filename and time in the recording
 Event_data$filename <- Event_data$starting_time <- NULL
 
 We now have the necessary dataset to train a classifier: we will train a Random Forest on the training set and validate the results on the test set.
 
-# Split the data in 60% Training / 40% Test sets
+### Split the data in 60% Training / 40% Test sets
 train <- sample(1:nrow(Event_data), round(nrow(Event_data) * .6))
 Train <- Event_data[train,]
 
 test <- setdiff(1:nrow(Event_data), train)
 Test <- Event_data[test,]
 
-# Train a random forest classifier
+### Train a random forest classifier
 set.seed(666)
 rf <- randomForest(Class ~ duration + freq_max_amp + freq_max + freq_min +
                            bandwidth + freq_start + freq_center + freq_end +
@@ -411,13 +411,13 @@ rf <- randomForest(Class ~ duration + freq_max_amp + freq_max + freq_min +
                    data = Train, importance = FALSE, proximity = FALSE,
                    replace = TRUE, ntree = 4000, mtry = 4)
 
-# Look at the confusion matrix of the training set
+### Look at the confusion matrix of the training set
 rf$confusion # looks good, but...
 
-# Let's make predictions with our classifier on a test set
+### Let's make predictions with our classifier on a test set
 table(Test[,1], predict(rf, Test[,-1], type = "response")) # not bad!
 
-# To look at the predictions 
+### To look at the predictions 
 head(predict(rf, Test[,-1], type = "prob"))
 
 We are now able to use this simple, but proven robust, classifier to detect new calls of your target species.
@@ -427,21 +427,21 @@ We will use Keras in R which requires to install several packages in Python Guid
 
 Let's now explore a ConvNet approach available on Keras. We will follow the approach of Hatami et al. (2017) to analyze time series as images with 2D ConvNets. The difference is that we will only perform max pooling at the last layer before activation and add batch normalization with dropouts at each layer.
 
-# Run if keras is installed on your machine
+### Run if keras is installed on your machine
 library(keras)
 
-# Build the training set
+### Build the training set
 Y_train <- to_categorical(as.integer(Train[,1]) - 1) # One hot encoding
 
-# X as matrix
+### X as matrix
 X_train <- as.matrix(Train[,-1])
 
-# Build the test set
+### Build the test set
 Y_test <- to_categorical(as.integer(Test[,1]) - 1)
 Y_test <- Y_test[,-1]
 X_test <- as.matrix(Test[,-1])
 
-# Build the sequential model
+### Build the sequential model
 mod0 <- keras_model_sequential()
 mod0 %>%
   # Input shape layer = c(samples, rows, cols, channels)
@@ -466,31 +466,31 @@ mod0 %>%
   # Activation output layer with 2 classes
   layer_dense(units = ncol(Y_train),  activation='softmax')
 
-# Model compile
+### Model compile
 mod0 %>% compile(loss = 'categorical_crossentropy',
                  optimizer = "adam",
                  metrics = "categorical_accuracy")
 
 
-# Add a callback to reduce the learning rate when reaching the plateau
+### Add a callback to reduce the learning rate when reaching the plateau
 reduce_lr <- callback_reduce_lr_on_plateau(monitor = 'loss', factor = 0.5,
                                            patience = 50, min_lr = 0.0001)
-# Start learning
+### Start learning
 mod0 %>% fit(X_train, Y_train, batch_size = 32, epochs = 50,
              validation_data = list(X_test, Y_test),
              verbose = 1, callbacks = reduce_lr)
 
-# Score on the test set
+### Score on the test set
 score <- mod0 %>% evaluate(X_test, Y_test, batch_size = 32)
 score
 
 Let's work a bit with the output to build a confusion matrix and use the predict function on the test set.
 
-# Look at predictions and build a confusion matrix
+### Look at predictions and build a confusion matrix
 Pred <- as.factor(predict_classes(mod0, X_test, batch_size = 32, verbose = 1))
 table(Y_test[,2], Pred)
 
-# To look at the prediction values 
+### To look at the prediction values 
 Prob <- round(predict_proba(mod0, X_test, batch_size = 32, verbose = 1), 2)
 
 We obtained a val_loss < 0.2 and val_categorical_accuracy > 0.94 which is acceptable, but not better than the simplest RF approach we used in section 3.2. Using only 26 acoustic features as model inputs instead of the whole spectrogram content (energy and frequency distribution, and harmonics) probably reduced the performances of the CNN model.
