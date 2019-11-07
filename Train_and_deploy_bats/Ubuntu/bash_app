@@ -1,0 +1,28 @@
+# Record 10 second chunks of audio on UltraMic384K, apply a 15K highpass filter, run the randomforest classifier. Repeat.
+
+arecord -l
+
+cd /home/paddy/Desktop/deploy_classifier/
+arecord -f S16 -r 384000 -d 10 -c 1 --device=plughw:r0,0 /home/paddy/Desktop/deploy_classifier/temp/test-mic.wav
+cd /home/paddy/Desktop/deploy_classifier/temp/
+sox test-mic.wav test-mic2.wav highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k
+cp test-mic2.wav /home/paddy/Desktop/deploy_classifier/unknown_bat_audio/
+cd /home/paddy/Desktop/deploy_classifier/
+Rscript Deploy_bats.R
+
+cd /home/paddy/Desktop/deploy_classifier/
+arecord -f S16 -r 384000 -d 10 -c 1 --device=plughw:r0,0 /home/paddy/Desktop/deploy_classifier/temp/test-mic.wav
+cd /home/paddy/Desktop/deploy_classifier/temp/
+sox test-mic.wav test-mic2.wav highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k
+cp test-mic2.wav /home/paddy/Desktop/deploy_classifier/unknown_bat_audio/
+cd /home/paddy/Desktop/deploy_classifier/
+Rscript Deploy_bats.R
+
+cd /home/paddy/Desktop/deploy_classifier/
+arecord -f S16 -r 384000 -d 10 -c 1 --device=plughw:r0,0 /home/paddy/Desktop/deploy_classifier/temp/test-mic.wav
+cd /home/paddy/Desktop/deploy_classifier/temp/
+sox test-mic.wav test-mic2.wav highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k
+cp test-mic2.wav /home/paddy/Desktop/deploy_classifier/unknown_bat_audio/
+cd /home/paddy/Desktop/deploy_classifier/
+Rscript Deploy_bats.R
+
