@@ -1,0 +1,2 @@
+cd to the working directory containing Train_bats.R and data folder etc.
+$ Rscript Train_bats.R
