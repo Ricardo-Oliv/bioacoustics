@@ -1,6 +1,8 @@
 
 # $ Rscript Deploy_bats.R
 
+# install.packages("audio")
+
 library(bioacoustics)
 library(tools)
 library(randomForest)
@@ -12,11 +14,11 @@ wd
 ############################################
 # Predict on one unknown wav file:
 data_dir_test <- file.path(wd, "unknown_bat_audio")
-print(data_dir_test)
+# print(data_dir_test)
 
 #The unknown test file is located in a specific directory:
 files_test <- dir(data_dir_test, recursive = TRUE, full.names = TRUE, pattern = "[.]wav$")
-files_test
+# files_test
 
 # Detect and extract audio events from our unknown test file:
 TDs <- setNames(
@@ -53,14 +55,13 @@ Event_data_test <- do.call("rbind", c(lapply(TDs, function(x) x$data$event_data)
 nrow(Event_data_test)
 
 # To look at the predictions 
-print("Is the unknown wav a c_pip?")
+# print("Is the unknown wav a c_pip?")
 test_file <- readRDS('rf_c_pip.rds')
-test_file
-predict(test_file , Event_data_test[,-1], type = "prob")
+# test_file
+# predict(test_file , Event_data_test[,-1], type = "prob")
 
-print("SUCCESS !!!!")
-print("Is the unknown wav a c_pip?")
-head(predict(test_file , Event_data_test[,-1], type = "prob"))
+# print("Is the unknown wav a c_pip?")
+# head(predict(test_file , Event_data_test[,-1], type = "prob"))
 
 rf_c_pip_file <- readRDS('rf_c_pip.rds')
 rf_s_pip_file <- readRDS('rf_s_pip.rds')
@@ -74,14 +75,14 @@ rf_rhino_hippo_file <- readRDS('rf_rhino_hippo.rds')
 # Create a matrix of prediction results for Class_01, (Nattereri = True)
 matrix_01 <- predict(rf_nattereri_file , Event_data_test[,-1], type = "prob")
 # matrix_01
-print("Is the unknown wav a nattereri?")
-colMeans(matrix_01)
+# print("Is the unknown wav a nattereri?")
+# colMeans(matrix_01)
 
 matrix_02 <- predict(rf_c_pip_file , Event_data_test[,-1], type = "prob")
 # matrix_02
-print("Is the unknown wav a c_pip?")
-colMeans(matrix_02)
-print("SUCCESS 2 !!!!")
+# print("Is the unknown wav a c_pip?")
+# colMeans(matrix_02)
+
 #################################################################################
 # Let's consolidate all the output data:
 
@@ -95,23 +96,23 @@ consolidate_results <- function(rf)
 
 # "Is the unknown wav a c_pip?"
 C_PIP <- consolidate_results(rf_c_pip_file)
-C_PIP
+# C_PIP
 # "Is the unknown wav a s_pip?"
 S_PIP <- consolidate_results(rf_s_pip_file)
-S_PIP
+# S_PIP
 # "Is the unknown wav a nattereri?"
 NATTERERI <- consolidate_results(rf_nattereri_file)
-NATTERERI
+# NATTERERI
 # "Is the unknown wav a noctula?"
 NOCTULA <- consolidate_results(rf_noctula_file)
-NOCTULA
+# NOCTULA
 # "Is the unknown wav a plecotus?"
 PLECOTUS <- consolidate_results(rf_plecotus_file)
-PLECOTUS
+# PLECOTUS
 
 # "Is the unknown wav a rhino_hippo?"
 RHINO_HIPPO <- consolidate_results(rf_rhino_hippo_file)
-RHINO_HIPPO
+# RHINO_HIPPO
 
 # The matrices are of type "double", object of class "c('matrix', 'double', 'numeric')"
 
@@ -120,7 +121,7 @@ penultimate <- rbind(C_PIP, S_PIP, NATTERERI, NOCTULA, PLECOTUS, RHINO_HIPPO)
 Final_result <- penultimate[order(penultimate[,1], decreasing = FALSE),]
 Final_result
 
-#importance(rf_c_pip)
+#importance(rf_c_pip_file)
 
 
 

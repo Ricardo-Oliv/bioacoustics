@@ -1,5 +1,7 @@
 # $ Rscript Train_bats.R
+# $ Rscript install.packages("audio")
 
+# install.packages("audio")
 # install.packages("bioacoustics")
 # install.packages("randomForest")
 # install.packages("rstudioapi")
