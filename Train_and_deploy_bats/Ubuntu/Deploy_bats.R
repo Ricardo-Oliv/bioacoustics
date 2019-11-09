@@ -11,6 +11,9 @@ library(rstudioapi)
 setwd("/home/paddy/Desktop/deploy_classifier/")
 wd <- getwd()         # Working directory
 wd
+
+# delete a file
+unlink("Final_result.txt")
 ############################################
 # Predict on one unknown wav file:
 data_dir_test <- file.path(wd, "unknown_bat_audio")
@@ -69,6 +72,7 @@ rf_nattereri_file <- readRDS('rf_nattereri.rds')
 rf_noctula_file <- readRDS('rf_noctula.rds')
 rf_plecotus_file <- readRDS('rf_plecotus.rds')
 rf_rhino_hippo_file <- readRDS('rf_rhino_hippo.rds')
+rf_house_keys_file <- readRDS('rf_house_keys.rds')
 
 #######################################################################################
 # Let's consolidate the data a bit:
@@ -93,6 +97,9 @@ consolidate_results <- function(rf)
   return(results)
 }
 
+# "Is the unknown wav house_keys?"
+HOUSE_KEYS <- consolidate_results(rf_house_keys_file)
+# HOUSE_KEYS
 
 # "Is the unknown wav a c_pip?"
 C_PIP <- consolidate_results(rf_c_pip_file)
@@ -116,12 +123,15 @@ RHINO_HIPPO <- consolidate_results(rf_rhino_hippo_file)
 
 # The matrices are of type "double", object of class "c('matrix', 'double', 'numeric')"
 
-penultimate <- rbind(C_PIP, S_PIP, NATTERERI, NOCTULA, PLECOTUS, RHINO_HIPPO)
+penultimate <- rbind(C_PIP, S_PIP, NATTERERI, NOCTULA, PLECOTUS, RHINO_HIPPO, HOUSE_KEYS)
 
 Final_result <- penultimate[order(penultimate[,1], decreasing = FALSE),]
 Final_result
 
 #importance(rf_c_pip_file)
+
+write.table(Final_result, file = "Final_result.txt", sep = "\t",
+            row.names = TRUE, col.names = NA)
 
 
 

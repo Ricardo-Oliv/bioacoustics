@@ -152,33 +152,45 @@ bat_train <- function(bat_name)
 ###################################################################################################
 print("Training has now commenced ...... it may take a few minutes ..... please wait !!!!")
 
+bat_name <- "house_keys"
+rf_house_keys <- bat_train(bat_name)
+print("house_keys:")
+rf_house_keys $confusion
+saveRDS(rf_house_keys,"rf_house_keys.rds")
+
 bat_name <- "rhino_hippo"
 rf_rhino_hippo <- bat_train(bat_name)
+print("rhino_hippo:")
 rf_rhino_hippo $confusion
 saveRDS(rf_rhino_hippo,"rf_rhino_hippo.rds")
 
 bat_name <- "c_pip"
 rf_c_pip <- bat_train(bat_name)
+print("c_pip:")
 rf_c_pip $confusion
 saveRDS(rf_c_pip,"rf_c_pip.rds")
 
 bat_name <- "s_pip"
 rf_s_pip <- bat_train(bat_name)
+print("s_pip:")
 rf_s_pip $confusion
 saveRDS(rf_s_pip,"rf_s_pip.rds")
 
 bat_name <- "nattereri"
 rf_nattereri <- bat_train(bat_name)
+print("nattereri:")
 rf_nattereri $confusion
 saveRDS(rf_nattereri,"rf_nattereri.rds")
 
 bat_name <- "noctula"
 rf_noctula <- bat_train(bat_name)
+print("noctula:")
 rf_noctula $confusion
 saveRDS(rf_noctula,"rf_noctula.rds")
 
 bat_name <- "plecotus"
 rf_plecotus <- bat_train(bat_name)
+print("plecotus:")
 rf_plecotus $confusion
 saveRDS(rf_plecotus,"rf_plecotus.rds")
 ############################################
@@ -255,6 +267,10 @@ consolidate_results <- function(rf)
 }
 
 
+# "Is the unknown wav house_keys?"
+HOUSE_KEYS <- consolidate_results(rf_house_keys)
+HOUSE_KEYS
+
 # "Is the unknown wav a c_pip?"
 C_PIP <- consolidate_results(rf_c_pip)
 C_PIP
@@ -270,14 +286,13 @@ NOCTULA
 # "Is the unknown wav a plecotus?"
 PLECOTUS <- consolidate_results(rf_plecotus)
 PLECOTUS
-
 # "Is the unknown wav a rhino_hippo?"
 RHINO_HIPPO <- consolidate_results(rf_rhino_hippo)
 RHINO_HIPPO
 
 # The matrices are of type "double", object of class "c('matrix', 'double', 'numeric')"
 
-penultimate <- rbind(C_PIP, S_PIP, NATTERERI, NOCTULA, PLECOTUS, RHINO_HIPPO)
+penultimate <- rbind(HOUSE_KEYS, C_PIP, S_PIP, NATTERERI, NOCTULA, PLECOTUS, RHINO_HIPPO)
 
 Final_result <- penultimate[order(penultimate[,1], decreasing = FALSE),]
 Final_result

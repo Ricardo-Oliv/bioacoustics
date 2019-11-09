@@ -1,28 +1,82 @@
+#!/bin/bash
 # Record 10 second chunks of audio on UltraMic384K, apply a 15K highpass filter, run the randomforest classifier. Repeat.
+# lscpu
+# arecord -l
 
-arecord -l
-
-cd /home/paddy/Desktop/deploy_classifier/
-arecord -f S16 -r 384000 -d 10 -c 1 --device=plughw:r0,0 /home/paddy/Desktop/deploy_classifier/temp/test-mic.wav
+rm Final_result.txt
+chunk_time=15                        # Audio chunk time in seconds.
+export iterations=7                  # Number of audio chunks, exported as environmental variable.
 cd /home/paddy/Desktop/deploy_classifier/temp/
-sox test-mic.wav test-mic2.wav highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k
-cp test-mic2.wav /home/paddy/Desktop/deploy_classifier/unknown_bat_audio/
-cd /home/paddy/Desktop/deploy_classifier/
-Rscript Deploy_bats.R
+rm final.wav
+RED='\033[0;31m'
+BLUE='\033[0;34m'
+GREEN='\033[0;32m'
+NC='\033[0m' # No Color
+printf "Iterations: $iterations\n"
 
-cd /home/paddy/Desktop/deploy_classifier/
-arecord -f S16 -r 384000 -d 10 -c 1 --device=plughw:r0,0 /home/paddy/Desktop/deploy_classifier/temp/test-mic.wav
-cd /home/paddy/Desktop/deploy_classifier/temp/
-sox test-mic.wav test-mic2.wav highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k
-cp test-mic2.wav /home/paddy/Desktop/deploy_classifier/unknown_bat_audio/
-cd /home/paddy/Desktop/deploy_classifier/
-Rscript Deploy_bats.R
+FILE=/home/paddy/Desktop/deploy_classifier/Final_result.txt
 
+############################################################ Loop start
+counter=0
+until [ $counter -gt ${iterations} ]
+do
+  export iter=$counter
+  cd /home/paddy/Desktop/deploy_classifier/
+
+  bat_detected=0
+  if [ -f "$FILE" ]; then
+    bat_detected=1
+    iter2=$((iter-2))
+    printf "${GREEN}Success: A bat classification result was published for iteration no. ${iter2}! ${NC}\n"
+  fi
+
+  printf "${RED}Now recording iteration ${iter} audio: ${NC}\n"
+  arecord -f S16 -r 384000 -d ${chunk_time} -c 1 --device=plughw:r0,0 /home/paddy/Desktop/deploy_classifier/temp/new_${iter}.wav &
+  wait
+  printf "${RED}Iteration ${iter} audio finished ${NC}\n"
+  # rm Final_result.txt
+  bat_detected=0
+  sh ./script_2.sh &
+
+  ((counter++))
+done
+
+############################################################ Loop end
+
+export iter=$counter
 cd /home/paddy/Desktop/deploy_classifier/
-arecord -f S16 -r 384000 -d 10 -c 1 --device=plughw:r0,0 /home/paddy/Desktop/deploy_classifier/temp/test-mic.wav
+printf "${RED}Now recording iteration ${iter} audio: ${NC}\n"
+arecord -f S16 -r 384000 -d ${chunk_time} -c 1 --device=plughw:r0,0 /home/paddy/Desktop/deploy_classifier/temp/new_${iter}.wav &
+wait
+printf "${RED}Iteration ${iter} audio finished ${NC}\n"
 cd /home/paddy/Desktop/deploy_classifier/temp/
-sox test-mic.wav test-mic2.wav highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k
-cp test-mic2.wav /home/paddy/Desktop/deploy_classifier/unknown_bat_audio/
+sox new_2.wav filtered.wav highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k
+cp filtered.wav /home/paddy/Desktop/deploy_classifier/unknown_bat_audio/
 cd /home/paddy/Desktop/deploy_classifier/
+printf "${BLUE}Now run iteration ${iter} classifier: ${NC}\n"
+printf "Iteration: $iter\n"
 Rscript Deploy_bats.R
+printf "${BLUE}Iteration ${iter} classifier has finished! ${NC}\n"
+if [ -f "$FILE" ]; then
+  bat_detected=1
+  iter2=$((iter-0))
+  printf "${GREEN}Success: A bat classification result was published for iteration no. ${iter2}! ${NC}\n"
+fi
+rm Final_result.txt
+
+cd /home/paddy/Desktop/deploy_classifier/temp/
+counter=0
+cp new_0.wav temp.wav
+
+until [ $counter -gt ${iterations} ]
+do
+  iter=$counter
+  printf "Iteration: $iter\n"
+  sox new_${iter}.wav temp.wav final.wav                      # Add first and second wav to third.
+  cp final.wav temp.wav
+  ((counter++))
+done
+
+echo 'END'
+
 
