@@ -4,8 +4,13 @@
 # arecord -l
 
 rm Final_result.txt
+rm /home/paddy/Desktop/deploy_classifier/temp/*
 chunk_time=15                        # Audio chunk time in seconds.
-export iterations=7                  # Number of audio chunks, exported as environmental variable.
+export iterations=2000                  # Number of audio chunks, exported as environmental variable.
+
+#TODO Allow a variable for overall time to be used and then claculate iterations from it.
+# 5 hours with 15 second chunks -> 5 x 60 x 4 -> iterations = 1200.
+
 cd /home/paddy/Desktop/deploy_classifier/temp/
 rm final.wav
 RED='\033[0;31m'
@@ -14,7 +19,7 @@ GREEN='\033[0;32m'
 NC='\033[0m' # No Color
 printf "Iterations: $iterations\n"
 
-FILE=/home/paddy/Desktop/deploy_classifier/Final_result.txt
+export FILE=/home/paddy/Desktop/deploy_classifier/Final_result.txt
 
 ############################################################ Loop start
 counter=0
@@ -22,13 +27,7 @@ until [ $counter -gt ${iterations} ]
 do
   export iter=$counter
   cd /home/paddy/Desktop/deploy_classifier/
-
-  bat_detected=0
-  if [ -f "$FILE" ]; then
-    bat_detected=1
-    iter2=$((iter-2))
-    printf "${GREEN}Success: A bat classification result was published for iteration no. ${iter2}! ${NC}\n"
-  fi
+  iter2=$((iter-2))
 
   printf "${RED}Now recording iteration ${iter} audio: ${NC}\n"
   arecord -f S16 -r 384000 -d ${chunk_time} -c 1 --device=plughw:r0,0 /home/paddy/Desktop/deploy_classifier/temp/new_${iter}.wav &
@@ -36,6 +35,7 @@ do
   printf "${RED}Iteration ${iter} audio finished ${NC}\n"
   # rm Final_result.txt
   bat_detected=0
+  cd /home/paddy/Desktop/deploy_classifier/
   sh ./script_2.sh &
 
   ((counter++))
@@ -50,32 +50,42 @@ arecord -f S16 -r 384000 -d ${chunk_time} -c 1 --device=plughw:r0,0 /home/paddy/
 wait
 printf "${RED}Iteration ${iter} audio finished ${NC}\n"
 cd /home/paddy/Desktop/deploy_classifier/temp/
-sox new_2.wav filtered.wav highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k
+sox new_${iter}.wav filtered.wav highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k
 cp filtered.wav /home/paddy/Desktop/deploy_classifier/unknown_bat_audio/
 cd /home/paddy/Desktop/deploy_classifier/
 printf "${BLUE}Now run iteration ${iter} classifier: ${NC}\n"
 printf "Iteration: $iter\n"
 Rscript Deploy_bats.R
 printf "${BLUE}Iteration ${iter} classifier has finished! ${NC}\n"
+#iter2=$((iter-0))
 if [ -f "$FILE" ]; then
   bat_detected=1
-  iter2=$((iter-0))
-  printf "${GREEN}Success: A bat classification result was published for iteration no. ${iter2}! ${NC}\n"
+  cd /home/paddy/Desktop/deploy_classifier/temp/
+  cp new_${iter}.wav /home/paddy/Desktop/deploy_classifier/detected_bat_audio/
+  printf "${GREEN}Success: A bat classification result was published for iteration no. ${iter}! ${NC}\n"
+else
+  printf "${GREEN}No classification result was published for iteration no. ${iter2}! ${NC}\n"
 fi
-rm Final_result.txt
 
-cd /home/paddy/Desktop/deploy_classifier/temp/
-counter=0
-cp new_0.wav temp.wav
+# TODO currently the last classification is not renamed to the bat name and timestamp so will get overwritten in the 'detected bats' folder.
 
-until [ $counter -gt ${iterations} ]
-do
-  iter=$counter
-  printf "Iteration: $iter\n"
-  sox new_${iter}.wav temp.wav final.wav                      # Add first and second wav to third.
-  cp final.wav temp.wav
-  ((counter++))
-done
+#cd /home/paddy/Desktop/deploy_classifier/
+#rm Final_result.txt
+
+#cd /home/paddy/Desktop/deploy_classifier/temp/
+#counter=0
+#cp new_0.wav temp.wav
+################################################################################
+
+#iterations2=$((iterations+1))
+#until [ $counter -gt ${iterations2} ]
+#do
+#  iter=$counter
+#  printf "Iteration: $iter\n"
+#  sox new_${iter}.wav temp.wav final.wav                      # Add first and second wav to third.
+#  cp final.wav temp.wav
+#  ((counter++))
+#done
 
 echo 'END'
 
