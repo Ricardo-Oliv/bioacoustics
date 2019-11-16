@@ -1,12 +1,15 @@
 #!/bin/bash
+# $ cd /home/paddy/Desktop/deploy_classifier/
+# $ bash bash_app
 # Record 10 second chunks of audio on UltraMic384K, apply a 15K highpass filter, run the randomforest classifier. Repeat.
 # lscpu
 # arecord -l
 
 rm Final_result.txt
 rm /home/paddy/Desktop/deploy_classifier/temp/*
+rm /home/paddy/Desktop/deploy_classifier/unknown_bat_audio/*
 chunk_time=15                        # Audio chunk time in seconds.
-export iterations=2000                  # Number of audio chunks, exported as environmental variable.
+export iterations=200000                  # Number of audio chunks, exported as environmental variable.
 
 #TODO Allow a variable for overall time to be used and then claculate iterations from it.
 # 5 hours with 15 second chunks -> 5 x 60 x 4 -> iterations = 1200.

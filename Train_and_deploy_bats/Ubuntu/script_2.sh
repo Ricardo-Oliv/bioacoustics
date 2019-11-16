@@ -7,7 +7,7 @@ NC='\033[0m' # No Color
 
 # echo $(($(date +%s%N)/1000000))
 cd /home/paddy/Desktop/deploy_classifier/temp/
-sox new_${iter}.wav filtered.wav highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k 
+sox new_${iter}.wav filtered.wav highpass 1k # highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k 
 cp filtered.wav /home/paddy/Desktop/deploy_classifier/unknown_bat_audio/
 cd /home/paddy/Desktop/deploy_classifier/
 # echo $(($(date +%s%N)/1000000))
@@ -33,7 +33,8 @@ if [ -f "$FILE" ]; then
   # batConfidence2=$((10*$batConfidence))
   # printf "${GREEN}Bat confidence value is: $batConfidence ${NC}\n"
 
-  batConfidence2=$(echo "scale=2; 100 * $batConfidence" | bc -l)
+  # batConfidence2=$(echo "scale=2; 100 * $batConfidence" | bc -l)
+  batConfidence2=$(echo "scale=2; (100 * $batConfidence)+2" | bc -l)
   batConfidence3=$(echo "$batConfidence2" | sed 's/[.].*$//')
 
   # printf "${GREEN}Bat confidence2 value is: $batConfidence2 ${NC}\n"
@@ -43,7 +44,9 @@ if [ -f "$FILE" ]; then
   exec 6<&-
 
   cd /home/paddy/Desktop/deploy_classifier/temp/
-  newName=$(date +%F-%H:%M:%S)
+
+  newName=$(date +%d-%m-%Y_%H:%M:%S)
+
   newName2="${batConfidence3}%_${batName}_${newName}"
   # printf "${GREEN}New name:  ${newName2} ${NC}\n"
   mv new_${iter}.wav ${newName2}.wav
@@ -55,5 +58,10 @@ else
   printf "${GREEN}No classification result was published for iteration no. ${iter}! ${NC}\n"
   export bat_detected=0
 fi
+# TODO: Have the option to delete the old new_${iter}.wav files to save on storage space.
+cd /home/paddy/Desktop/deploy_classifier/temp/
+ls -t | tail -n +4 | xargs rm --                   # Delete all files except for the three newest.
+cd /home/paddy/Desktop/deploy_classifier/detected_bat_audio/
+ls|sort -V -r | tail -n +500 | xargs rm --         # Delete all files except for the best 500.
 
 cd /home/paddy/Desktop/deploy_classifier/
