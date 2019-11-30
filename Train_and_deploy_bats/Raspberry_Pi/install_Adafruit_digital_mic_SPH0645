@@ -1,0 +1,143 @@
+# Only works on Pi less than 4 :(
+
+sudo apt-get install gedit
+
+sudo gedit /boot/config.txt
+Uncomment #dtparam=i2s=on
+
+sudo gedit /etc/modules
+Add snd-bcm2835 on its own line,
+
+sudo reboot
+lsmod | grep snd
+
+sudo apt-get update && sudo apt-get install rpi-update && sudo rpi-update
+sudo reboot
+
+sudo apt-get install git bc libncurses5-dev bison flex libssl-dev
+
+sudo wget https://raw.githubusercontent.com/notro/rpi-source/master/rpi-source -O /usr/bin/rpi-source
+sudo chmod +x /usr/bin/rpi-source
+/usr/bin/rpi-source -q --tag-update
+rpi-source --skip-gcc
+
+########################################
+
+sudo mount -t debugfs debugs /sys/kernel/debug
+Pi 3 or Pi 2 - make sure the module name is 3f203000.i2s 
+
+git clone https://github.com/PaulCreaser/rpi-i2s-audio
+cd rpi-i2s-audio
+make -C /lib/modules/$(uname -r )/build M=$(pwd) modules
+sudo insmod my_loader.ko
+lsmod | grep my_loader
+dmesg
+
+# Look for:
+#   3.111018] request module load 'bcm2708-dmaengine': 0
+# [    3.111708] register platform device 'asoc-simple-card': 0
+# [    3.111895] Hello World :)
+
+# Auto-load the module on startup:
+sudo cp my_loader.ko /lib/modules/$(uname -r)
+echo 'my_loader' | sudo tee --append /etc/modules > /dev/null
+sudo depmod -a
+sudo modprobe my_loader
+
+sudo reboot
+
+arecord -l
+# Should see:
+# **** List of CAPTURE Hardware Devices ****
+# card 0: sndrpisimplecar [snd_rpi_simple_card], device 0: simple-card_codec_link snd-soc-dummy-dai-0 [simple-card_codec_link snd-soc-dummy-dai-0]
+
+
+cd /home/pi/Desktop/
+arecord -D plughw:1 -c1 -r 48000 -f S32_LE -t wav -V mono -v file.wav
+
+
+    3.111018] request module load 'bcm2708-dmaengine': 0
+[    3.111708] register platform device 'asoc-simple-card': 0
+[    3.111895] Hello World :)
+
+
+arecord -vv -fdat foo.wav
+
+ALSA lib pcm_hw.c:1822:(_snd_pcm_hw_open) Invalid value for card
+
+arecord -D hw:0 -c 2 -f s24 -r 8000 -d 2 -v file2.wav
+
+
+alsa asoundrc:
+
+sudo gedit /home/pi/.asoundrc
+
+
+#The below 2 sections are commented, they control the default sound card to use
+#This set up is for a Pi with an I2S microphone attached using the guide
+#from adafruit at
+# https://learn.adafruit.com/adafruit-i2s-mems-microphone-breakout
+#Uncomment and the I2S will be your default card (assuming same setup)
+#but you won't get audio playback because both recording and playback will be
+#defaulted
+#TODO - Figure out how to set default for recording separately
+#To adjust use aplay -l to work out the devices you have and their card number
+#For recording devices use arecord -l
+
+#pcm.!default {
+#	type hw
+#	card 1
+#}
+
+#ctl.!default {
+#	type hw           
+#	card 1
+#}
+
+#This section makes a reference to your I2S hardware, adjust the card name
+# to what is shown in arecord -l after card x: before the name in []
+#You may have to adjust channel count also but stick with default first
+pcm.dmic_hw {
+	type hw
+	card sndrpisimplecar
+	channels 2
+	format S32_LE
+}
+
+#This is the software volume control, it links to the hardware above and after
+# saving the .asoundrc file you can type alsamixer, press F6 to select
+# your I2S mic then F5 to set the recording volume and arrow up and down
+# to adjust the volume
+# After adjusting the volume - go for 50 percent at first, you can do
+# something like 
+# arecord -D dmic_sv -c2 -r 48000 -f S32_LE -t wav -V mono -v myfile.wav
+pcm.dmic_sv {
+	type softvol
+	slave.pcm dmic_hw
+	control {
+		name "Boost Capture Volume"
+		card sndrpisimplecar
+	}
+	min_dB -3.0
+	max_dB 30.0
+}
+
+
+cd /home/pi/Desktop/
+arecord -D dmic_sv -c2 -r 48000 -f S32_LE -t wav -V mono -v myfile3.wav
+
+Run the above once and cancel using control C.
+Now open alsamixer.
+
+
+
+
+
+
+
+
+
+
+
+
+    
