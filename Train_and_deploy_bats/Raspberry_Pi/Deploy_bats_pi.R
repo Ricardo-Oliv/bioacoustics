@@ -1,4 +1,4 @@
-# $ cd /home/paddy/Desktop/deploy_classifier/
+# $ cd /home/pi/Desktop/deploy_classifier/
 # $ Rscript Deploy_bats.R
 
 # install.packages("audio")
@@ -8,7 +8,7 @@ library(tools)
 library(randomForest)
 library(rstudioapi)
 
-setwd("/home/paddy/Desktop/deploy_classifier/")
+setwd("/home/pi/Desktop/deploy_classifier/")
 wd <- getwd()         # Working directory
 wd
 
