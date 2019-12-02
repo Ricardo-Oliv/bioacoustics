@@ -1,4 +1,4 @@
-
+# $ cd /home/paddy/Desktop/deploy_classifier/
 # $ Rscript Deploy_bats.R
 
 # install.packages("audio")

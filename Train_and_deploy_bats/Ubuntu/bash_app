@@ -25,6 +25,7 @@ printf "Iterations: $iterations\n"
 export FILE=/home/paddy/Desktop/deploy_classifier/Final_result.txt
 
 ############################################################ Loop start
+
 counter=0
 until [ $counter -gt ${iterations} ]
 do

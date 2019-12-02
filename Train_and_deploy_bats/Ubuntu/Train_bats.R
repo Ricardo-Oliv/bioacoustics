@@ -1,6 +1,7 @@
+# $ cd /home/paddy/Desktop/deploy_classifier/
 # $ Rscript Train_bats.R
-# $ Rscript install.packages("audio")
 
+# $ Rscript install.packages("audio")
 # install.packages("audio")
 # install.packages("bioacoustics")
 # install.packages("randomForest")
@@ -62,7 +63,7 @@ TD <- threshold_detection(
 nrow(TD$data$event_data)
 
 #######################################################################################
-
+print("Now extracting feature data - many files may not meet the threshold requirements !!!!")
 files <- dir(data_dir, recursive = TRUE, full.names = TRUE, pattern = "[.]wav$")
 
 # Detect and extract audio events

@@ -38,8 +38,6 @@ if [ -f "$FILE" ]; then
   batConfidence3=$(echo "$batConfidence2" | sed 's/[.].*$//')
 
   # printf "${GREEN}Bat confidence2 value is: $batConfidence2 ${NC}\n"
-  # printf "${GREEN}Bat confidence3 value is: $batConfidence3 ${NC}\n"
-
   # printf "${GREEN}Bat detected was a $batName ${NC}\n"
   exec 6<&-
 
@@ -58,6 +56,27 @@ else
   printf "${GREEN}No classification result was published for iteration no. ${iter}! ${NC}\n"
   export bat_detected=0
 fi
+
+printf "${GREEN}Bat confidence value is: $batConfidence3 ${NC}\n"
+
+if [ $batConfidence3 -gt 50 ]; then
+  if [ ${batName} = "HOUSE_KEYS" ]; then
+    aplay /home/paddy/Desktop/deploy_classifier/alert_sounds/keys.wav
+  elif [ ${batName} = "NOCTULA" ]; then
+    aplay /home/paddy/Desktop/deploy_classifier/alert_sounds/noctule.wav
+  elif [ ${batName} = "NATTERERI" ]; then
+    aplay /home/paddy/Desktop/deploy_classifier/alert_sounds/nattereri.wav
+  elif [ ${batName} = "PLECOTUS" ]; then
+    aplay /home/paddy/Desktop/deploy_classifier/alert_sounds/plecotus.wav
+  elif [ ${batName} = "NATTERERI" ]; then
+    aplay /home/paddy/Desktop/deploy_classifier/alert_sounds/nattereri.wav
+  elif [ ${batName} = "C_PIP" ]; then
+    aplay /home/paddy/Desktop/deploy_classifier/alert_sounds/c_pip.wav
+  elif [ ${batName} = "S_PIP" ]; then
+    aplay /home/paddy/Desktop/deploy_classifier/alert_sounds/s_pip.wav
+  fi
+fi
+
 # TODO: Have the option to delete the old new_${iter}.wav files to save on storage space.
 cd /home/paddy/Desktop/deploy_classifier/temp/
 ls -t | tail -n +4 | xargs rm --                   # Delete all files except for the three newest.
