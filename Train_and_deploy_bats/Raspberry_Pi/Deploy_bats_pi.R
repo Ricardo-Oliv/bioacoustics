@@ -1,5 +1,5 @@
 # $ cd /home/pi/Desktop/deploy_classifier/
-# $ Rscript Deploy_bats.R
+# $ Rscript Deploy_bats_pi.R
 
 # install.packages("audio")
 
