@@ -1,0 +1,98 @@
+#!/bin/bash
+# $ cd /home/pi/Desktop/deploy_classifier/
+# $ bash bash_app
+# Record 10 second chunks of audio on UltraMic384K, apply a 15K highpass filter, run the randomforest classifier. Repeat.
+# lscpu
+# arecord -l
+
+amixer sset PCM 100%
+aplay --device=hw:0,0 /home/pi/Desktop/deploy_classifier/alert_sounds/Go_for_Deploy.wav
+
+rm Final_result.txt
+rm /home/pi/Desktop/deploy_classifier/temp/*
+rm /home/pi/Desktop/deploy_classifier/unknown_bat_audio/*
+chunk_time=20                        # Audio chunk time in seconds.
+export iterations=5                  # Number of audio chunks, exported as environmental variable.
+
+#TODO Allow a variable for overall time to be used and then claculate iterations from it.
+# 5 hours with 15 second chunks -> 5 x 60 x 4 -> iterations = 1200.
+
+cd /home/pi/Desktop/deploy_classifier/temp/
+rm final.wav
+RED='\033[0;31m'
+BLUE='\033[0;34m'
+GREEN='\033[0;32m'
+NC='\033[0m' # No Color
+printf "Iterations: $iterations\n"
+
+export FILE=/home/pi/Desktop/deploy_classifier/Final_result.txt
+
+############################################################ Loop start
+counter=0
+until [ $counter -gt ${iterations} ]
+do
+  export iter=$counter
+  cd /home/pi/Desktop/deploy_classifier/
+  iter2=$((iter-2))
+
+  printf "${RED}Now recording iteration ${iter} audio: ${NC}\n"
+  arecord -f S16 -r 384000 -d ${chunk_time} -c 1 --device=plughw:r0,0 /home/pi/Desktop/deploy_classifier/temp/new_${iter}.wav &
+  wait
+  printf "${RED}Iteration ${iter} audio finished ${NC}\n"
+  # rm Final_result.txt
+  bat_detected=0
+  cd /home/pi/Desktop/deploy_classifier/
+  sh ./script_2.sh &
+
+  ((counter++))
+done
+
+############################################################ Loop end
+
+export iter=$counter
+cd /home/pi/Desktop/deploy_classifier/
+printf "${RED}Now recording iteration ${iter} audio: ${NC}\n"
+arecord -f S16 -r 384000 -d ${chunk_time} -c 1 --device=plughw:r0,0 /home/pi/Desktop/deploy_classifier/temp/new_${iter}.wav &
+wait
+printf "${RED}Iteration ${iter} audio finished ${NC}\n"
+cd /home/pi/Desktop/deploy_classifier/temp/
+sox new_${iter}.wav filtered.wav highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k
+cp filtered.wav /home/pi/Desktop/deploy_classifier/unknown_bat_audio/
+cd /home/pi/Desktop/deploy_classifier/
+printf "${BLUE}Now run iteration ${iter} classifier: ${NC}\n"
+printf "Iteration: $iter\n"
+Rscript Deploy_bats_pi.R
+printf "${BLUE}Iteration ${iter} classifier has finished! ${NC}\n"
+#iter2=$((iter-0))
+if [ -f "$FILE" ]; then
+  bat_detected=1
+  cd /home/pi/Desktop/deploy_classifier/temp/
+  cp new_${iter}.wav /home/pi/Desktop/deploy_classifier/detected_bat_audio/
+  printf "${GREEN}Success: A bat classification result was published for iteration no. ${iter}! ${NC}\n"
+else
+  printf "${GREEN}No classification result was published for iteration no. ${iter2}! ${NC}\n"
+fi
+
+# TODO currently the last classification is not renamed to the bat name and timestamp so will get overwritten in the 'detected bats' folder.
+
+#cd /home/pi/Desktop/deploy_classifier/
+#rm Final_result.txt
+
+#cd /home/pi/Desktop/deploy_classifier/temp/
+#counter=0
+#cp new_0.wav temp.wav
+################################################################################
+
+#iterations2=$((iterations+1))
+#until [ $counter -gt ${iterations2} ]
+#do
+#  iter=$counter
+#  printf "Iteration: $iter\n"
+#  sox new_${iter}.wav temp.wav final.wav                      # Add first and second wav to third.
+#  cp final.wav temp.wav
+#  ((counter++))
+#done
+
+echo 'END'
+
+
