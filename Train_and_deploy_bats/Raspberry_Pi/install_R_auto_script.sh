@@ -22,7 +22,9 @@ sudo apt-get upgrade -y
 printf "${GREEN}Update and upgrade done! ${NC}\n"
 
 # If necessary, check the version of bzip is as below:
-cd && cd /home/pi/Downloads/bzip2-1.0.6
+cd && cd /home/pi/Downloads/
+tar zxvf bzip2-1.0.6.tar.gz 
+cd bzip2-1.0.6
 sudo make install
 
 printf "${GREEN}bzip2 installed! ${NC}\n"
