@@ -18,7 +18,7 @@ Rscript Deploy_bats_pi.R
 printf "${BLUE}Iteration ${iter} classifier has finished! ${NC}\n"
 
 if [ -f "$FILE" ]; then
-  export bat_detected=1
+  bat_detected=1
   cd /home/pi/Desktop/deploy_classifier/
 
   exec 6< Final_result.txt
@@ -33,7 +33,6 @@ if [ -f "$FILE" ]; then
 
   batConfidence=$(echo "$line2" | sed 's/.*[[:blank:]]//') 
   # batConfidence2=$((10*$batConfidence))
-  printf "${GREEN}Bat confidence value is: $batConfidence ${NC}\n"
 
   # batConfidence2=$(echo "scale=2; 100 * $batConfidence" | bc -l)
   batConfidence2=$(echo "scale=2; (100 * $batConfidence)+2" | bc -l)
@@ -58,8 +57,11 @@ if [ -f "$FILE" ]; then
 
 else
   printf "${GREEN}No classification result was published for iteration no. ${iter}! ${NC}\n"
-  export bat_detected=0
+  bat_detected=0
+  batConfidence3=0
 fi
+
+# printf "${GREEN}Bat confidence 3 value is: $batConfidence3 ${NC}\n"
 
 # arecord -f S16 -r 384000 -d ${chunk_time} -c 1 --device=plughw:r0,0 /home/pi/Desktop/deploy_classifier/temp/new_${iter}.wav
 # card 0: ALSA [bcm2835 ALSA], device 1: bcm2835 IEC958/HDMI [bcm2835 IEC958/HDMI]
@@ -76,7 +78,9 @@ fi
 
 # amixer sset PCM 100%
 
-if [ $batConfidence3 -gt 50 ]; then
+conf=50
+
+if [ $batConfidence3 -gt $conf ]; then
   if [ ${batName} = "HOUSE_KEYS" ]; then
     aplay --device=hw:0,0 /home/pi/Desktop/deploy_classifier/alert_sounds/keys.wav
   elif [ ${batName} = "NOCTULA" ]; then
@@ -93,10 +97,26 @@ if [ $batConfidence3 -gt 50 ]; then
     aplay --device=hw:0,0 /home/pi/Desktop/deploy_classifier/alert_sounds/s_pip.wav
   fi
 fi
-# TODO: Have the option to delete the old new_${iter}.wav files to save on storage space.
-cd /home/pi/Desktop/deploy_classifier/temp/
-ls -t | tail -n +4 | xargs rm --                   # Delete all files except for the three newest.
-cd /home/pi/Desktop/deploy_classifier/detected_bat_audio/
-ls|sort -V -r | tail -n +500 | xargs rm --         # Delete all files except for the best 500.
+
+# printf "${GREEN}Is there still a  ./script_2.sh: 79: [: -gt: unexpected operator error? ${NC}\n"
+directory_to_search_inside="/home/pi/Desktop/deploy_classifier/detected_bat_audio"
+file_count=$( set -- $directory_to_search_inside/* ; echo $#)
+# printf "$file_count \n"
+# printf "${GREEN}File count in detected_bat_audio directory: $file_count  ${NC}\n"
+
+if [ $bat_detected -gt 0 ]; then
+  # printf "${GREEN}Bat_detected value: ${bat_detected} ${NC}\n"
+  cd /home/pi/Desktop/deploy_classifier/temp/
+  ls -t | tail -n +4 | xargs rm                   # Delete all files except for the three newest.
+  # printf "${GREEN}Was there an rm missing operand error? deleting from temp ${NC}\n"
+  if  [ $file_count -gt 100 ]; then
+    cd /home/pi/Desktop/deploy_classifier/detected_bat_audio/
+    ls|sort -V -r | tail -n +100 | xargs rm         # Delete all files except for the best 500.
+    # printf "${GREEN}Was there an rm missing operand error? deleting from detected_bats${NC}\n"
+    # TODO above error is probably caused by rm not finding the prescribed files ie there are less than 500 files in the detected_bat_audio directory.
+  fi
+fi
 
 cd /home/pi/Desktop/deploy_classifier/
+
+
