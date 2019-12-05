@@ -12,7 +12,7 @@ rm Final_result.txt
 # rm /home/pi/Desktop/deploy_classifier/temp/*
 rm /home/pi/Desktop/deploy_classifier/unknown_bat_audio/*
 chunk_time=20                        # Audio chunk time in seconds.
-export iterations=5                  # Number of audio chunks, exported as environmental variable.
+export iterations=200000                  # Number of audio chunks, exported as environmental variable.
 
 #TODO Allow a variable for overall time to be used and then claculate iterations from it.
 # 5 hours with 15 second chunks -> 5 x 60 x 4 -> iterations = 1200.
@@ -29,6 +29,7 @@ export FILE=/home/pi/Desktop/deploy_classifier/Final_result.txt
 
 ############################################################ Loop start
 counter=0
+(
 until [ $counter -gt ${iterations} ]
 do
   export iter=$counter
@@ -46,6 +47,17 @@ do
 
   ((counter++))
 done
+) |
+zenity --progress \
+  --title="Recording" \
+  --text="Press cancel sto stop recording" \
+  --percentage=0
+  #--width 600
+
+if [ "$?" = -1 ] ; then
+      zenity --error \
+        --text="Update canceled."
+fi
 
 ############################################################ Loop end
 
