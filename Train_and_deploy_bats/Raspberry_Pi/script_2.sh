@@ -47,6 +47,7 @@ if [ -f "$FILE" ]; then
   cd /home/pi/Desktop/deploy_classifier/temp/
 
   newName=$(date +%d-%m-%Y_%H:%M:%S)
+  cp $FILE /home/pi/Desktop/deploy_classifier/Final_result_copy.txt
 
   newName2="${batConfidence3}%_${batName}_${newName}"
   # printf "${GREEN}New name:  ${newName2} ${NC}\n"

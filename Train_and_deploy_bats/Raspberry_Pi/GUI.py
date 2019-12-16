@@ -248,7 +248,7 @@ class ButtonWindow(Gtk.Window):
                 print("stopFile detected !!!!")
                 a = 1
             else:                                      # There exists no stopFile.
-                file = '/home/pi/Desktop/deploy_classifier/Final_result.txt'
+                file = '/home/pi/Desktop/deploy_classifier/Final_result_copy.txt'
                 if os.path.isfile(file):
                     # print ("File exists")
                     # readText = open(file).read()
@@ -278,9 +278,11 @@ class ButtonWindow(Gtk.Window):
                                 # print(line3)
                                 # print(cnt)
                                 # print("Line {}: {}".format(cnt, line.strip()))
+                                
                                 newText = newText + line3
                             cnt += 1
-                    text = newText
+                    batTime = "12:32"
+                    text = batTime + "\n" + newText
                     # text = re.sub('\ |\"|\!|\/|\;|\:', '', newText)
                     
                 else:

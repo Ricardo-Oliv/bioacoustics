@@ -1,21 +1,19 @@
 #!/bin/bash
-# $ cd /home/pi/Desktop/deploy_classifier/
-# $ bash bash_app
+# $ cd /home/pi/Desktop/deploy_classifier/ && bash bash_app.sh
 # Record 10 second chunks of audio on UltraMic384K, apply a 15K highpass filter, run the randomforest classifier. Repeat.
 # lscpu
 # arecord -l
-
-hello_world () 
-{
-   echo 'hello, world'
-}
 
 amixer sset PCM 100%
 aplay --device=hw:0,0 /home/pi/Desktop/deploy_classifier/alert_sounds/Go_for_Deploy.wav
 
 cd /home/pi/Desktop/deploy_classifier/
 rm Final_result.txt
+rm Final_result_copy.txt
 cd /home/pi/Desktop/deploy_classifier/helpers/
+#touch counter.txt
+#echo 0 > /home/pi/Desktop/deploy_classifier/helpers/counter.txt
+
 #rm stop.txt
 rm start.txt
 touch stop.txt
@@ -42,15 +40,15 @@ export FILE=/home/pi/Desktop/deploy_classifier/Final_result.txt
 f_main_loop ()
 {
 ############################################################ Loop start
+# counter=`cat /home/pi/Desktop/deploy_classifier/helpers/counter.txt`
 counter=0
-
 until [ $counter -gt ${iterations} ]
 do
 	while [ -e "$1/home/pi/Desktop/deploy_classifier/helpers/stop.txt" ]; do     # This loop will block the classier and recorder whilst waiting for a 'stop.txt' file to appear in 'helpers' folder.
     echo "stop.txt file exists"
     sleep 2
 	done
-  
+  # counter=`cat /home/pi/Desktop/deploy_classifier/helpers/counter.txt`
   export iter=$counter
   cd /home/pi/Desktop/deploy_classifier/
   iter2=$((iter-2))
@@ -62,17 +60,20 @@ do
   # rm Final_result.txt
   bat_detected=0
   cd /home/pi/Desktop/deploy_classifier/
+  
+  #printf "${GREEN}Counter before = ${counter} ${NC}\n"
+  counter=$((counter + 1))
+  #printf "${GREEN}Counter after = ${counter} ${NC}\n"
   taskset 0x3 sh ./script_2.sh &
-  # f_classifier &  # This function and f_test below dont work with piped to zenity for some reason.
-  # f_test
-  ((counter++))
+
+  # echo $counter > /home/pi/Desktop/deploy_classifier/helpers/counter.txt
 done
 ############################################################ Loop end
 }
 
 cd /home/pi/Desktop/deploy_classifier/
 # taskset 0x1  python GUI.py &                                  # The GUI app is on its own thread, core 0x1.
-f_main_loop 
+f_main_loop &
 
 
 export iter=$counter
