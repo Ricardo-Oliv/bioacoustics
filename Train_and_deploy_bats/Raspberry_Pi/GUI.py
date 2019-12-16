@@ -7,6 +7,9 @@ import math
 import gi
 import os.path
 import re
+from datetime import datetime
+import os.path, time
+
 
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk, GdkPixbuf, GLib
@@ -54,13 +57,13 @@ class ButtonWindow(Gtk.Window):
         hbox.pack_start(buttonZ4, False, False, 0)
 #######################################################################
 
-        button1 = Gtk.Button.new_with_label("Play discovery roger audio")
+        button1 = Gtk.Button.new_with_label("Take dog for a walk")
         button1.connect("clicked", self.on_click_me_clicked)
 
-        button2 = Gtk.Button.new_with_mnemonic("_Run Classifier")
+        button2 = Gtk.Button.new_with_mnemonic("_Drink another coffee")
         button2.connect("clicked", self.on_open_clicked)
 
-        button3 = Gtk.Button.new_with_mnemonic("_Close")
+        button3 = Gtk.Button.new_with_mnemonic("_Shut down the Pi")
         button3.connect("clicked", self.on_close_clicked)
         
         button4 = Gtk.Button.new_with_mnemonic("_Ignore")
@@ -74,16 +77,16 @@ class ButtonWindow(Gtk.Window):
         button7 = Gtk.Button.new_with_label("Play disc rog audio")
         button7.connect("clicked", self.on_click_me_clicked)
         
-        button8 = Gtk.Button.new_with_label("Play disc rog audio")
+        button8 = Gtk.Button.new_with_label("Self destruct")
         button8.connect("clicked", self.on_click_me_clicked)
         
-        adjustment = Gtk.Adjustment(0, 0, 100, 1, 10, 0)
+        adjustment = Gtk.Adjustment(0, 50, 100, 1, 10, 0)
         self.spinbutton_01 = Gtk.SpinButton()
         self.spinbutton_01.set_adjustment(adjustment)
 
         # a label
         self.label = Gtk.Label()
-        self.label.set_text("Choose a threshold value ! ")
+        self.label.set_text("Choose an audio indicator threshold value!")
         self.spinbutton_01.connect("value-changed", self.spin_selected)
   
         check_numeric_01 = Gtk.CheckButton("Numeric")
@@ -250,6 +253,11 @@ class ButtonWindow(Gtk.Window):
             else:                                      # There exists no stopFile.
                 file = '/home/pi/Desktop/deploy_classifier/Final_result_copy.txt'
                 if os.path.isfile(file):
+                    #print("Last modified: %s" % time.ctime(os.path.getmtime("/home/pi/Desktop/deploy_classifier/Final_result_copy.txt")))
+                    #print("Created: %s" % time.ctime(os.path.getctime("/home/pi/Desktop/deploy_classifier/Final_result_copy.txt")))
+                    #now = datetime.now()
+                    # current_time = now.strftime("%H:%M:%S")
+                    current_time = time.ctime(os.path.getctime("/home/pi/Desktop/deploy_classifier/Final_result_copy.txt"))
                     # print ("File exists")
                     # readText = open(file).read()
                     # text = re.sub('\ |\"|\.|\!|\/|\;|\:', '', readText)
@@ -281,9 +289,9 @@ class ButtonWindow(Gtk.Window):
                                 
                                 newText = newText + line3
                             cnt += 1
-                    batTime = "12:32"
-                    text = batTime + "\n" + newText
-                    # text = re.sub('\ |\"|\!|\/|\;|\:', '', newText)
+                    #batTime = "12:32"
+                    #print("Current Time =", current_time)
+                    text = current_time + "\n" + newText
                     
                 else:
                     # print ("File not exist")
