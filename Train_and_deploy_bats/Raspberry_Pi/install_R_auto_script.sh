@@ -71,7 +71,11 @@ sudo chmod -R 777 /usr/local/lib/R/
 
 printf "${GREEN} Now the R packages need to be manually installed eg run R and use: install.packages("audio") ${NC}\n"
 
-
+R
+install.packages("randomForest")
+install.packages("bioacoustics")
+install.packages("audio")
+install.packages("rstudioapi")
 
 
 
