@@ -31,15 +31,15 @@ printf "${GREEN}bzip2 installed! ${NC}\n"
 
 sudo apt-get install liblzma-dev
 sudo apt-get install cmake -y
-sudo apt-get install sox libsox-fmt-all
-sudo apt-get install audacity
-sudo apt-get install bc
-sudo apt-get install build-essential libgtk-3-dev
-sudo pip3 install jupyter
-sudo apt install python3-cairo 
-sudo apt install libcairo2
-pip3 install playsound
-sudo apt-get install -y gir1.2-appindicator3-0.1
+sudo apt-get install sox libsox-fmt-all -y
+sudo apt-get install audacity -y
+sudo apt-get install bc -y
+sudo apt-get install build-essential libgtk-3-dev -y
+sudo pip3 install jupyter -y
+sudo apt install python3-cairo -y
+sudo apt install libcairo2 -y
+#pip3 install playsound
+#sudo apt-get install -y gir1.2-appindicator3-0.1
 #sudo apt-get install libasound-dev
 #sudo apt-get install portaudio19-dev
 #pip3 install pyaudio
