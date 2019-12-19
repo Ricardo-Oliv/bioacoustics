@@ -77,6 +77,6 @@ install.packages("bioacoustics")
 install.packages("audio")
 install.packages("rstudioapi")
 
-
+sudo apt-get install --reinstall pcmanfm     # If the file manager goes wrong.
 
 
