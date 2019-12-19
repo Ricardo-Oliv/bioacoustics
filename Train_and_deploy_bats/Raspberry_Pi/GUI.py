@@ -41,19 +41,21 @@ class ButtonWindow(Gtk.Window):
         hbox.set_orientation(Gtk.Orientation.VERTICAL)
 
         buttonZ1 = Gtk.RadioButton.new_with_label_from_widget(None, "Record some live audio")
-        buttonZ1.connect("toggled", self.on_button_toggled, "1")
+        #buttonZ1.set_label("record")
+        buttonZ1.connect("toggled", self.on_button_toggled, "record")
         hbox.pack_start(buttonZ1, False, False, 0)
 
         buttonZ2 = Gtk.RadioButton.new_with_label_from_widget(buttonZ1, "Process a batch of old recordings")
-        buttonZ2.connect("toggled", self.on_button_toggled, "1")
+        #buttonZ2.set_label("process")
+        buttonZ2.connect("toggled", self.on_button_toggled, "process")
         hbox.pack_start(buttonZ2, False, False, 0)
 
         buttonZ3 = Gtk.RadioButton.new_with_label_from_widget(buttonZ1, "Button 3")
-        buttonZ3.connect("toggled", self.on_button_toggled, "1")
+        buttonZ3.connect("toggled", self.on_button_toggled, "empty 1")
         hbox.pack_start(buttonZ3, False, False, 0)
         
         buttonZ4 = Gtk.RadioButton.new_with_label_from_widget(buttonZ1, "Button 4")
-        buttonZ4.connect("toggled", self.on_button_toggled, "1")
+        buttonZ4.connect("toggled", self.on_button_toggled, "empty 2")
         hbox.pack_start(buttonZ4, False, False, 0)
 #######################################################################
 
@@ -211,6 +213,13 @@ class ButtonWindow(Gtk.Window):
 
         self.label1 = Gtk.Label()
         self.label1.set_width_chars(60)
+        text2 = "Select the task required (on the left) \n"
+        text2 = text2 + "Select a folder location if processing old files (above) \n"
+        text2 = text2 + "Select a detect bat threshold (above) \n"
+        text2 = text2 + "Press the Start button (below)\n"
+        text2 = text2 + "Press the Stop button (below)\n"
+        text2 = text2 + "Press Shut down the Pi button (above) when finished \n"
+        self.label1.set_text(text2)
         box1.pack_start(self.label1, True, True, 0)
         
         # self.activitybar = Gtk.ProgressBar()
