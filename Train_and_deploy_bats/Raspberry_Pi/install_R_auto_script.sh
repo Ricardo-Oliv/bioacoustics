@@ -31,15 +31,15 @@ printf "${GREEN}bzip2 installed! ${NC}\n"
 
 sudo apt-get install liblzma-dev
 sudo apt-get install cmake -y
-sudo apt-get install sox libsox-fmt-all -y
-sudo apt-get install audacity -y
-sudo apt-get install bc -y
-sudo apt-get install build-essential libgtk-3-dev -y
-sudo pip3 install jupyter -y
-sudo apt install python3-cairo -y
-sudo apt install libcairo2 -y
-#pip3 install playsound
-#sudo apt-get install -y gir1.2-appindicator3-0.1
+sudo apt-get install sox libsox-fmt-all
+sudo apt-get install audacity
+sudo apt-get install bc
+sudo apt-get install build-essential libgtk-3-dev
+sudo pip3 install jupyter
+sudo apt install python3-cairo 
+sudo apt install libcairo2
+pip3 install playsound
+sudo apt-get install -y gir1.2-appindicator3-0.1
 #sudo apt-get install libasound-dev
 #sudo apt-get install portaudio19-dev
 #pip3 install pyaudio
@@ -67,16 +67,13 @@ printf "${GREEN}R 3.6.1 installed! ${NC}\n"
 
 sudo chmod -R 777 /usr/local/lib/R/library
 sudo chmod -R 777 /usr/local/lib/R/
-
+sudo chmod -R 777 /home/pi/Desktop/deploy_classifier/run.desktop
+sudo chmod -R 775 /home/pi/Desktop/deploy_classifier/
 
 printf "${GREEN} Now the R packages need to be manually installed eg run R and use: install.packages("audio") ${NC}\n"
 
-R
-install.packages("randomForest")
-install.packages("bioacoustics")
-install.packages("audio")
-install.packages("rstudioapi")
 
-sudo apt-get install --reinstall pcmanfm     # If the file manager goes wrong.
+
+
 
 

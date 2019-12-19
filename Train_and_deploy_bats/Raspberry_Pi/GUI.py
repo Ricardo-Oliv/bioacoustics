@@ -1,4 +1,4 @@
-# cd /home/pi/Desktop/deploy_classifier/
+# cd /home/pi/Desktop/deploy_classifier/ && python GUI.py
 # python GUI.py
 import os
 import time as t
@@ -64,7 +64,7 @@ class ButtonWindow(Gtk.Window):
         button2.connect("clicked", self.on_open_clicked)
 
         button3 = Gtk.Button.new_with_mnemonic("_Shut down the Pi")
-        button3.connect("clicked", self.on_close_clicked)
+        button3.connect("clicked", self.shut_down_clicked)
         
         button4 = Gtk.Button.new_with_mnemonic("_Ignore")
         button4.connect("clicked", self.on_close_clicked)
@@ -98,13 +98,43 @@ class ButtonWindow(Gtk.Window):
         checkbutton_01 = Gtk.CheckButton("Click me!")
         checkbutton_01.connect("toggled", self.on_ifvalid_toggled)
         
-        grid_01.add(button1)
-        grid_01.attach(button2, 1, 0, 2, 1)
-        grid_01.attach_next_to(button3, button1, Gtk.PositionType.BOTTOM, 1, 2)
-        grid_01.attach_next_to(button4, button3, Gtk.PositionType.RIGHT, 2, 1)
-        grid_01.attach(button5, 1, 2, 1, 1)
-        grid_01.attach(self.label, 0, 5, 2, 1)
+    
+        box2 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
+        #self.add(self.box2)
+        toolbar = Gtk.Toolbar()
+        selected_folder = "/home/pi/Desktop/deploy_classifier/my_audio"
+        open_btn = Gtk.ToolButton.new_from_stock(Gtk.STOCK_OPEN)
+        open_btn.connect("clicked", self.select_folder_clicked)
+        toolbar.insert(open_btn, 0)
+        save_btn = Gtk.ToolButton.new_from_stock(Gtk.STOCK_SAVE)
+        #save_btn.connect("clicked", self.on_save_clicked)
+        toolbar.insert(save_btn, 1)
+        box2.pack_start(toolbar, False, True, 0)
+
+        scrolledwindow = Gtk.ScrolledWindow()
+        scrolledwindow.set_hexpand(True)
+        #scrolledwindow.set_vexpand(False)
+        scrolledwindow.set_policy(
+            Gtk.PolicyType.NEVER, Gtk.PolicyType.NEVER)
+
+        self.textview = Gtk.TextView()
+        self.textbuffer = self.textview.get_buffer()
+        scrolledwindow.add(self.textview)
+        box2.pack_start(scrolledwindow, True, True, 0) 
+        
+        # button1 = Take dog for a walk.
+        # button2 = Drink another coffee.
+        # button3 = Shutdown the pi.
+        # button4 = Ignore.
+        # button5 = Threshold.
+        
+        grid_01.attach(box2, 0, 0, 2, 1)
+        grid_01.attach(button2, 0, 1, 1, 1)         # Drink another coffee
+        grid_01.attach_next_to(button3, button2, Gtk.PositionType.RIGHT, 1, 1)         # Shutdown the pi.
+
+        grid_01.attach(button5, 0, 2, 1, 1)         # Threshold
         grid_01.attach_next_to(self.spinbutton_01, button5, Gtk.PositionType.RIGHT, 1, 1)
+        grid_01.attach(self.label, 0, 3, 1, 1)
         
         grid_02.add(button7)
         grid_02.attach(button8, 0, 1, 1, 1)
@@ -115,7 +145,7 @@ class ButtonWindow(Gtk.Window):
 ##########################################################################
         hp1.add1(hbox)
         hp1.add2(grid_01)
-        hp1.set_position(300)   # Only max of 2 panes alloed.
+        hp1.set_position(300)   # Only max of 2 panes allowed.
 ##########################################################################       
         
         button9 = Gtk.Button.new_with_label("Play disc rog audio")
@@ -190,10 +220,11 @@ class ButtonWindow(Gtk.Window):
         
         self.label2 = Gtk.Label()
         self.label2.set_width_chars(60)
-        box1.pack_start(self.label2, True, True, 0)
+        box1.pack_start(self.label2, True, True, 0)   
 
         grid_05.add(box1)
-
+        #grid_05.attach(box2, 1, 1, 1, 1)
+        #grid_04.attach(stop_media_box, 1, 0, 1, 1)           # Stop
 #########################################################################   
         hp3.add1(grid_02)                          # Some random checkboxes
         hp3.add2(grid_05)                          # Display text file
@@ -205,14 +236,35 @@ class ButtonWindow(Gtk.Window):
 ##########################################################################    
         vp1.add1(hp1)                              # Check boxes and buttons
         vp1.add2(hp3)                              # Some random checkboxes and text box.
-        vp1.set_position(120)
+        vp1.set_position(160)
 ##########################################################################  
         vp2.add1(vp1) 
-        vp2.set_position(360)
+        vp2.set_position(350)
         vp2.add2(hp2)                             # Got logo and recording controls.
 ##########################################################################
         self.add(vp2)
 ##########################################################################
+        # selected_folder = "/home/pi/Desktop/deploy_classifier/my_audio"
+
+    def select_folder_clicked(self, widget):
+        # selected_folder = "/home/pi/Desktop/deploy_classifier/my_audio"
+        dialog = Gtk.FileChooserDialog("Please choose the folder containing your audio files", self,
+
+            Gtk.FileChooserAction.SELECT_FOLDER,
+            (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+             Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+
+        response = dialog.run()
+        # selected_folder = "/home/pi/Desktop/deploy_classifier/my_audio"
+        selected_folder = dialog.get_filename()
+        if response == Gtk.ResponseType.OK:
+            selected_folder = dialog.get_filename()
+            print(selected_folder)
+            self.textbuffer.set_text(selected_folder)
+        elif response == Gtk.ResponseType.CANCEL:
+            dialog.destroy()
+
+        dialog.destroy()
 
     def on_timeout_pulse(self, user_data):
         if self.activity_mode:
@@ -235,7 +287,18 @@ class ButtonWindow(Gtk.Window):
             os.remove(startFile)
             print("start file removed")
         print("stop file created !!")
-        f.close() 
+        f.close()
+
+    def shut_down_clicked(self, button):         # Shut down Pi.
+        print("shut down")
+        shutDownFile = "/home/pi/Desktop/deploy_classifier/helpers/shutDown.txt"
+        startFile = "/home/pi/Desktop/deploy_classifier/helpers/start.txt"
+        f= open(shutDownFile, "w+")
+        if os.path.isfile(startFile):
+            os.remove(startFile)
+            print("start file removed")
+        print("shut down file created !!")
+        f.close()
 
     def start(self, widget, event):    # Start box rather than image.
         stopFile = "/home/pi/Desktop/deploy_classifier/helpers/stop.txt"

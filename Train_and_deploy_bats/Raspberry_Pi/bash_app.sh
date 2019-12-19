@@ -17,7 +17,7 @@ cd /home/pi/Desktop/deploy_classifier/helpers/
 #rm stop.txt
 rm start.txt
 touch stop.txt
-rm running.txt
+rm shutDown.txt
 # touch running.txt                               # Create 'running.txt' to let other programs know that the script is running.
 # rm /home/pi/Desktop/deploy_classifier/temp/*
 rm /home/pi/Desktop/deploy_classifier/unknown_bat_audio/*
@@ -47,6 +47,13 @@ do
 	while [ -e "$1/home/pi/Desktop/deploy_classifier/helpers/stop.txt" ]; do     # This loop will block the classier and recorder whilst waiting for a 'stop.txt' file to appear in 'helpers' folder.
     echo "stop.txt file exists"
     sleep 2
+    if [ -e "$1/home/pi/Desktop/deploy_classifier/helpers/shutDown.txt" ]; then     # Waiting for a 'shutDown.txt' file to appear in 'helpers' folder.
+      echo "shutDown.txt file exists"
+      sleep 10
+      sudo halt
+      #sleep 200
+      #exit does not seem to work!
+    fi
 	done
   # counter=`cat /home/pi/Desktop/deploy_classifier/helpers/counter.txt`
   export iter=$counter
