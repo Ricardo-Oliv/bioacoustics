@@ -45,6 +45,7 @@ sudo apt-get install -y gir1.2-appindicator3-0.1
 #pip3 install pyaudio
 #sudo apt-get install python3-pyaudio
 #sudo apt-get install parallel
+pip3 install pyAudioAnalysis
 
 
 sudo apt-get install -y gfortran libreadline6-dev libx11-dev libxt-dev libpng-dev libjpeg-dev libcairo2-dev xvfb libcurl4-openssl-dev texinfo
