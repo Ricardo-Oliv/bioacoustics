@@ -47,6 +47,7 @@ sudo apt-get install -y gir1.2-appindicator3-0.1
 #sudo apt-get install parallel
 pip3 install pyAudioAnalysis
 pip3 install pydub
+pip3 install pathlib2
 
 
 sudo apt-get install -y gfortran libreadline6-dev libx11-dev libxt-dev libpng-dev libjpeg-dev libcairo2-dev xvfb libcurl4-openssl-dev texinfo
