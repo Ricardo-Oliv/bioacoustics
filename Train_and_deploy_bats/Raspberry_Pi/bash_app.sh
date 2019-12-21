@@ -86,7 +86,10 @@ do
     echo "Processing! ...."
     sleep 2
     cd /home/pi/Desktop/deploy_classifier/
-    python3 process_audio_files.py
+    python3 process_audio_files.py             # Adding a '&' to this causes lock up!
+    cd /home/pi/Desktop/deploy_classifier/helpers/
+    rm start.txt
+    touch stop.txt
   fi
   
 done

@@ -338,7 +338,7 @@ class ButtonWindow(Gtk.Window):
             if os.path.isfile(stopFile):
                 print("stopFile detected !!!!")
                 a = 1
-            else:                                      # There exists no stopFile.
+            elif textToggled == "record":                                                            # There exists no stopFile.
                 file = '/home/pi/Desktop/deploy_classifier/Final_result_copy.txt'
                 if os.path.isfile(file):
                     current_time = time.ctime(os.path.getctime("/home/pi/Desktop/deploy_classifier/Final_result_copy.txt"))
@@ -353,12 +353,20 @@ class ButtonWindow(Gtk.Window):
                         while line :
                             line = fp.readline()
                             line2 = re.sub('\ |\"|\!|\/|\;|\:', '', line)
-                            if cnt < 7:
+                            if cnt < 3:                                                 # was 7
                                 zzz = re.split(r'\t+', line2)
                                 line3 = zzz.pop(0) + " = " + zzz.pop(1)
                                 newText = newText + line3
                             cnt += 1
                     text = current_time + "\n" + newText
+                    fp.close()
+                    
+            elif textToggled == "process":                                                            # There exists no stopFile.
+                file = '/home/pi/Desktop/deploy_classifier/Final_result_copy.txt'
+                if os.path.isfile(file):
+                    with open(file, "r") as fp:
+                        text = fp.read()
+                    fp.close()
                     
                 else:
                     text = "Waiting for data ......"

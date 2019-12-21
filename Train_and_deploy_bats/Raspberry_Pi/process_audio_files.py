@@ -8,6 +8,7 @@ from pydub.utils import make_chunks
 import os
 import datetime
 import re
+import time
 
 # file = "/home/pi/Desktop/deploy_classifier/my_audio/noctula_Oct_31_2019_01.wav"
 file = "/home/pi/Desktop/deploy_classifier/my_audio/11_oct_2019_01.wav"                # 110 Mb
@@ -60,7 +61,6 @@ for file in os.listdir(directory):
 
             # Build subprocess command
             cmd = [command, path2script]
-
             x = subprocess.Popen(cmd).wait()
 
             # if Final_result.txt" exists ......
@@ -91,19 +91,18 @@ for file in os.listdir(directory):
                             newText = str(number) + "%_" + bat
                         cnt += 1
                 #print(newText)
+                fp.close()
 
                 Current_Date = datetime.datetime.today().strftime ('%d-%b-%Y-%H:%M:%S')
                 old_file = os.path.join(folder3, chunk_name)
                 new_file = os.path.join(folder2, newText + "_" + Current_Date)
                 os.rename(old_file, new_file)
-                
-
 
             else:
                 # print (i," Nothing detected")
                 detected = "Nothing detected"
                 newText = ""
-    
+
         #for i, chunk in enumerate(chunks):
             print("")
             # print(file_to_process)
@@ -113,14 +112,14 @@ for file in os.listdir(directory):
             # print(newText)
             message = filename + "\n" + "Processing: " + chunk_name + "\n" + detected  + "\n" + newText
             print(message)
+
             file = file3
             f= open(file, "w+")
             f.write(message)
             f.close()
 
-        #continue
-    #else:
-        #continue
+        #for i, chunk in enumerate(chunks):  finishes here.
+
 
 message = "Finished!" + "\n" + "Check out the 'processed_audio' folder for results."
 print("\n" + message)
@@ -128,3 +127,4 @@ file = file3
 f= open(file, "w+")
 f.write(message)
 f.close()
+time.sleep(5)         # Allows GUI to catch up.
