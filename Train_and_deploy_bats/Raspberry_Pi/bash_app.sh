@@ -7,6 +7,8 @@
 amixer sset PCM 100%
 aplay --device=hw:0,0 /home/pi/Desktop/deploy_classifier/alert_sounds/Go_for_Deploy.wav
 
+sudo chmod 775 /home/pi/Desktop/deploy_classifier/helpers/toggled_01.txt
+
 cd /home/pi/Desktop/deploy_classifier/
 rm Final_result.txt
 rm Final_result_copy.txt
@@ -44,7 +46,7 @@ f_main_loop ()
 counter=0
 until [ $counter -gt ${iterations} ]
 do
-	while [ -e "$1/home/pi/Desktop/deploy_classifier/helpers/stop.txt" ]; do     # This loop will block the classier and recorder whilst waiting for a 'stop.txt' file to appear in 'helpers' folder.
+	while [ -e "$1/home/pi/Desktop/deploy_classifier/helpers/stop.txt" ]; do     # This loop will block the classifier and recorder whilst waiting for a 'stop.txt' file to appear in 'helpers' folder.
     echo "stop.txt file exists"
     sleep 2
     if [ -e "$1/home/pi/Desktop/deploy_classifier/helpers/shutDown.txt" ]; then     # Waiting for a 'shutDown.txt' file to appear in 'helpers' folder.
@@ -55,25 +57,38 @@ do
       #exit does not seem to work!
     fi
 	done
-  # counter=`cat /home/pi/Desktop/deploy_classifier/helpers/counter.txt`
-  export iter=$counter
-  cd /home/pi/Desktop/deploy_classifier/
-  iter2=$((iter-2))
 
-  printf "${RED}Now recording iteration ${iter} audio: ${NC}\n"
-  taskset 0x2 arecord -f S16 -r 384000 -d ${chunk_time} -c 1 --device=plughw:r0,0 /home/pi/Desktop/deploy_classifier/temp/new_${iter}.wav &
-  wait
-  printf "${RED}Iteration ${iter} audio finished ${NC}\n"
-  # rm Final_result.txt
-  bat_detected=0
-  cd /home/pi/Desktop/deploy_classifier/
+  value=`cat /home/pi/Desktop/deploy_classifier/helpers/toggled_01.txt`      # Toggled options include 'record' and 'process'.
   
-  #printf "${GREEN}Counter before = ${counter} ${NC}\n"
-  counter=$((counter + 1))
-  #printf "${GREEN}Counter after = ${counter} ${NC}\n"
-  taskset 0x3 sh ./script_2.sh &
+  if [ "$value" == "record" ]; then
+    echo "Recording! ....."
+  
+    # counter=`cat /home/pi/Desktop/deploy_classifier/helpers/counter.txt`
+    export iter=$counter
+    cd /home/pi/Desktop/deploy_classifier/
+    iter2=$((iter-2))
 
-  # echo $counter > /home/pi/Desktop/deploy_classifier/helpers/counter.txt
+    printf "${RED}Now recording iteration ${iter} audio: ${NC}\n"
+    taskset 0x2 arecord -f S16 -r 384000 -d ${chunk_time} -c 1 --device=plughw:r0,0 /home/pi/Desktop/deploy_classifier/temp/new_${iter}.wav &
+    wait
+    printf "${RED}Iteration ${iter} audio finished ${NC}\n"
+    # rm Final_result.txt
+    bat_detected=0
+    cd /home/pi/Desktop/deploy_classifier/
+    
+    #printf "${GREEN}Counter before = ${counter} ${NC}\n"
+    counter=$((counter + 1))
+    #printf "${GREEN}Counter after = ${counter} ${NC}\n"
+    taskset 0x3 sh ./script_2.sh &
+
+    # echo $counter > /home/pi/Desktop/deploy_classifier/helpers/counter.txt
+  elif [ "$value" == "process" ]; then
+    echo "Processing! ...."
+    sleep 2
+    cd /home/pi/Desktop/deploy_classifier/
+    python3 process_audio_files.py
+  fi
+  
 done
 ############################################################ Loop end
 }

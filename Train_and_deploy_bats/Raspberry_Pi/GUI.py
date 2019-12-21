@@ -36,7 +36,13 @@ class ButtonWindow(Gtk.Window):
         grid_04.set_column_homogeneous(True)
         grid_04.set_column_spacing(10)
         
-######################################################################       
+######################################################################
+        name = "record"                                     # Set default to 'record'
+        file = "/home/pi/Desktop/deploy_classifier/helpers/toggled_01.txt"
+        f= open(file, "w+")                                 # Create the file toggled_01.txt
+        f.write(name)
+        f.close()
+        
         hbox = Gtk.Box(spacing=6)
         hbox.set_orientation(Gtk.Orientation.VERTICAL)
 
@@ -213,12 +219,11 @@ class ButtonWindow(Gtk.Window):
 
         self.label1 = Gtk.Label()
         self.label1.set_width_chars(60)
-        text2 = "Select the task required (on the left) \n"
-        text2 = text2 + "Select a folder location if processing old files (above) \n"
-        text2 = text2 + "Select a detect bat threshold (above) \n"
-        text2 = text2 + "Press the Start button (below)\n"
-        text2 = text2 + "Press the Stop button (below)\n"
-        text2 = text2 + "Press Shut down the Pi button (above) when finished \n"
+        file = '/home/pi/Desktop/deploy_classifier/instructions.txt'
+        if os.path.isfile(file):
+            with open(file) as fp:
+                text2 = fp.read()
+            fp.close()
         self.label1.set_text(text2)
         box1.pack_start(self.label1, True, True, 0)
         
@@ -269,6 +274,10 @@ class ButtonWindow(Gtk.Window):
         if response == Gtk.ResponseType.OK:
             selected_folder = dialog.get_filename()
             print(selected_folder)
+            file = "/home/pi/Desktop/deploy_classifier/helpers/audio_files_path.txt"
+            f= open(file, "w+")                         # Create the file audio_files_path.txt
+            f.write(selected_folder)
+            f.close()
             self.textbuffer.set_text(selected_folder)
         elif response == Gtk.ResponseType.CANCEL:
             dialog.destroy()
@@ -310,6 +319,13 @@ class ButtonWindow(Gtk.Window):
         f.close()
 
     def start(self, widget, event):    # Start box rather than image.
+        
+        file = "/home/pi/Desktop/deploy_classifier/helpers/toggled_01.txt"
+        with open(file) as fp:
+            textToggled = fp.read()
+        fp.close()
+        print(textToggled)
+        
         stopFile = "/home/pi/Desktop/deploy_classifier/helpers/stop.txt"
         startFile = "/home/pi/Desktop/deploy_classifier/helpers/start.txt"
         f= open(startFile, "w+")     # Create the file start.txt
@@ -325,54 +341,32 @@ class ButtonWindow(Gtk.Window):
             else:                                      # There exists no stopFile.
                 file = '/home/pi/Desktop/deploy_classifier/Final_result_copy.txt'
                 if os.path.isfile(file):
-                    #print("Last modified: %s" % time.ctime(os.path.getmtime("/home/pi/Desktop/deploy_classifier/Final_result_copy.txt")))
-                    #print("Created: %s" % time.ctime(os.path.getctime("/home/pi/Desktop/deploy_classifier/Final_result_copy.txt")))
-                    #now = datetime.now()
-                    # current_time = now.strftime("%H:%M:%S")
                     current_time = time.ctime(os.path.getctime("/home/pi/Desktop/deploy_classifier/Final_result_copy.txt"))
-                    # print ("File exists")
-                    # readText = open(file).read()
-                    # text = re.sub('\ |\"|\.|\!|\/|\;|\:', '', readText)
-                    # print (text)
                     newText = ""
                     line2 = ""
                     line3 = ""
                     zzz = ""
                     lines = 0
                     with open(file) as fp:
-                        # for i, l in enumerate(fp):
-                            # pass
-                            # lines = lines + 1
-                        # print(lines)
                         line = fp.readline()
                         cnt = 1
                         while line :
                             line = fp.readline()
                             line2 = re.sub('\ |\"|\!|\/|\;|\:', '', line)
                             if cnt < 7:
-                                # strs = "foo\tbar\t\tspam"
                                 zzz = re.split(r'\t+', line2)
-                                # print(zzz)
-                                # print(zzz.pop(0))
                                 line3 = zzz.pop(0) + " = " + zzz.pop(1)
-                                # print(line3)
-                                # print(cnt)
-                                # print("Line {}: {}".format(cnt, line.strip()))
-                                
                                 newText = newText + line3
                             cnt += 1
-                    #batTime = "12:32"
-                    #print("Current Time =", current_time)
                     text = current_time + "\n" + newText
                     
                 else:
-                    # print ("File not exist")
                     text = "Waiting for data ......"
                 waittime=1
                 num=rd.randint(1,60)
                 text2 = ""
                 for i in range(num):
-                    text2 = text2 + "*"
+                    text2 = text2 + "*"                 # A random series of characters as a progress indicator.
                 self.label1.set_text(text2)
                 self.label2.set_text(text)
                 while Gtk.events_pending():
@@ -390,7 +384,12 @@ class ButtonWindow(Gtk.Window):
 
     # callback function: the signal of the spinbutton is used to change the text of the label
     def spin_selected(self, event):
-        self.label.set_text("Threshold value selected is: " + str(self.spinbutton_01.get_value_as_int()) + ".")
+        value = str(self.spinbutton_01.get_value_as_int())
+        self.label.set_text("Threshold value selected is: " + value + ".")
+        file = "/home/pi/Desktop/deploy_classifier/helpers/threshold.txt"
+        f= open(file, "w+")                                 # Create the file threshold.txt
+        f.write(value)
+        f.close()
 
 
     def on_click_me_clicked(self, button):
@@ -407,10 +406,6 @@ class ButtonWindow(Gtk.Window):
         print("Stopping application")
         os.system(exit)
         #os.system(return [n])
-        
-    #def on_close_clicked(self, button):
-        #print("Closing application")
-        #Gtk.main_quit()
 
     def on_numeric_toggled(self, button):
         self.spinbutton_01.set_numeric(button.get_active())
@@ -458,6 +453,10 @@ class ButtonWindow(Gtk.Window):
         else:
             state = "off"
         print("Button", name, "was turned", state)
+        file = "/home/pi/Desktop/deploy_classifier/helpers/toggled_01.txt"
+        f= open(file, "w+")                                 # Create the file toggled_01.txt
+        f.write(name)
+        f.close()
         
     def set_style_text(self, checkbutton):
         start, end = textbuffer.get_bounds()
