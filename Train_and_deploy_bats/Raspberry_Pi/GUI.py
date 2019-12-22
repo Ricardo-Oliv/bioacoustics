@@ -36,7 +36,55 @@ class ButtonWindow(Gtk.Window):
         grid_04.set_column_homogeneous(True)
         grid_04.set_column_spacing(10)
         
-######################################################################
+###########################################################################
+
+        vboxCombo = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+        
+        self.set_border_width(10)
+
+        name_store1 = Gtk.ListStore(int, str)
+        name_store1.append([1, "UK_Bats"])
+        name_store1.append([11, "Rodents"])
+        name_store1.append([12, "Mechanical_Bearings"])
+        
+        name_store2 = Gtk.ListStore(int, str)
+        name_store2.append([21, "Level1:_Species"])
+        name_store2.append([31, "Level2:_Genera"])
+        name_store2.append([22, "Level3:_Order"])
+        name_store2.append([23, "Bicycle_Wheel"])
+        
+        name_store3 = Gtk.ListStore(int, str)
+        name_store3.append([41, "All_Calls"])
+        name_store3.append([42, "Echolocation_Only"])
+        name_store3.append([43, "Socials_Only"])
+        name_store3.append([44, "NULL"])
+
+        name_combo1 = Gtk.ComboBox.new_with_model_and_entry(name_store1)
+        name_combo1.connect("changed", self.on_name_combo1_changed)
+        name_combo1.set_entry_text_column(1)
+        vboxCombo.pack_start(name_combo1, False, False, 0)
+        
+        name_combo2 = Gtk.ComboBox.new_with_model_and_entry(name_store2)
+        name_combo2.connect("changed", self.on_name_combo2_changed)
+        name_combo2.set_entry_text_column(1)
+        vboxCombo.pack_start(name_combo2, False, False, 0)
+        
+        name_combo3 = Gtk.ComboBox.new_with_model_and_entry(name_store3)
+        name_combo3.connect("changed", self.on_name_combo3_changed)
+        name_combo3.set_entry_text_column(1)
+        vboxCombo.pack_start(name_combo3, False, False, 0)
+
+        name_combo1.set_active(0)
+        name_combo2.set_active(0)
+        name_combo3.set_active(0)
+        
+        name = "UK_Bats" + "\n" + "Level1:_Species" + "\n" + "All_Calls"                   # Set defaults
+        file = "/home/pi/Desktop/deploy_classifier/helpers/combo_01.txt"
+        f= open(file, "w+")                                 # Create the file combo_01.txt
+        f.write(name)
+        f.close()
+
+###########################################################################
         name = "record"                                     # Set default to 'record'
         file = "/home/pi/Desktop/deploy_classifier/helpers/toggled_01.txt"
         f= open(file, "w+")                                 # Create the file toggled_01.txt
@@ -240,7 +288,9 @@ class ButtonWindow(Gtk.Window):
         #grid_05.attach(box2, 1, 1, 1, 1)
         #grid_04.attach(stop_media_box, 1, 0, 1, 1)           # Stop
 #########################################################################   
-        hp3.add1(grid_02)                          # Some random checkboxes
+        # hp3.add1(grid_02)                          # Some random checkboxes
+        # self.add(vboxCombo)
+        hp3.add1(vboxCombo) 
         hp3.add2(grid_05)                          # Display text file
         hp3.set_position(200)
 ##########################################################################
@@ -259,6 +309,46 @@ class ButtonWindow(Gtk.Window):
         self.add(vp2)
 ##########################################################################
         # selected_folder = "/home/pi/Desktop/deploy_classifier/my_audio"
+    
+    def replace_line(self, file_name, line_num, text):
+        lines = open(file_name, 'r').readlines()
+        lines[line_num] = text
+        out = open(file_name, 'w')
+        out.writelines(lines)
+        out.close()
+        
+    def on_name_combo1_changed(self, combo):
+        tree_iter = combo.get_active_iter()
+        if tree_iter is not None:
+            model = combo.get_model()
+            row_id, name = model[tree_iter][:2]
+            print("Selected: ID=%d, name=%s" % (row_id, name))
+            self.replace_line('/home/pi/Desktop/deploy_classifier/helpers/combo_01.txt', 0, name + '\n')
+        else:
+            entry = combo.get_child()
+            print("Entered: %s" % entry.get_text())
+            
+    def on_name_combo2_changed(self, combo):
+        tree_iter = combo.get_active_iter()
+        if tree_iter is not None:
+            model = combo.get_model()
+            row_id, name = model[tree_iter][:2]
+            print("Selected: ID=%d, name=%s" % (row_id, name))
+            self.replace_line('/home/pi/Desktop/deploy_classifier/helpers/combo_01.txt', 1, name + '\n')
+        else:
+            entry = combo.get_child()
+            print("Entered: %s" % entry.get_text())
+
+    def on_name_combo3_changed(self, combo):
+        tree_iter = combo.get_active_iter()
+        if tree_iter is not None:
+            model = combo.get_model()
+            row_id, name = model[tree_iter][:2]
+            print("Selected: ID=%d, name=%s" % (row_id, name))
+            self.replace_line('/home/pi/Desktop/deploy_classifier/helpers/combo_01.txt', 2, name + '\n')
+        else:
+            entry = combo.get_child()
+            print("Entered: %s" % entry.get_text())
 
     def select_folder_clicked(self, widget):
         # selected_folder = "/home/pi/Desktop/deploy_classifier/my_audio"
@@ -353,13 +443,26 @@ class ButtonWindow(Gtk.Window):
                         while line :
                             line = fp.readline()
                             line2 = re.sub('\ |\"|\!|\/|\;|\:', '', line)
-                            if cnt < 3:                                                 # was 7
+                            if cnt < 7:                                                 # was 7
                                 zzz = re.split(r'\t+', line2)
                                 line3 = zzz.pop(0) + " = " + zzz.pop(1)
                                 newText = newText + line3
                             cnt += 1
                     text = current_time + "\n" + newText
                     fp.close()
+                    
+                else:
+                    text = "Waiting for data ......"
+                waittime=1
+                num=rd.randint(1,60)
+                text2 = ""
+                for i in range(num):
+                    text2 = text2 + "*"                 # A random series of characters as a progress indicator.
+                self.label1.set_text(text2)
+                self.label2.set_text(text)
+                while Gtk.events_pending():
+                    Gtk.main_iteration()
+                t.sleep(waittime)
                     
             elif textToggled == "process":                                                            # There exists no stopFile.
                 file = '/home/pi/Desktop/deploy_classifier/Final_result_copy.txt'
@@ -476,12 +579,6 @@ class ButtonWindow(Gtk.Window):
             
     def set_wrap_mode(self, radiobutton, wrap_mode):
         textview.set_wrap_mode(wrap_mode)
-        
-def test88():
-    print("test88")
-    return 1
-
-# test88()
     
 win = ButtonWindow()
 win.set_position(Gtk.WindowPosition.CENTER)
