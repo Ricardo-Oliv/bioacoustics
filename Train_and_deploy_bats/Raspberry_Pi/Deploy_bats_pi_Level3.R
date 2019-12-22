@@ -75,26 +75,8 @@ test_file <- readRDS('rf_c_pip.rds')
 # print("Is the unknown wav a c_pip?")
 # head(predict(test_file , Event_data_test[,-1], type = "prob"))
 
-rf_c_pip_file <- readRDS('rf_c_pip.rds')
-rf_s_pip_file <- readRDS('rf_s_pip.rds')
-rf_nattereri_file <- readRDS('rf_nattereri.rds')
-rf_noctula_file <- readRDS('rf_noctula.rds')
-rf_plecotus_file <- readRDS('rf_plecotus.rds')
-rf_rhino_hippo_file <- readRDS('rf_rhino_hippo.rds')
+rf_bats_file <- readRDS('rf_bats.rds')
 rf_house_keys_file <- readRDS('rf_house_keys.rds')
-
-#######################################################################################
-# Let's consolidate the data a bit:
-# Create a matrix of prediction results for Class_01, (Nattereri = True)
-matrix_01 <- predict(rf_nattereri_file , Event_data_test[,-1], type = "prob")
-# matrix_01
-# print("Is the unknown wav a nattereri?")
-# colMeans(matrix_01)
-
-matrix_02 <- predict(rf_c_pip_file , Event_data_test[,-1], type = "prob")
-# matrix_02
-# print("Is the unknown wav a c_pip?")
-# colMeans(matrix_02)
 
 #################################################################################
 # Let's consolidate all the output data:
@@ -111,28 +93,13 @@ HOUSE_KEYS <- consolidate_results(rf_house_keys_file)
 # HOUSE_KEYS
 
 # "Is the unknown wav a c_pip?"
-C_PIP <- consolidate_results(rf_c_pip_file)
+BATS <- consolidate_results(rf_bats_file)
 # C_PIP
-# "Is the unknown wav a s_pip?"
-S_PIP <- consolidate_results(rf_s_pip_file)
-# S_PIP
-# "Is the unknown wav a nattereri?"
-NATTERERI <- consolidate_results(rf_nattereri_file)
-# NATTERERI
-# "Is the unknown wav a noctula?"
-NOCTULA <- consolidate_results(rf_noctula_file)
-# NOCTULA
-# "Is the unknown wav a plecotus?"
-PLECOTUS <- consolidate_results(rf_plecotus_file)
-# PLECOTUS
 
-# "Is the unknown wav a rhino_hippo?"
-RHINO_HIPPO <- consolidate_results(rf_rhino_hippo_file)
-# RHINO_HIPPO
 
 # The matrices are of type "double", object of class "c('matrix', 'double', 'numeric')"
 
-penultimate <- rbind(C_PIP, S_PIP, NATTERERI, NOCTULA, PLECOTUS, RHINO_HIPPO, HOUSE_KEYS)
+penultimate <- rbind(BATS, HOUSE_KEYS)
 
 Final_result <- penultimate[order(penultimate[,1], decreasing = FALSE),]
 print(Final_result)

@@ -21,9 +21,63 @@ folder4 = "/home/pi/Desktop/deploy_classifier/my_audio"
 
 # Define command and arguments
 command = 'Rscript'
-path2script = '/home/pi/Desktop/deploy_classifier/Deploy_bats_pi.R'
+
 
 directory = os.fsencode("/home/pi/Desktop/deploy_classifier/my_audio")
+
+
+file4='/home/pi/Desktop/deploy_classifier/helpers/combo_01.txt'
+
+n = 1
+line = [1, 2, 3, 4, 5]
+
+f = open(file4)
+
+while True:
+    # read line
+    x = f.readline()
+    line[n] = x
+    n = n + 1
+    # print(x)
+    # check if line is not empty
+    if not x:
+        break
+f.close()
+
+if (line[1] == "UK_Bats\n"):
+	print ("UK_Bats was selected")
+elif (line[1] == "Rodents\n" ):
+	print ("Rodents was selected")
+elif (line[1] == "Mechanical_Bearings"):
+	print ("Mechanical_Bearings was selected")
+
+if (line[2] == "Level1:_Species\n"):
+	print ("Level1:_Species was selected")
+elif (line[2] == "Level2:_Genera\n" ):
+	print ("Level2:_Genera was selected")
+elif (line[2] == "Level3:_Order\n"):
+	print("Level3:_Order was selected")
+elif (line[2] == "Bicycle_Wheel\n" ):
+	print ("Bicycle_Wheel was selected")
+
+if (line[3] ==  "All_Calls"):
+	print("All_Calls was selected")
+elif (line[3] == "Echolocation_Only" ):
+	print("Echolocation was selected")
+elif (line[3] == "Socials_Only" ):
+	print("Socials was selected")
+elif (line[3] == "NULL" ):
+	print("NULL was selected")
+
+if ((line[1] == "UK_Bats\n") and (line[2] == "Level1:_Species\n")):
+	path2script = '/home/pi/Desktop/deploy_classifier/Deploy_bats_pi.R'
+	print ("Level 1 was deployed")
+elif ((line[1] == "UK_Bats\n" ) and (line[2] == "Level3:_Order\n" )):
+	path2script = '/home/pi/Desktop/deploy_classifier/Deploy_bats_pi_Level3.R'
+	print ("Level 3 was deployed")
+else:
+	print ("No valid combo box selection was made")
+
 
 print("Starting .....")
 

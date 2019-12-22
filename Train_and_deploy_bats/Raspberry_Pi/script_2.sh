@@ -64,8 +64,12 @@ elif [ ${result} = "NULL" ]; then
 fi
 choice3=$result
 
-if [ ${choice1} = "UK_Bats" ]; then
+if [ ${choice1} = "UK_Bats" ] && [ ${choice2} = "Level1:_Species" ]; then
   Rscript Deploy_bats_pi.R
+  echo "Level 1 was deployed"
+elif [ ${choice1} = "UK_Bats" ] && [ ${choice2} = "Level3:_Order" ]; then
+  Deploy_bats_pi_Level3.R
+  echo "Level 3 was deployed"
 else
   echo "No valid combo box selection was made"
   sleep 5
