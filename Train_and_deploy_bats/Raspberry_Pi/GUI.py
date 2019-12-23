@@ -443,7 +443,7 @@ class ButtonWindow(Gtk.Window):
                         while line :
                             line = fp.readline()
                             line2 = re.sub('\ |\"|\!|\/|\;|\:', '', line)
-                            if cnt < 7:                                                 # was 7
+                            if cnt < 5:                                                 # was 7
                                 zzz = re.split(r'\t+', line2)
                                 line3 = zzz.pop(0) + " = " + zzz.pop(1)
                                 newText = newText + line3

@@ -72,6 +72,9 @@ elif (line[3] == "NULL" ):
 if ((line[1] == "UK_Bats\n") and (line[2] == "Level1:_Species\n")):
 	path2script = '/home/pi/Desktop/deploy_classifier/Deploy_bats_pi.R'
 	print ("Level 1 was deployed")
+elif ((line[1] == "UK_Bats\n" ) and (line[2] == "Level2:_Genera\n" )):
+	path2script = '/home/pi/Desktop/deploy_classifier/Deploy_bats_pi_Level2.R'
+	print ("Level 2 was deployed")
 elif ((line[1] == "UK_Bats\n" ) and (line[2] == "Level3:_Order\n" )):
 	path2script = '/home/pi/Desktop/deploy_classifier/Deploy_bats_pi_Level3.R'
 	print ("Level 3 was deployed")

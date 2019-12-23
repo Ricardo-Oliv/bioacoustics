@@ -75,6 +75,8 @@ test_file <- readRDS('rf_c_pip.rds')
 # print("Is the unknown wav a c_pip?")
 # head(predict(test_file , Event_data_test[,-1], type = "prob"))
 
+rf_rodent_file <- readRDS('rf_rodent.rds')
+rf_cricket_file <- readRDS('rf_cricket.rds')
 rf_bats_file <- readRDS('rf_bats.rds')
 rf_house_keys_file <- readRDS('rf_house_keys.rds')
 
@@ -92,14 +94,13 @@ consolidate_results <- function(rf)
 HOUSE_KEYS <- consolidate_results(rf_house_keys_file)
 # HOUSE_KEYS
 
-# "Is the unknown wav a c_pip?"
-BATS <- consolidate_results(rf_bats_file)
-# C_PIP
-
+BAT <- consolidate_results(rf_bats_file)
+CRICKET <- consolidate_results(rf_cricket_file)
+RODENT <- consolidate_results(rf_rodent_file)
 
 # The matrices are of type "double", object of class "c('matrix', 'double', 'numeric')"
 
-penultimate <- rbind(BATS, HOUSE_KEYS)
+penultimate <- rbind(BAT, HOUSE_KEYS, RODENT, CRICKET)
 
 Final_result <- penultimate[order(penultimate[,1], decreasing = FALSE),]
 print(Final_result)
