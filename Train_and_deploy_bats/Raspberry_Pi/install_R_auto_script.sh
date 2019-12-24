@@ -49,6 +49,11 @@ pip3 install pyAudioAnalysis
 pip3 install pydub
 pip3 install pathlib2
 
+git clone https://github.com/tyiannak/pyAudioAnalysis.git
+cd /home/pi/pyAudioAnalysis
+pip3 install -r ./requirements.txt
+pip3 install -e .
+
 
 sudo apt-get install -y gfortran libreadline6-dev libx11-dev libxt-dev libpng-dev libjpeg-dev libcairo2-dev xvfb libcurl4-openssl-dev texinfo
 
