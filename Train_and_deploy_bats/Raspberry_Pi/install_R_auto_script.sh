@@ -45,28 +45,28 @@ sudo apt-get install -y gir1.2-appindicator3-0.1
 #pip3 install pyaudio
 #sudo apt-get install python3-pyaudio
 #sudo apt-get install parallel
-pip3 install pyAudioAnalysis
+#pip3 install pyAudioAnalysis
 pip3 install pydub
 pip3 install pathlib2
 
 sudo apt-get install python-dev libatlas-base-dev
 pip3 install numpy
 pip3 install matplotlib
-# sudo pip3 install --upgrade matplotlib
+#sudo pip3 install --upgrade matplotlib
 
 sudo apt install -y python3-scipy
-# pip3 install scipy
+#pip3 install scipy
 
-pip3 install sklearn
-pip3 install hmmlearn
-pip3 install simplejson
-pip3 install eyed3
+# pip3 install sklearn
+#pip3 install hmmlearn
+#pip3 install simplejson
+#pip3 install eyed3
 # The script eyeD3 is installed in '/home/pi/.local/bin' which is not on PATH.
 
-git clone https://github.com/tyiannak/pyAudioAnalysis.git
-cd /home/pi/pyAudioAnalysis
-# pip3 install -r ./requirements.txt
-pip3 install -e .
+#git clone https://github.com/tyiannak/pyAudioAnalysis.git
+#cd /home/pi/pyAudioAnalysis
+#pip3 install -r ./requirements.txt
+#pip3 install -e .
 
 
 sudo apt-get install -y gfortran libreadline6-dev libx11-dev libxt-dev libpng-dev libjpeg-dev libcairo2-dev xvfb libcurl4-openssl-dev texinfo
