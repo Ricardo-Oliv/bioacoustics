@@ -9,6 +9,7 @@ import os.path
 import re
 from datetime import datetime
 import os.path, time
+from subprocess import call
 
 
 gi.require_version('Gtk', '3.0')
@@ -116,7 +117,7 @@ class ButtonWindow(Gtk.Window):
         button1 = Gtk.Button.new_with_label("Take dog for a walk")
         button1.connect("clicked", self.on_click_me_clicked)
 
-        button2 = Gtk.Button.new_with_mnemonic("_Drink another coffee")
+        button2 = Gtk.Button.new_with_mnemonic("_Close the App")
         button2.connect("clicked", self.on_open_clicked)
 
         button3 = Gtk.Button.new_with_mnemonic("_Shut down the Pi")
@@ -159,6 +160,7 @@ class ButtonWindow(Gtk.Window):
         #self.add(self.box2)
         toolbar = Gtk.Toolbar()
         selected_folder = "/home/pi/Desktop/deploy_classifier/my_audio"
+        #         name_combo3.set_active(0)
         open_btn = Gtk.ToolButton.new_from_stock(Gtk.STOCK_OPEN)
         open_btn.connect("clicked", self.select_folder_clicked)
         toolbar.insert(open_btn, 0)
@@ -508,10 +510,34 @@ class ButtonWindow(Gtk.Window):
         file = "/home/pi/Desktop/deploy_classifier/alert_sounds/Go_for_Deploy.wav"
         os.system("aplay " + file)
 
-    def on_open_clicked(self, button):
+    def on_open_clicked(self, button):                                        # Close / restart the app
         print("\"Open\" button was clicked")
-        file = "/home/pi/Desktop/deploy_classifier/bash_app"
-        os.system("bash " + file)
+        # file = "/home/pi/Desktop/deploy_classifier/bash_app"
+        
+        # os.chdir("/home/pi/Desktop/deploy_classifier")
+        call('./close_the_app.sh', shell=True)
+        # call('echo "I like potatos"', shell=True)
+		# rc = call("./restart_the_app.sh", shell=True)
+        
+        # rc = call("./home/pi/Desktop/deploy_classifier/restart_the_app.sh", shell=True)
+        # os.system("bash " + cd /home/pi/Desktop/deploy_classifier/ && bash restart_the_app.sh)
+# cd /home/pi/Desktop/deploy_classifier/ && sudo chmod 775 restart_the_app.sh
+# killall -ir example.jar   # run.sh
+# killall -ir run.sh	
+# the options:
+# -i : interactive (asks confirmation for each process whether or not to kill it)
+# -r : allows you to specify a regex. killall will try to kill all matching.
+
+#pi        1759  4.2  0.6  85668 27600 ?        Sl   15:25   0:00 x-terminal-emulator -e /home/pi/Desktop/deploy_classifier/run.sh
+#pi        1765  0.0  0.0   7676  2536 pts/1    Ss+  15:25   0:00 /bin/bash /home/pi/Desktop/deploy_classifier/run.sh
+#pi        1766  0.0  0.0   7676  2808 pts/1    S+   15:25   0:00 bash ./bash_app.sh
+#pi        1767  4.4  1.0 129072 40520 pts/1    Sl+  15:25   0:00 python GUI.py $
+#root      1779  0.0  0.0      0     0 ?        I<   15:26   0:00 [kworker/3:0H]
+#pi        1796  0.0  0.0   7676  2100 pts/1    S+   15:26   0:00 bash ./bash_app.sh
+#pi        1797  0.8  0.0   8408  2524 pts/1    S+   15:26   0:00 arecord -f S16 -r 384000 -d 20 -c 1 --device=plughw:r0,0 /home/pi/Desktop/deploy_classifier/temp/new_.wav
+#pi        1806  1.2  0.0   8516  3588 pts/2    Ss   15:26   0:00 bash
+#pi        1812  0.0  0.0   6456   336 pts/1    S+   15:26   0:00 sleep 2
+
 
     def on_close_clicked(self, button):
         print("Stopping application")

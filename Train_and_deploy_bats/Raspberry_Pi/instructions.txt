@@ -1,0 +1,7 @@
+Select the task required (on the top left).
+Select a folder location if processing old files (above). Default is: 'my_audio'.
+Select a detect bat threshold (above). Default is: 50.
+Select levels of detail eg species (left). Default is: UK_Bats, species, All_calls.
+Press the Start button (below).
+Press the Stop button (below).
+Press Shut down the Pi button (above) when finished.
