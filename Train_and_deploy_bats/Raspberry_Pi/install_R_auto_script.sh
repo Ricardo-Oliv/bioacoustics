@@ -51,8 +51,8 @@ pip3 install pathlib2
 
 sudo apt-get install python-dev libatlas-base-dev
 pip3 install numpy
-pip3 install matplotlib==1.5.3
-sudo pip install --upgrade matplotlib
+pip3 install matplotlib
+# sudo pip3 install --upgrade matplotlib
 
 sudo apt install -y python3-scipy
 # pip3 install scipy
