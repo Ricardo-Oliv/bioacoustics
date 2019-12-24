@@ -49,14 +49,18 @@ pip3 install pyAudioAnalysis
 pip3 install pydub
 pip3 install pathlib2
 
+sudo apt-get install python-dev libatlas-base-dev
 pip3 install numpy
 pip3 install matplotlib==1.5.3
-pip3 install scipy
+
+sudo apt install -y python3-scipy
+# pip3 install scipy
+
 pip3 install sklearn
 pip3 install hmmlearn
 pip3 install simplejson
 pip3 install eyed3
-
+# The script eyeD3 is installed in '/home/pi/.local/bin' which is not on PATH.
 
 git clone https://github.com/tyiannak/pyAudioAnalysis.git
 cd /home/pi/pyAudioAnalysis
