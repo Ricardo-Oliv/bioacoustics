@@ -13,8 +13,15 @@ sox new_${iter}.wav filtered.wav highpass 1k # highpass 15k highpass 15k highpas
 cp filtered.wav /home/pi/Desktop/deploy_classifier/unknown_bat_audio/
 cd /home/pi/Desktop/deploy_classifier/
 
-python3 create_spectogram.py
-
+# Create spectogram:
+##############################################################################
+value2=`cat /home/pi/Desktop/deploy_classifier/helpers/toggled_02.txt`      # Toggled options include 'record' and 'process'.
+echo "Value2 = "$value2
+if [ ${value2} = "spectogram" ]; then
+  echo "Spectogram now being created:....."
+  python3 create_spectogram.py &
+fi
+##############################################################################
 # echo $(($(date +%s%N)/1000000))
 printf "${BLUE}Now run iteration ${iter} classifier: ${NC}\n"
 
@@ -67,17 +74,20 @@ elif [ ${result} = "NULL" ]; then
 fi
 choice3=$result
 
-if [ ${choice1} = "UK_Bats" ] && [ ${choice2} = "Level1:_Species" ]; then
+# && [ ${value2} = "text" ]                                   # This can be "text" or "spectogram"
+# if [ ${value2} = "spectogram" ]; then
+
+if [ ${choice1} = "UK_Bats" ] && [ ${choice2} = "Level1:_Species" ] && [ ${value2} = "text" ]; then
   Rscript Deploy_bats_pi.R
   echo "Level 1 was deployed"
-elif [ ${choice1} = "UK_Bats" ] && [ ${choice2} = "Level2:_Genera" ]; then
+elif [ ${choice1} = "UK_Bats" ] && [ ${choice2} = "Level2:_Genera" ] && [ ${value2} = "text" ]; then
   Rscript Deploy_bats_pi_Level2.R
   echo "Level 2 was deployed"
-elif [ ${choice1} = "UK_Bats" ] && [ ${choice2} = "Level3:_Order" ]; then
+elif [ ${choice1} = "UK_Bats" ] && [ ${choice2} = "Level3:_Order" ] && [ ${value2} = "text" ]; then
   Rscript Deploy_bats_pi_Level3.R
   echo "Level 3 was deployed"
 else
-  echo "No valid combo box selection was made"
+  echo "No valid combo box selection was made, or spectogram was selected"
   sleep 5
 fi
 

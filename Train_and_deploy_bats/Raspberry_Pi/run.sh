@@ -4,8 +4,6 @@
 cd /home/pi/Desktop/deploy_classifier/
 echo "Hello !!!"
 
-
-
 # The following loop looks for a restart.txt file to exist and then restarts run.sh if it does exist.
 # This is here to enable the GUI to change Gtk boxes etc in the vertical or horixontal panes etc.
 f_main_loop ()
@@ -21,6 +19,14 @@ do
     # pkill -9 -x $process_name
     # ./$(basename $0) && exit
     kill $(pgrep -f 'GUI.py')
+    sleep 4
+    # wait
+    # python GUI.py &
+    # trap 'pkill -P $$' SIGINT SIGTERM                         # Is this still in memory somehow?
+    # for i in {1..10}; do
+      # sleep 10 &
+    # done
+    # wait
   else 
     echo "restart.txt file does not exist"
     echo "base name = " $(basename $0)
@@ -29,9 +35,9 @@ do
 done
 }
 
-f_main_loop &
 bash ./bash_app.sh &
-python GUI.py $
+python GUI.py &
+# f_main_loop &
 
 
 # ps -u pi       # Use this to see what shells are running under user = pi.
@@ -42,6 +48,12 @@ python GUI.py $
 # ps -o ppid,cmd -U pi | grep 'run.sh\|PID'
 # ps -o pid,cmd -U pi | grep 'run.sh\|PID'
 # kill $(pgrep -f 'GUI.py')
+
+# trap 'pkill -P $$' SIGINT SIGTERM
+# for i in {1..10}; do
+   # sleep 10 &
+# done
+# wait
 
 # ppid = parent process id
 

@@ -126,7 +126,7 @@ class ButtonWindow(Gtk.Window):
         button1 = Gtk.Button.new_with_label("Take dog for a walk")
         button1.connect("clicked", self.on_click_me_clicked)
 
-        button2 = Gtk.Button.new_with_mnemonic("_Close the App")
+        button2 = Gtk.Button.new_with_mnemonic("_Restart the App_1")               ## Restart the app. Working if desktop icon not clicked.
         button2.connect("clicked", self.on_open_clicked)
 
         button3 = Gtk.Button.new_with_mnemonic("_Shut down the Pi")
@@ -135,7 +135,7 @@ class ButtonWindow(Gtk.Window):
         button4 = Gtk.Button.new_with_mnemonic("_Ignore")
         button4.connect("clicked", self.on_close_clicked)
 
-        button5 = Gtk.Button.new_with_mnemonic("_Restart the app")
+        button5 = Gtk.Button.new_with_mnemonic("_Restart the app_2")               ## Restart the app - not working !!!!!
         button5.connect("clicked", self.restart_clicked)
         
         button6 = Gtk.Button.new_with_mnemonic("_Something Else")
@@ -386,7 +386,7 @@ class ButtonWindow(Gtk.Window):
 ########################################################################################################################
     def on_close_clicked(self, button):
         print("Stopping application")
-        os.system(exit)
+        os.system(exit)                                                         # This is NOT close the app!!!
         #os.system(return [n])
 
     def editPixbuf(self, button):
@@ -596,7 +596,7 @@ class ButtonWindow(Gtk.Window):
                 num=rd.randint(1,60)
                 # print(num)
                 print("Trying to update spectogram: ....... ",num)
-                waittime=1
+                waittime=6
                 file = '/home/pi/Desktop/deploy_classifier/images/spectograms/specto.png'
                 if os.path.isfile(file):
 					print("We found a spectogram: ....... ",num)
@@ -650,11 +650,11 @@ class ButtonWindow(Gtk.Window):
         print("\"Click me\" button was clicked")
         file = "/home/pi/Desktop/deploy_classifier/alert_sounds/Go_for_Deploy.wav"
         os.system("aplay " + file)
-
+#####################################################################################################################################################################
     def on_open_clicked(self, button):                                        # Close / restart the app
         print("\"Open\" button was clicked")
-        call('./close_the_app.sh', shell=True)
-
+        call('./close_the_app.sh', shell=True)                                # This seems to be working as long as desktop icon is not clicked."Close_the_app.sh"
+#####################################################################################################################################################################
     def on_numeric_toggled(self, button):
         self.spinbutton_01.set_numeric(button.get_active())
         print("Numeric")
