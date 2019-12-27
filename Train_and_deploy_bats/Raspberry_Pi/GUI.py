@@ -38,6 +38,7 @@ class ButtonWindow(Gtk.Window):
         grid_04 = Gtk.Grid()
         grid_04.set_column_homogeneous(True)
         grid_04.set_column_spacing(10)
+        grid_05 = Gtk.Grid()
         
 ###########################################################################
 
@@ -92,13 +93,15 @@ class ButtonWindow(Gtk.Window):
         f= open(file, "w+")                                 # Create the file toggled_01.txt
         f.write(name)
         f.close()
-        
-        name = "text"                                     # Set default to 'text'
-        file = "/home/pi/Desktop/deploy_classifier/helpers/toggled_02.txt"
-        f= open(file, "w+")                                 # Create the file toggled_02.txt
-        f.write(name)
-        f.close()
-######################################################################
+###########################################################################################################
+###########################################################################################################
+        # name = "text"                                     # Set default to 'text'
+        # file = "/home/pi/Desktop/deploy_classifier/helpers/toggled_02.txt"
+        # f= open(file, "w+")                                 # Create the file toggled_02.txt
+        # f.write(name)
+        # f.close()
+############################################################################################################
+############################################################################################################
         hbox = Gtk.Box(spacing=6)
         hbox.set_orientation(Gtk.Orientation.VERTICAL)
 
@@ -119,22 +122,7 @@ class ButtonWindow(Gtk.Window):
         buttonZ4 = Gtk.RadioButton.new_with_label_from_widget(buttonZ1, "Button 4")
         buttonZ4.connect("toggled", self.on_button_toggled, "empty 2")
         hbox.pack_start(buttonZ4, False, False, 0)
-#######################################################################
-        hbox2 = Gtk.Box(spacing=6)
-        hbox2.set_orientation(Gtk.Orientation.VERTICAL)
 
-        buttonW1 = Gtk.RadioButton.new_with_label_from_widget(None, "Text reporting")
-        buttonW1.connect("toggled", self.on_button_toggled_2, "text")
-        hbox2.pack_start(buttonW1, False, False, 0)
-
-        buttonW2 = Gtk.RadioButton.new_with_label_from_widget(buttonW1, "Spectogram")
-        buttonW2.connect("toggled", self.on_button_toggled_2, "spectogram")
-        hbox2.pack_start(buttonW2, False, False, 0)
-
-        buttonW3 = Gtk.RadioButton.new_with_label_from_widget(buttonW1, "Button 3")
-        buttonW3.connect("toggled", self.on_button_toggled_2, "empty 1")
-        hbox2.pack_start(buttonW3, False, False, 0)
-#######################################################################
         button1 = Gtk.Button.new_with_label("Take dog for a walk")
         button1.connect("clicked", self.on_click_me_clicked)
 
@@ -146,8 +134,9 @@ class ButtonWindow(Gtk.Window):
         
         button4 = Gtk.Button.new_with_mnemonic("_Ignore")
         button4.connect("clicked", self.on_close_clicked)
-        
-        button5 = Gtk.Button.new_with_mnemonic("_Threshold")
+
+        button5 = Gtk.Button.new_with_mnemonic("_Restart the app")
+        button5.connect("clicked", self.restart_clicked)
         
         button6 = Gtk.Button.new_with_mnemonic("_Something Else")
         button6.connect("clicked", self.on_close_clicked)
@@ -277,6 +266,29 @@ class ButtonWindow(Gtk.Window):
         specto_box.pack_start(self.image_renderer, True, True, 0)
         specto_box.pack_start(buttonSpecto, True, True, 0)
         
+#######################################################################################################################
+#######################################################################################################################
+        hbox2 = Gtk.Box(spacing=6)
+        hbox2.set_orientation(Gtk.Orientation.VERTICAL)
+        
+        buttonW4 = Gtk.RadioButton.new_with_label_from_widget(None, "Button 4")
+        buttonW4.connect("toggled", self.on_button_toggled_2, "empty 2")
+        # hbox2.pack_start(buttonW4, False, False, 0)                                  # This button does nothing except remove default 'clicked' radio box.
+
+        buttonW1 = Gtk.RadioButton.new_with_label_from_widget(buttonW4, "Text reporting")
+        buttonW1.connect("toggled", self.on_button_toggled_2, "text")
+        hbox2.pack_start(buttonW1, False, False, 0)
+
+        buttonW2 = Gtk.RadioButton.new_with_label_from_widget(buttonW4, "Spectogram")
+        buttonW2.connect("toggled", self.on_button_toggled_2, "spectogram")
+        hbox2.pack_start(buttonW2, False, False, 0)
+
+        buttonW3 = Gtk.RadioButton.new_with_label_from_widget(buttonW4, "Button 3")
+        buttonW3.connect("toggled", self.on_button_toggled_2, "empty 1")
+        hbox2.pack_start(buttonW3, False, False, 0)
+#######################################################################################################################
+#######################################################################################################################
+        
         start_media_box = Gtk.EventBox()
         start_image = Gtk.Image()
         pixbuf_start = GdkPixbuf.Pixbuf.new_from_file_at_size("/home/pi/Desktop/GUI/start_250.png", 100, 100)
@@ -297,8 +309,6 @@ class ButtonWindow(Gtk.Window):
         
         grid_04.add(start_media_box)                         # Record
         grid_04.attach(stop_media_box, 1, 0, 1, 1)           # Stop
-        
-        grid_05 = Gtk.Grid()
 
         box1 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
         box1.set_homogeneous(False)
@@ -312,7 +322,7 @@ class ButtonWindow(Gtk.Window):
             fp.close()
         self.label1.set_text(text2)
         box1.pack_start(self.label1, True, True, 0)
-######################################################################################################
+########################################################################
         self.label2 = Gtk.Label()
         self.label2.set_width_chars(60)
         box1.pack_start(self.label2, True, True, 0)   
@@ -330,15 +340,15 @@ class ButtonWindow(Gtk.Window):
             textToggled2 = fp.read()
         fp.close()
         print(textToggled2)
-        # grid_05.add(box1)                               ###########################################################
+        # grid_05.add(box1)                               
+#######################################################################################################################
+#######################################################################################################################
         if (textToggled == "record") and (textToggled2 == "spectogram"): 
-			grid_05.add(specto_box)
+            grid_05.add(specto_box)
         elif (textToggled == "record") and (textToggled2 == "text"): 
-			# grid_05.add(box1)
-			grid_05.add(specto_box)
-        #grid_05.attach(box2, 1, 1, 1, 1)
-        #grid_04.attach(stop_media_box, 1, 0, 1, 1)           # Stop
-#########################################################################   
+            grid_05.add(box1)
+#######################################################################################################################
+#######################################################################################################################
         # self.add(vboxCombo)
         vp3.add(vboxCombo)
         vp3.add(hbox2)                           # Spectogram check boxes
@@ -361,7 +371,24 @@ class ButtonWindow(Gtk.Window):
         self.add(vp2)
 ##########################################################################
         # selected_folder = "/home/pi/Desktop/deploy_classifier/my_audio"
-        
+
+########################################################################################################################
+########################################################################################################################
+    def restart_clicked(self, button):
+        print("\"Click me\" button was clicked")
+        file = "/home/pi/Desktop/deploy_classifier/alert_sounds/Go_for_Deploy.wav"
+        os.system("aplay " + file)
+        restartFile = "/home/pi/Desktop/deploy_classifier/helpers/restart.txt"
+        f= open(restartFile, "w+")
+        print("restart File created !!")
+        f.close()
+########################################################################################################################
+########################################################################################################################
+    def on_close_clicked(self, button):
+        print("Stopping application")
+        os.system(exit)
+        #os.system(return [n])
+
     def editPixbuf(self, button):
         self.image = GdkPixbuf.Pixbuf.new_from_file(self.spectoFile)
         self.image_renderer.set_from_pixbuf (self.image)
@@ -490,7 +517,12 @@ class ButtonWindow(Gtk.Window):
             textToggled2 = fp.read()
         fp.close()
         print(textToggled2)
-        
+#####################################################################################################  
+        #if (textToggled == "record") and (textToggled2 == "spectogram"): 
+			#grid_05.add(specto_box)
+        #elif (textToggled == "record") and (textToggled2 == "text"): 
+			#grid_05.add(box1)
+#####################################################################################################
         stopFile = "/home/pi/Desktop/deploy_classifier/helpers/stop.txt"
         startFile = "/home/pi/Desktop/deploy_classifier/helpers/start.txt"
         f= open(startFile, "w+")     # Create the file start.txt
@@ -559,7 +591,7 @@ class ButtonWindow(Gtk.Window):
                     Gtk.main_iteration()
                 t.sleep(waittime)
                 
-            elif (textToggled == "record") and (textToggled2 == "spectogram"):         # TODO: Some of the lines below are irrelevant.
+            elif (textToggled == "record") and (textToggled2 == "spectogram"):
                 text = "This needs to be spectogram ......"
                 num=rd.randint(1,60)
                 # print(num)
@@ -568,15 +600,9 @@ class ButtonWindow(Gtk.Window):
                 file = '/home/pi/Desktop/deploy_classifier/images/spectograms/specto.png'
                 if os.path.isfile(file):
 					print("We found a spectogram: ....... ",num)
-					# specto_image = Gtk.Image()
-					# pixbuf2 = GdkPixbuf.Pixbuf.new_from_file("/home/pi/Desktop/deploy_classifier/images/spectograms/specto.png")
-					# specto_image = Gtk.Image.new_from_pixbuf(pixbuf2)
-					# specto_image.set_from_pixbuf(pixbuf2)
-					# del pixbuf2
-					# del specto_image
 					self.image = GdkPixbuf.Pixbuf.new_from_file(self.spectoFile)
 					self.image_renderer.set_from_pixbuf (self.image)
-					print(self.spectoFile)
+					# print(self.spectoFile)
                 while Gtk.events_pending():
                     Gtk.main_iteration()
                 t.sleep(waittime)
@@ -628,11 +654,6 @@ class ButtonWindow(Gtk.Window):
     def on_open_clicked(self, button):                                        # Close / restart the app
         print("\"Open\" button was clicked")
         call('./close_the_app.sh', shell=True)
-
-    def on_close_clicked(self, button):
-        print("Stopping application")
-        os.system(exit)
-        #os.system(return [n])
 
     def on_numeric_toggled(self, button):
         self.spinbutton_01.set_numeric(button.get_active())
@@ -695,6 +716,7 @@ class ButtonWindow(Gtk.Window):
         f= open(file, "w+")                                 # Create the file toggled_01.txt
         f.write(name)
         f.close()
+        # self.__init__()                                 # Does this run the first def again?
         
     def set_style_text(self, checkbutton):
         start, end = textbuffer.get_bounds()

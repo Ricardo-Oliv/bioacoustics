@@ -12,6 +12,9 @@ cd /home/pi/Desktop/deploy_classifier/temp/
 sox new_${iter}.wav filtered.wav highpass 1k # highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k 
 cp filtered.wav /home/pi/Desktop/deploy_classifier/unknown_bat_audio/
 cd /home/pi/Desktop/deploy_classifier/
+
+python3 create_spectogram.py
+
 # echo $(($(date +%s%N)/1000000))
 printf "${BLUE}Now run iteration ${iter} classifier: ${NC}\n"
 
