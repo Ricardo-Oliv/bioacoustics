@@ -1,27 +1,18 @@
 #!/bin/bash
+cd /home/pi/Desktop/deploy_classifier/ && chmod 775 script_2.sh
 
-RED='\033[0;31m'
-BLUE='\033[0;34m'
+RED='\e[41m'
+BLUE='\e[44m'
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color
+BLINK='\e[5m'
 
 /opt/vc/bin/vcgencmd measure_temp
 
 # echo $(($(date +%s%N)/1000000))
-cd /home/pi/Desktop/deploy_classifier/temp/
-sox new_${iter}.wav filtered.wav highpass 1k # highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k 
-cp filtered.wav /home/pi/Desktop/deploy_classifier/unknown_bat_audio/
+
 cd /home/pi/Desktop/deploy_classifier/
 
-# Create spectogram:
-##############################################################################
-value2=`cat /home/pi/Desktop/deploy_classifier/helpers/toggled_02.txt`      # Toggled options include 'record' and 'process'.
-echo "Value2 = "$value2
-if [ ${value2} = "spectogram" ]; then
-  echo "Spectogram now being created:....."
-  python3 create_spectogram.py &
-fi
-##############################################################################
 # echo $(($(date +%s%N)/1000000))
 printf "${BLUE}Now run iteration ${iter} classifier: ${NC}\n"
 
@@ -77,13 +68,13 @@ choice3=$result
 # && [ ${value2} = "text" ]                                   # This can be "text" or "spectogram"
 # if [ ${value2} = "spectogram" ]; then
 
-if [ ${choice1} = "UK_Bats" ] && [ ${choice2} = "Level1:_Species" ] && [ ${value2} = "text" ]; then
+if [ ${choice1} = "UK_Bats" ] && [ ${choice2} = "Level1:_Species" ]; then
   Rscript Deploy_bats_pi.R
   echo "Level 1 was deployed"
-elif [ ${choice1} = "UK_Bats" ] && [ ${choice2} = "Level2:_Genera" ] && [ ${value2} = "text" ]; then
+elif [ ${choice1} = "UK_Bats" ] && [ ${choice2} = "Level2:_Genera" ]; then
   Rscript Deploy_bats_pi_Level2.R
   echo "Level 2 was deployed"
-elif [ ${choice1} = "UK_Bats" ] && [ ${choice2} = "Level3:_Order" ] && [ ${value2} = "text" ]; then
+elif [ ${choice1} = "UK_Bats" ] && [ ${choice2} = "Level3:_Order" ]; then
   Rscript Deploy_bats_pi_Level3.R
   echo "Level 3 was deployed"
 else

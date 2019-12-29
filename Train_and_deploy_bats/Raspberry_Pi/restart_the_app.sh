@@ -1,7 +1,13 @@
 #!/bin/bash
 # cd /home/pi/Desktop/deploy_classifier/ && bash restart_the_app.sh
 
-echo "Trying to kill the GUI: ....."
+RED='\e[41m'
+BLUE='\e[44m'
+GREEN='\033[0;32m'
+NC='\033[0m' # No Color
+BLINK='\e[5m'
+
+printf "${RED}Trying to kill the GUI: .....${NC}\n"
 killall -9 -w python
 sh ./run.sh
 
@@ -18,7 +24,7 @@ exit
 # The -w option tells killall to wait for all designated processes to die.
 # killall's basic syntax is:  killall [options] program_name(s)
 
-# killall -9 app
+# killall -9 bash
 # pkill -9 app
 
 # How to kill processes older than TIME

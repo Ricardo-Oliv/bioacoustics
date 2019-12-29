@@ -3,7 +3,7 @@
 
 echo "Trying to kill the GUI: ....."
 killall -9 -w python
-sh ./run.sh
+# sh ./run.sh
 
 exit
 
