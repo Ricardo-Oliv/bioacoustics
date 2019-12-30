@@ -13,8 +13,9 @@ while true
 do
   printf "${GREEN}Print out of processes running: ${NC}\n"
   # echo "Print out processes running:"
-  # ps -u pi
-  ps -u pi -o %cpu,%mem,cmd
+  ps -u pi
+  # ps -u pi -o %cpu,%mem,cmd
+  # ps -o pid,cmd -U pi | grep 'run.sh\|PID'
   echo ""
   echo ""
   sleep 1

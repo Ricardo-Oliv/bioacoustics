@@ -11,8 +11,8 @@ BLINK='\e[5m'
 cd /home/pi/Desktop/deploy_classifier/
 
 printf "${RED}${BLINK}Hello !!!!!${NC}\n"
-printf "${RED}Running from destop icon seems to kill run.sh !!!! Why ????${NC}\n"
-sleep 2
+# printf "${RED}Running from destop icon seems to kill run.sh !!!! Why ????${NC}\n"
+
 
 # Kill some shells if they are still running from previous session:
 
@@ -21,12 +21,10 @@ f_service_check()
   if pgrep -f "$SERVICE" >/dev/null
 	then
 		echo "$SERVICE is running"
-		sleep 3
 		kill $(pgrep -f $SERVICE)
-		sleep 3
+		sleep 2
 	else
-		echo "$SERVICE stopped"
-		sleep 3
+		echo "$SERVICE is NOT running"
 	fi
 }
 
@@ -50,8 +48,12 @@ f_service_check "$SERVICE"
 # kill $(pgrep -f 'GUI.py')
 # kill $(pgrep -f 'create_spectogram.py')
 
-
-
+if [ -e "$1/home/pi/Desktop/deploy_classifier/helpers/close_app.txt" ]; then     # Check if there is a close_app.txt file from a previous session.
+  echo "Run.sh reports: restart.txt file exists"
+  rm /home/pi/Desktop/deploy_classifier/helpers/close_app.txt
+  echo "Run.sh reports: restart.txt file was deleted!"
+fi
+  
 # The following loop looks for a restart.txt file to exist and then restarts run.sh if it does exist.
 # This is here to enable the GUI to change Gtk boxes etc in the vertical or horixontal panes etc.
 f_main_loop ()
@@ -85,15 +87,31 @@ done
 }
 
 printf "${GREEN}Services have been checked and stopped.${NC}\n"
-sleep 5
-
+sleep 2
+printf "${GREEN}Now try to run GUI.py ......${NC}\n"
+python GUI.py &
 bash ./script_1.sh &
 printf "${GREEN}script_1 has been started.${NC}\n"
-sleep 5
+sleep 2
+
+echo "while loop start"
+while true
+do
+  # echo "while loop"
+  if [ -e "$1/home/pi/Desktop/deploy_classifier/helpers/close_app.txt" ]; then     # Waiting for a 'close_app.txt' file to appear in 'helpers' folder.
+    echo "Run.sh reports: close_app.txt file exists"
+    exit
+  # else
+    # echo "close_app.txt file does not exist"
+    # echo "base name = " $(basename $0)
+  fi
+  sleep 4
+done
+
 printf "${RED}Will not start the GUI !!!!${NC}\n"
 sleep 5
 
-python3 GUI.py &
+
 # f_main_loop &       # Seems like killing stuff works better in bash_app !!!!
 
 

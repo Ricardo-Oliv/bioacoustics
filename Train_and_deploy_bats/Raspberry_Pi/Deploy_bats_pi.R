@@ -1,4 +1,4 @@
-# $ cd /home/pi/Desktop/deploy_classifier/
+# $ cd /home/pi/Desktop/deploy_classifier/ && Rscript Deploy_bats_pi.R
 # $ R --no-save 
 # > setwd("/home/pi/Desktop/deploy_classifier/")
 

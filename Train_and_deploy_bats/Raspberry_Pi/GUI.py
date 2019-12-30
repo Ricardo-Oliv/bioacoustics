@@ -222,15 +222,9 @@ class ButtonWindow(Gtk.Window):
 
         button10 = Gtk.Button.new_with_label("STOP")
         button10.connect("clicked", self.on_click_me_clicked)
-        color = Gdk.Color(40000, 0, 0)
-        button10.modify_bg(Gtk.StateType.PRELIGHT, color)
-        button10.modify_bg(Gtk.StateType.NORMAL, Gdk.Color(65000, 0, 0)) # Red, Green, Blue, max 65535
         
         button11 = Gtk.Button.new_with_label("RECORD")
         button11.connect("clicked", self.on_click_me_clicked)
-        color = Gdk.Color(0, 40000, 0)
-        button11.modify_bg(Gtk.StateType.PRELIGHT, color)
-        button11.modify_bg(Gtk.StateType.NORMAL, Gdk.Color(0, 50000, 0)) # Red, Green, Blue, max 65535
         
         button12 = Gtk.Button.new_with_label("Play audio")
         button12.connect("clicked", self.on_click_me_clicked)
@@ -402,6 +396,14 @@ class ButtonWindow(Gtk.Window):
         os.system("aplay " + file)
         # os.system(exit)                                                         # This is close the app.
         # os.system(return [n])
+        print("Attempting to close down the app .........")
+        close_app = "/home/pi/Desktop/deploy_classifier/helpers/close_app.txt"
+        f= open(close_app, "w+")
+        if os.path.isfile(startFile):
+            os.remove(startFile)
+            print("start file removed")
+        print("close_appfile created !!")
+        f.close()
 
     def editPixbuf(self, button):
         self.image = GdkPixbuf.Pixbuf.new_from_file(self.spectoFile)
@@ -613,10 +615,10 @@ class ButtonWindow(Gtk.Window):
                 waittime=6
                 file = '/home/pi/Desktop/deploy_classifier/images/spectograms/specto.png'
                 if os.path.isfile(file):
-					print("From GUI.py: ... We found a spectogram: ....... ",num)
-					self.image = GdkPixbuf.Pixbuf.new_from_file(self.spectoFile)
-					self.image_renderer.set_from_pixbuf (self.image)
-					# print(self.spectoFile)
+                    print("From GUI.py: ... We found a spectogram: ....... ",num)
+                    self.image = GdkPixbuf.Pixbuf.new_from_file(self.spectoFile)
+                    self.image_renderer.set_from_pixbuf (self.image)
+                    # print(self.spectoFile)
                 while Gtk.events_pending():
                     Gtk.main_iteration()
                 t.sleep(waittime)
