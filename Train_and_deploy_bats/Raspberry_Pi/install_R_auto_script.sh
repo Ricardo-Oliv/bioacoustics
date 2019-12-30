@@ -62,12 +62,7 @@ sudo apt install -y python3-scipy
 #pip3 install simplejson
 #pip3 install eyed3
 # The script eyeD3 is installed in '/home/pi/.local/bin' which is not on PATH.
-
-#git clone https://github.com/tyiannak/pyAudioAnalysis.git
-#cd /home/pi/pyAudioAnalysis
-#pip3 install -r ./requirements.txt
-#pip3 install -e .
-
+pip3 install psrecord
 
 sudo apt-get install -y gfortran libreadline6-dev libx11-dev libxt-dev libpng-dev libjpeg-dev libcairo2-dev xvfb libcurl4-openssl-dev texinfo
 
