@@ -58,11 +58,12 @@ sudo apt install -y python3-scipy
 #pip3 install scipy
 
 # pip3 install sklearn
-#pip3 install hmmlearn
-#pip3 install simplejson
-#pip3 install eyed3
+# pip3 install hmmlearn
+# pip3 install simplejson
+# pip3 install eyed3
 # The script eyeD3 is installed in '/home/pi/.local/bin' which is not on PATH.
-pip3 install psrecord
+# pip3 install psrecord
+bash <(curl -Ss https://my-netdata.io/kickstart.sh)
 
 sudo apt-get install -y gfortran libreadline6-dev libx11-dev libxt-dev libpng-dev libjpeg-dev libcairo2-dev xvfb libcurl4-openssl-dev texinfo
 
