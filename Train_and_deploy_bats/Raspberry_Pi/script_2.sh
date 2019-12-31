@@ -68,6 +68,7 @@ choice3=$result
 # && [ ${value2} = "text" ]                                   # This can be "text" or "spectogram"
 # if [ ${value2} = "spectogram" ]; then
 
+# This is where the R classifier is deployed:
 if [ ${choice1} = "UK_Bats" ] && [ ${choice2} = "Level1:_Species" ]; then
   Rscript Deploy_bats_pi.R
   echo "Level 1 was deployed"

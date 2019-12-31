@@ -623,6 +623,22 @@ class ButtonWindow(Gtk.Window):
                     Gtk.main_iteration()
                 t.sleep(waittime)
                 
+            elif (textToggled == "process") and (textToggled2 == "spectogram"):    # /home/pi/Desktop/deploy_classifier/helpers/toggled_02.txt is where "text" or "spectogram" is stored according to button pressed.
+                text = "This needs to be spectogram ......"
+                num=rd.randint(1,60)
+                # print(num)
+                print("From GUI.py: ... Trying to update spectogram: ....... ",num)
+                waittime=6
+                file = '/home/pi/Desktop/deploy_classifier/images/spectograms/specto.png'
+                if os.path.isfile(file):
+                    print("From GUI.py: ... We found a spectogram: ....... ",num)
+                    self.image = GdkPixbuf.Pixbuf.new_from_file(self.spectoFile)
+                    self.image_renderer.set_from_pixbuf (self.image)
+                    # print(self.spectoFile)
+                while Gtk.events_pending():
+                    Gtk.main_iteration()
+                t.sleep(waittime)
+                
 # self.image = GdkPixbuf.Pixbuf.new_from_file_at_size(self.Cover, 250, 250)
 # self.image_renderer = Gtk.Image.new_from_pixbuf(self.image)
 # self.image_renderer.set_from_pixbuf (self.image)

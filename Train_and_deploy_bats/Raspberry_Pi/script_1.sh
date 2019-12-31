@@ -135,6 +135,8 @@ do
     sleep 2
     cd /home/pi/Desktop/deploy_classifier/
     python3 process_audio_files.py             # Adding a '&' to this causes lock up!
+    # Does create_spectogram.py go here?
+    # Why are the following 3 lines here?
     cd /home/pi/Desktop/deploy_classifier/helpers/
     rm start.txt
     touch stop.txt

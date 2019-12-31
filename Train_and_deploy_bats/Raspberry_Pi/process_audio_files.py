@@ -1,5 +1,6 @@
 # cd /home/pi/Desktop/deploy_classifier/ && python3 process_audio_files.py
 # python3 process_audio_files.py
+# cd /home/pi/Desktop/deploy_classifier/ && chmod 775 process_audio_files.py
 
 import subprocess
 from pathlib import Path
@@ -14,6 +15,7 @@ import time
 file = "/home/pi/Desktop/deploy_classifier/my_audio/11_oct_2019_01.wav"                # 110 Mb
 file2 = "/home/pi/Desktop/deploy_classifier/Final_result.txt"
 file3 = "/home/pi/Desktop/deploy_classifier/Final_result_copy.txt"
+file5 = "/home/pi/Desktop/deploy_classifier/helpers/toggled_02.txt"                   # text or spectigram.
 folder1 = "/home/pi/Desktop/deploy_classifier/"
 folder2 = "/home/pi/Desktop/deploy_classifier/processed_audio/"
 folder3 = "/home/pi/Desktop/deploy_classifier/unknown_bat_audio/"
@@ -21,6 +23,9 @@ folder4 = "/home/pi/Desktop/deploy_classifier/my_audio"
 
 # Define command and arguments
 command = 'Rscript'
+command_python = "python3"
+
+path_to_create_spectogram = "/home/pi/Desktop/deploy_classifier/create_spectogram.py"
 
 
 directory = os.fsencode("/home/pi/Desktop/deploy_classifier/my_audio")
@@ -30,6 +35,13 @@ file4='/home/pi/Desktop/deploy_classifier/helpers/combo_01.txt'
 
 n = 1
 line = [1, 2, 3, 4, 5]
+
+f = open(file5)
+text_or_spectogram = f.readline()
+print("Is it text or spectogram?")
+print(text_or_spectogram )
+f.close()
+
 
 f = open(file4)
 
@@ -84,7 +96,7 @@ else:
 
 print("Starting .....")
 
-for file in os.listdir(directory):
+for file in os.listdir(directory):                                       # This loop will carry on going as long as there are more files to process.
     filename = os.fsdecode(file)
     if filename.endswith(".wav"):
         # print(filename)
@@ -107,23 +119,33 @@ for file in os.listdir(directory):
             # else:
                 # print (i," File not exist")
                 # continue
-            for file in os.scandir(folder3) :            # Delete all wav files in unknown_bat_audio
+            for file in os.scandir(folder3) :                            # Delete all wav files in unknown_bat_audio.
                 if file.name.endswith(".wav"):
                     os.unlink(file)
 
             chunk_name = "chunk{0}.wav".format(i)
             # print ("Processing ", chunk_name)
             # print(folder3 + chunk_name)
-            chunk.export(folder3 + chunk_name, format="wav")
-
+            chunk.export(folder3 + chunk_name, format="wav")             # folder3 is "unknown_bat_audio".
+            # chunk.export(folder3 + filtered, format="wav")             # folder3 is "unknown_bat_audio". There is no actual filter applied .... yet !!
+            
             # Build subprocess command
             cmd = [command, path2script]
-            x = subprocess.Popen(cmd).wait()
+            x = subprocess.Popen(cmd).wait()                              # This is where the classifier program is called. Not script_2.sh !!
 
             # if Final_result.txt" exists ......
             if Path(folder1 + "Final_result.txt").is_file():
                 # print (i," Detected!")
                 detected = "Something was detected:"
+                
+##############################################################################################################
+                if text_or_spectogram == "spectogram":
+                    # Build subprocess command
+                    cmd = [command_python, path_to_create_spectogram]
+                    print(cmd)
+                    x = subprocess.Popen(cmd).wait()                              # This is where the create spectogram program is called.
+######################################################################################################################
+                    
                 file2 = "/home/pi/Desktop/deploy_classifier/Final_result.txt"
                 newText = ""
                 line2 = ""
@@ -184,4 +206,4 @@ file = file3
 f= open(file, "w+")
 f.write(message)
 f.close()
-time.sleep(5)         # Allows GUI to catch up.
+# time.sleep(5)         # Allows GUI to catch up.
