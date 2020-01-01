@@ -93,7 +93,7 @@ sudo chmod -R 777 /home/pi/Desktop/deploy_classifier/run.desktop
 sudo chmod -R 775 /home/pi/Desktop/deploy_classifier/
 
 printf "${GREEN} Now the R packages need to be manually installed eg run R and use: install.packages("audio") ${NC}\n"
-
+printf "${GREEN} Don't forget to enable I2C in settings !${NC}\n"
 
 
 
