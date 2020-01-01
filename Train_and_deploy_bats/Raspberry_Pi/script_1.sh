@@ -16,6 +16,8 @@ aplay --device=hw:0,0 /home/pi/Desktop/deploy_classifier/alert_sounds/Go_for_Dep
 sudo chmod 775 /home/pi/Desktop/deploy_classifier/helpers/toggled_01.txt
 
 cd /home/pi/Desktop/deploy_classifier/
+
+sh ./battery_info.sh &                                                        # Get battery information.
 rm Final_result.txt
 rm Final_result_copy.txt
 cd /home/pi/Desktop/deploy_classifier/helpers/
@@ -110,6 +112,7 @@ do
 #################################################
     wait
 #################################################
+    sh ./battery_info.sh &                                                        # Get battery information.
     f_create_filtered_wav_file &
     f_create_spectogram &                                                         # Create spectogram - or do classification.
     

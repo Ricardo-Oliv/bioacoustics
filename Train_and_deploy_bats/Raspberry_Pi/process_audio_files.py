@@ -24,8 +24,10 @@ folder4 = "/home/pi/Desktop/deploy_classifier/my_audio"
 # Define command and arguments
 command = 'Rscript'
 command_python = "python3"
+command_bash = "bash"
 
 path_to_create_spectogram = "/home/pi/Desktop/deploy_classifier/create_spectogram.py"
+path_to_battery = "/home/pi/Desktop/deploy_classifier/battery_info.sh"
 
 
 directory = os.fsencode("/home/pi/Desktop/deploy_classifier/my_audio")
@@ -128,6 +130,10 @@ for file in os.listdir(directory):                                       # This 
             # print(folder3 + chunk_name)
             chunk.export(folder3 + chunk_name, format="wav")             # folder3 is "unknown_bat_audio".
             # chunk.export(folder3 + filtered, format="wav")             # folder3 is "unknown_bat_audio". There is no actual filter applied .... yet !!
+            
+            # Build subprocess command
+            cmd = [command_bash, path_to_battery]
+            x = subprocess.Popen(cmd).wait()                              # This is where the battery volts program is called.
             
             # Build subprocess command
             cmd = [command, path2script]

@@ -37,7 +37,7 @@ class ButtonWindow(Gtk.Window):
         grid_03.set_column_spacing(20)
         grid_04 = Gtk.Grid()
         grid_04.set_column_homogeneous(True)
-        grid_04.set_column_spacing(10)
+        grid_04.set_column_spacing(6)
         grid_05 = Gtk.Grid()
         grid_06 = Gtk.Grid()
         
@@ -119,11 +119,16 @@ class ButtonWindow(Gtk.Window):
         buttonZ3 = Gtk.RadioButton.new_with_label_from_widget(buttonZ1, "Button 3")
         buttonZ3.connect("toggled", self.on_button_toggled, "empty 1")
         hbox.pack_start(buttonZ3, False, False, 0)
+############################################################################################
+        # buttonZ4 = Gtk.RadioButton.new_with_label_from_widget(buttonZ1, "Button 4")
+        # buttonZ4.connect("toggled", self.on_button_toggled, "empty 2")
+        # hbox.pack_start(buttonZ4, False, False, 0)
         
-        buttonZ4 = Gtk.RadioButton.new_with_label_from_widget(buttonZ1, "Button 4")
-        buttonZ4.connect("toggled", self.on_button_toggled, "empty 2")
-        hbox.pack_start(buttonZ4, False, False, 0)
-
+        self.label3 = Gtk.Label()
+        self.label3.set_width_chars(6)
+        self.label3.set_text("Battery")
+        hbox.pack_start(self.label3, False, False, 0)
+############################################################################################
         button1 = Gtk.Button.new_with_label("Take dog for a walk")
         button1.connect("clicked", self.on_click_me_clicked)
 
@@ -214,7 +219,7 @@ class ButtonWindow(Gtk.Window):
 ##########################################################################
         hp1.add1(hbox)
         hp1.add2(grid_01)
-        hp1.set_position(300)   # Only max of 2 panes allowed.
+        # hp1.set_position(300)   # Only max of 2 panes allowed.
 ##########################################################################       
         
         button9 = Gtk.Button.new_with_label("Play disc rog audio")
@@ -287,6 +292,10 @@ class ButtonWindow(Gtk.Window):
         buttonW2.connect("clicked", self.spectogram_clicked)
         hbox2.pack_start(buttonW2, False, False, 0)
 
+        buttonW3 = Gtk.Button.new_with_mnemonic("_Graph reporting")
+        buttonW3.connect("clicked", self.spectogram_clicked)
+        hbox2.pack_start(buttonW3, False, False, 0)
+
         # hbox2.set_position(300)
 
         # buttonW3 = Gtk.RadioButton.new_with_label_from_widget(buttonW4, "Button 3")
@@ -297,7 +306,7 @@ class ButtonWindow(Gtk.Window):
         
         start_media_box = Gtk.EventBox()
         start_image = Gtk.Image()
-        pixbuf_start = GdkPixbuf.Pixbuf.new_from_file_at_size("/home/pi/Desktop/GUI/start_250.png", 100, 100)
+        pixbuf_start = GdkPixbuf.Pixbuf.new_from_file_at_size("/home/pi/Desktop/GUI/start_250.png", 90, 90)
         start_image.set_from_pixbuf(pixbuf_start)
         start_media_box.add(start_image)
         start_media_box.connect("button_press_event",self.start)  # Starts the window of results in app.
@@ -306,7 +315,7 @@ class ButtonWindow(Gtk.Window):
         
         stop_media_box = Gtk.EventBox()
         stop_image = Gtk.Image()
-        pixbuf_stop = GdkPixbuf.Pixbuf.new_from_file_at_size("/home/pi/Desktop/GUI/stop_250.png", 100, 100)
+        pixbuf_stop = GdkPixbuf.Pixbuf.new_from_file_at_size("/home/pi/Desktop/GUI/stop_250.png", 90, 90)
         stop_image.set_from_pixbuf(pixbuf_stop)
         stop_media_box.add(stop_image)
         stop_media_box.connect("button_press_event",self.stop)
@@ -371,7 +380,7 @@ class ButtonWindow(Gtk.Window):
         vp1.set_position(140)
 ##########################################################################  
         vp2.add1(vp1)                              # TODO: vp2 may be unnecessary!
-        vp2.set_position(350)
+        vp2.set_position(370)
         vp2.add2(hp2)                             # Got logo and recording controls.
 ##########################################################################
         self.add(vp2)
@@ -552,6 +561,11 @@ class ButtonWindow(Gtk.Window):
                 print("stopFile detected !!!!")
                 a = 1
             elif (textToggled == "record") and (textToggled2 == "text"):                                          # There exists no stopFile.
+                file = '/home/pi/Desktop/deploy_classifier/helpers/battery_info.txt'
+                if os.path.isfile(file):
+                    with open(file, "r") as fp:
+                        battery = fp.read()
+                    fp.close()
                 file = '/home/pi/Desktop/deploy_classifier/Final_result_copy.txt'
                 if os.path.isfile(file):
                     current_time = time.ctime(os.path.getctime("/home/pi/Desktop/deploy_classifier/Final_result_copy.txt"))
@@ -583,17 +597,22 @@ class ButtonWindow(Gtk.Window):
                     text2 = text2 + "*"                                          # A random series of characters as a progress indicator.
                 self.label1.set_text(text2)
                 self.label2.set_text(text)
+                self.label3.set_text(battery)
                 while Gtk.events_pending():
                     Gtk.main_iteration()
                 t.sleep(waittime)
 
             elif (textToggled == "process") and (textToggled2 == "text"):
+                file = '/home/pi/Desktop/deploy_classifier/helpers/battery_info.txt'
+                if os.path.isfile(file):
+                    with open(file, "r") as fp:
+                        battery = fp.read()
+                    fp.close()
                 file = '/home/pi/Desktop/deploy_classifier/Final_result_copy.txt'
                 if os.path.isfile(file):
                     with open(file, "r") as fp:
                         text = fp.read()
                     fp.close()
-                    
                 else:
                     text = "Waiting for data ......"
                 waittime=1
@@ -603,6 +622,7 @@ class ButtonWindow(Gtk.Window):
                     text2 = text2 + "*"                                           # A random series of characters as a progress indicator.
                 self.label1.set_text(text2)
                 self.label2.set_text(text)
+                self.label3.set_text(battery)
                 while Gtk.events_pending():
                     Gtk.main_iteration()
                 t.sleep(waittime)
