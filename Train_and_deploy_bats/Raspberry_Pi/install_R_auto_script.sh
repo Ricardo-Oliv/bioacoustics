@@ -54,6 +54,10 @@ pip3 install numpy
 pip3 install matplotlib
 #sudo pip3 install --upgrade matplotlib
 
+curl -O https://www.omzlo.com/downloads/pivoyager.tar.gz
+tar xvf pivoyager.tar.gz
+sudo mv pivoyager /usr/local/bin/
+
 sudo apt install -y python3-scipy
 #pip3 install scipy
 
