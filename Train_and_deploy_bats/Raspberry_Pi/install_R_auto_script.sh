@@ -52,6 +52,7 @@ pip3 install pathlib2
 sudo apt-get install python-dev libatlas-base-dev
 pip3 install numpy
 pip3 install matplotlib
+pip3 install timerange
 #sudo pip3 install --upgrade matplotlib
 
 curl -O https://www.omzlo.com/downloads/pivoyager.tar.gz
