@@ -53,6 +53,7 @@ sudo apt-get install python-dev libatlas-base-dev
 pip3 install numpy
 pip3 install matplotlib
 pip3 install DateTimeRange
+pip3 install pandas
 
 # pip3 install py2exe
 # pip3 install timerange
