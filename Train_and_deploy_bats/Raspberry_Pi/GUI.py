@@ -15,8 +15,11 @@ from subprocess import call
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk, GdkPixbuf, GLib
 
+
 class ButtonWindow(Gtk.Window):
     spectoFile= "/home/pi/Desktop/deploy_classifier/images/spectograms/specto.png"
+
+    battery = "whatever"
 
     def __init__(self):
         Gtk.Window.__init__(self, title="Ultrasonic Classifier")
@@ -292,8 +295,8 @@ class ButtonWindow(Gtk.Window):
         buttonW2.connect("clicked", self.spectogram_clicked)
         hbox2.pack_start(buttonW2, False, False, 0)
 
-        buttonW3 = Gtk.Button.new_with_mnemonic("_Graph reporting")
-        buttonW3.connect("clicked", self.spectogram_clicked)
+        buttonW3 = Gtk.Button.new_with_mnemonic("_Graphical reporting")
+        buttonW3.connect("clicked", self.text_reporting_clicked)
         hbox2.pack_start(buttonW3, False, False, 0)
 
         # hbox2.set_position(300)
@@ -384,9 +387,28 @@ class ButtonWindow(Gtk.Window):
         vp2.add2(hp2)                             # Got logo and recording controls.
 ##########################################################################
         self.add(vp2)
-##########################################################################
+#######################################################################################################################
+#######################################################################################################################
         # selected_folder = "/home/pi/Desktop/deploy_classifier/my_audio"
 
+        self.timeout_id = GLib.timeout_add(5000, self.on_timeout, None)
+        self.activity_mode = False
+        
+    def on_timeout(self, user_data):
+        """
+        Update battery and temperature info
+        """
+        print("Update the battery info .... ")
+        file = '/home/pi/Desktop/deploy_classifier/helpers/battery_info.txt'
+        if os.path.isfile(file):
+            with open(file, "r") as fp:
+                battery = fp.read()
+            fp.close()
+        self.label3.set_text(battery)
+        # As this is a timeout function, return True so that it
+        # continues to get called
+        return True
+        
 ########################################################################################################################
 ########################################################################################################################
     def restart_clicked(self, button):
@@ -397,8 +419,7 @@ class ButtonWindow(Gtk.Window):
         f= open(restartFile, "w+")
         print("restart File created !!")
         f.close()
-########################################################################################################################
-########################################################################################################################
+
     def on_close_clicked(self, button):
         print("Stopping application")
         file = "/home/pi/Desktop/deploy_classifier/alert_sounds/Go_for_Deploy.wav"
@@ -529,9 +550,11 @@ class ButtonWindow(Gtk.Window):
             print("start file removed")
         print("shut down file created !!")
         f.close()
+        
+    def test2(self):
+        print("testing 1, 2, 3 .... ")
 
     def start(self, widget, event):    # Start box rather than image.
-        
         file = "/home/pi/Desktop/deploy_classifier/helpers/toggled_01.txt"
         with open(file) as fp:
             textToggled = fp.read()
@@ -561,11 +584,6 @@ class ButtonWindow(Gtk.Window):
                 print("stopFile detected !!!!")
                 a = 1
             elif (textToggled == "record") and (textToggled2 == "text"):                                          # There exists no stopFile.
-                file = '/home/pi/Desktop/deploy_classifier/helpers/battery_info.txt'
-                if os.path.isfile(file):
-                    with open(file, "r") as fp:
-                        battery = fp.read()
-                    fp.close()
                 file = '/home/pi/Desktop/deploy_classifier/Final_result_copy.txt'
                 if os.path.isfile(file):
                     current_time = time.ctime(os.path.getctime("/home/pi/Desktop/deploy_classifier/Final_result_copy.txt"))
@@ -590,6 +608,11 @@ class ButtonWindow(Gtk.Window):
 				       
                 else:
                     text = "Waiting for data ......"
+                file = '/home/pi/Desktop/deploy_classifier/helpers/battery_info.txt'
+                if os.path.isfile(file):
+                    with open(file, "r") as fp:
+                        battery = fp.read()
+                    fp.close()
                 waittime=1
                 num=rd.randint(1,60)
                 text2 = ""
@@ -597,17 +620,11 @@ class ButtonWindow(Gtk.Window):
                     text2 = text2 + "*"                                          # A random series of characters as a progress indicator.
                 self.label1.set_text(text2)
                 self.label2.set_text(text)
-                self.label3.set_text(battery)
                 while Gtk.events_pending():
                     Gtk.main_iteration()
                 t.sleep(waittime)
 
             elif (textToggled == "process") and (textToggled2 == "text"):
-                file = '/home/pi/Desktop/deploy_classifier/helpers/battery_info.txt'
-                if os.path.isfile(file):
-                    with open(file, "r") as fp:
-                        battery = fp.read()
-                    fp.close()
                 file = '/home/pi/Desktop/deploy_classifier/Final_result_copy.txt'
                 if os.path.isfile(file):
                     with open(file, "r") as fp:
@@ -622,7 +639,6 @@ class ButtonWindow(Gtk.Window):
                     text2 = text2 + "*"                                           # A random series of characters as a progress indicator.
                 self.label1.set_text(text2)
                 self.label2.set_text(text)
-                self.label3.set_text(battery)
                 while Gtk.events_pending():
                     Gtk.main_iteration()
                 t.sleep(waittime)
@@ -658,26 +674,6 @@ class ButtonWindow(Gtk.Window):
                 while Gtk.events_pending():
                     Gtk.main_iteration()
                 t.sleep(waittime)
-                
-# self.image = GdkPixbuf.Pixbuf.new_from_file_at_size(self.Cover, 250, 250)
-# self.image_renderer = Gtk.Image.new_from_pixbuf(self.image)
-# self.image_renderer.set_from_pixbuf (self.image)
-
-# pixbuf = GdkPixbuf.Pixbuf.new_from_file("/home/pi/Desktop/deploy_classifier/images/spectograms/specto.png")
-# specto_image = Gtk.Image.new_from_pixbuf(pixbuf)
-# specto_image.set_from_pixbuf(pixbuf)
-                
-# specto_box = Gtk.EventBox()
-# specto_image = Gtk.Image()
-# pixbuf = GdkPixbuf.Pixbuf.new_from_file("/home/pi/Desktop/deploy_classifier/images/spectograms/specto.png")
-# specto_image.set_from_pixbuf(pixbuf)
-# specto_box.add(specto_image)
-# specto_box.connect("button_press_event",self.hello1)
-                
-#if (textToggled == "record") and (textToggled2 == "spectogram"): 
-#	grid_05.add(specto_box)
-#elif (textToggled == "record") and (textToggled2 == "text"): 
-#	grid_05.add(box1)
 
     def updateTime(self):
         timeStr = self.getTime()

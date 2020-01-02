@@ -1,5 +1,5 @@
 #!/bin/bash
-# $ cd /home/pi/Desktop/deploy_classifier/ && bash bash_app.sh
+# $ cd /home/pi/Desktop/deploy_classifier/ && bash script_1.sh
 # Record 10 second chunks of audio on UltraMic384K, apply a 15K highpass filter, run the randomforest classifier. Repeat.
 # lscpu
 # arecord -l
@@ -74,9 +74,10 @@ f_main_loop ()
 counter=0
 until [ $counter -gt ${iterations} ]
 do
-	while [ -e "$1/home/pi/Desktop/deploy_classifier/helpers/stop.txt" ]; do     # This loop will block the classifier and recorder whilst waiting for a 'stop.txt' file to appear in 'helpers' folder.
+	while [ -e "$1/home/pi/Desktop/deploy_classifier/helpers/stop.txt" ]; do          # This loop will block the classifier and recorder whilst waiting for a 'stop.txt' file to appear in 'helpers' folder.
     printf "bash_app reports: ${RED}stop.txt${NC} file exists\n"
     sleep 2
+    sh ./battery_info.sh                                                            # Get battery information.
     if [ -e "$1/home/pi/Desktop/deploy_classifier/helpers/shutDown.txt" ]; then     # Waiting for a 'shutDown.txt' file to appear in 'helpers' folder.
       echo "bash_app reports: shutDown.txt file exists"
       sleep 10
