@@ -62,9 +62,13 @@ TDs <- setNames(
 # Keep only files with data in it
 TDs <- TDs[lapply(TDs, function(x) length(x$data)) > 0]
 
+# print(function(x) length(x$data))
+# print("Above.")
 # Keep the extracted feature and merge in a single data frame for further analysis
 Event_data_test <- do.call("rbind", c(lapply(TDs, function(x) x$data$event_data), list(stringsAsFactors = FALSE)))
+
 nrow(Event_data_test)
+num_audio_events <- nrow(Event_data_test)
 
 # To look at the predictions 
 # print("Is the unknown wav a c_pip?")
@@ -135,14 +139,73 @@ RHINO_HIPPO <- consolidate_results(rf_rhino_hippo_file)
 penultimate <- rbind(C_PIP, S_PIP, NATTERERI, NOCTULA, PLECOTUS, RHINO_HIPPO, HOUSE_KEYS)
 
 Final_result <- penultimate[order(penultimate[,1], decreasing = FALSE),]
-print(Final_result)
+# print(Final_result)
+# print(num_audio_events)
+
+# print("This, below, gives nice new set of row labels:")
+dfnew4 <- cbind(rownames(Final_result), data.frame(Final_result, row.names=NULL))
+# dfnew4
+
+# Then we can get variables such as batName:
+print("This is RHINO_HIPPO:")
+currBatName <- dfnew4[c(1),c(1)]
+currBatName
+
+t <- Sys.time()
+num_species = 1                                                            # This get overwritten if csv file is found.
+
+
+if(file.exists("From_R_01.csv")) 
+{
+    print("This should import previous data:")
+    prevData <- read.csv("From_R_01.csv", header=TRUE)
+    # str(prevData)
+    print(prevData)
+    
+    print("This is  RHINO_HIPPO:")
+    prevBatName <- prevData[c(1),c(1)]
+    print(prevBatName)
+    
+    print("IS this the num_species value?")
+    num_species <- prevData[c(1),c(4)]
+    print(num_species)
+
+    print("This gives the newest time in previous data:")
+    newValue <- prevData[c(1),c(3)]
+    print(newValue)
+}
+
+print("This should give RHINO_HIPPO  7  time  num_species:")
+dfnew6 <- cbind(data.frame(currBatName), num_audio_events, t, num_species)
+dfnew6
+
+print("And change the column names:")
+colnames(dfnew6) <- c("bat_name","frequency", "time", "num_species")
+dfnew6
+
+
+print("This will add the new row to the old ones if we want to:")
+if(file.exists("From_R_01.csv")) 
+{
+    if( prevBatName == currBatName)      # Both are RHINO_HIPPO.
+    {
+        print("Yes it was!")
+    }
+    # TODO: Put an else command with next 3 lines in it:
+    print("Now add the rows to old ones:")
+    df7 <- rbind(dfnew6, prevData)
+    df7
+} else { df7 <- dfnew6 }
+
+
+print("END")
 
 #importance(rf_c_pip_file)
 
-write.table(Final_result, file = "Final_result.txt", sep = "\t",
-            row.names = TRUE, col.names = NA)
-
+write.table(Final_result, file = "Final_result.txt", sep = "\t", row.names = TRUE, col.names = NA)
+write.table(df7, file = "From_R_01.csv", sep = ",", row.names = FALSE, col.names = TRUE)
 q()
+
 
 
 
