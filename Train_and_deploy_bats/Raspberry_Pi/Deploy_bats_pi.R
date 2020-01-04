@@ -139,71 +139,141 @@ RHINO_HIPPO <- consolidate_results(rf_rhino_hippo_file)
 penultimate <- rbind(C_PIP, S_PIP, NATTERERI, NOCTULA, PLECOTUS, RHINO_HIPPO, HOUSE_KEYS)
 
 Final_result <- penultimate[order(penultimate[,1], decreasing = FALSE),]
+# importance(rf_c_pip_file)
 # print(Final_result)
 # print(num_audio_events)
 
 # print("This, below, gives nice new set of row labels:")
-dfnew4 <- cbind(rownames(Final_result), data.frame(Final_result, row.names=NULL))
+df99 <- cbind(rownames(Final_result), data.frame(Final_result, row.names=NULL))
 # dfnew4
 
 # Then we can get variables such as batName:
-print("This is RHINO_HIPPO:")
-currBatName <- dfnew4[c(1),c(1)]
+print("This is RHINO_HIPPO from the new data:")
+currBatName <- df99[c(1),c(1)]
 currBatName
+currBatNameChar <- sapply(currBatName, as.character)                       # Convert to a character vector.
 
-t <- Sys.time()
+# tRaw <- Sys.time()
+# t <- sapply(tRaw, as.character)                                            # Convert to a character vector.
+# tChar <- sapply(t, as.character)                                           # Convert to a character vector.
+t = as.integer( as.POSIXct( Sys.time()))
+
+tMillisCurrent = as.integer( as.POSIXct( Sys.time()))
 num_species = 1                                                            # This get overwritten if csv file is found.
-
+n = num_species
+blank = "blank"
+zero = "0"
 
 if(file.exists("From_R_01.csv")) 
 {
-    print("This should import previous data:")
-    prevData <- read.csv("From_R_01.csv", header=TRUE)
-    # str(prevData)
+    as.integer( as.POSIXct( Sys.time() ) )
+    print("Does this give system time ???? ")
+    # print(    as.integer( as.POSIXct( Sys.time() ) ))
+    print("This imports previous data:")
+    prevData <- read.csv("From_R_01.csv")
     print(prevData)
+    df15 <- prevData
     
-    print("This is  RHINO_HIPPO:")
-    prevBatName <- prevData[c(1),c(1)]
-    print(prevBatName)
-    
-    print("IS this the num_species value?")
-    num_species <- prevData[c(1),c(4)]
-    print(num_species)
 
-    print("This gives the newest time in previous data:")
-    newValue <- prevData[c(1),c(3)]
-    print(newValue)
+    
+} else {
+    print("Trying to continue")
+    df14 <- t                                                             # Add time stamp
+    df15 <- data.frame(df14)
+    colnames(df15) <- c("BLANK")
+    print("This should be the new csv file to save?")
+    print(df15)
+    write.table(df15, file = "From_R_01.csv", sep = ",", row.names = FALSE, col.names = TRUE)
+    # We now have a 1 x 2 dataframe called df15 with some timestamp data in it, with column name BLANK after the first iteration, only.
 }
 
-print("This should give RHINO_HIPPO  7  time  num_species:")
-dfnew6 <- cbind(data.frame(currBatName), num_audio_events, t, num_species)
-dfnew6
+# Now to create our new data column:
+df9 <- data.frame(placeholder_name = 1)
+names(df9)[names(df9) == "placeholder_name"] <- currBatNameChar
+print("This below should now have column names:")
+df9
+# Now try and replace the placeholder with num_audio_events:
+df9["1", currBatNameChar] <- num_audio_events
+print("Now we have our new dataframe with some useful data:")
+df9
 
-print("And change the column names:")
-colnames(dfnew6) <- c("bat_name","frequency", "time", "num_species")
-dfnew6
-
-
-print("This will add the new row to the old ones if we want to:")
+print("This will add the new data column to the old ones if we want to:")
+# we've already written a csv of size at least 1 x2.
 if(file.exists("From_R_01.csv")) 
 {
-    if( prevBatName == currBatName)      # Both are RHINO_HIPPO.
+    prevData <- read.csv("From_R_01.csv")
+
+    # Try and read system time:
+    # print("Does this give system time ... YES !!")
+    newValue <- prevData[c(1),c(1)]
+    # tMillisPrevious = as.integer(as.POSIXct(newValue))
+    tMillisPrevious = newValue
+    # print(tMillisPrevious)
+    timeInterval = tMillisCurrent - tMillisPrevious
+    print("Does this give time interval ..... YES !!!")
+    print(timeInterval)
+    # print(as.numeric(Sys.time())*1000, digits=15)
+    # as.numeric(format(Sys.time(), "%OS3")) * 1000
+
+    if( timeInterval > 6000)
     {
-        print("Yes it was!")
+        df16 <- data.frame(tMillisCurrent,zero,zero)                     # The number of zeros must fit the csv dataframe !!!!
+        # Firstly, duplicate the last row:
+        prevData <- rbind(prevData, prevData)
+        print("Did this dupicate the rows ... YES !!!!")
+        print(prevData)
+        # Replace time cell with t:
+        # newValue <- prevData[c(1),c(1)]
+        # df17 <- "test"                                                             # Add time stamp
+        # df18 <- data.frame(df17)
+        # colnames(df18) <- c("BLANK")
+        # prevData["1", "BLANK"] <- df17
+        
+        # myDataFrame["rowName", "columnName"] <- value
+        value = t
+        prevData["1", "BLANK"] <- value
+        
+        # prevData[c(1),c(1)] <- df17
+        print("What does the new dataframe look like?")
+        print(prevData)
     }
-    # TODO: Put an else command with next 3 lines in it:
-    print("Now add the rows to old ones:")
-    df7 <- rbind(dfnew6, prevData)
-    df7
-} else { df7 <- dfnew6 }
+    
+# Assuming that the name of your data frame is dat and that your column name to check is "d", you can use the %in% operator:
+
+    if(currBatNameChar %in% colnames(prevData))
+    {
+        print("Yep, it's in there!")
+        # Lets add the new data bat frequency integer to the old:
+        prevValue <- prevData["1", currBatNameChar]
+        newValue = prevValue + num_audio_events
+        
+        print("This is the number of rows in the dataframe:")
+        print(nrow(prevData))
+        
+        
+        
+        # Why are we not inserting direct into prevData????
+        prevData["1", currBatNameChar] <- newValue                                  # This is where a new value is inserted into a cell.
+        print("Now we have our new prevData dataframe with some useful data:")
+        print(prevData)
+
+        
+        # df11 <- cbind(prevData, df9)                                   # ... And replace it with the new one.
+        # print(df11)
+    } else {
+    
+    # df11 <- cbind(prevData, df9)                                       # This adds the new data as a column
+    # df11
+    
+    }
+} else { df11 <- df10 }
 
 
 print("END")
 
-#importance(rf_c_pip_file)
-
 write.table(Final_result, file = "Final_result.txt", sep = "\t", row.names = TRUE, col.names = NA)
-write.table(df7, file = "From_R_01.csv", sep = ",", row.names = FALSE, col.names = TRUE)
+# write.table(df11, file = "From_R_01.csv", sep = ",", row.names = FALSE, col.names = TRUE)
+write.table(prevData, file = "From_R_01.csv", sep = ",", row.names = FALSE, col.names = TRUE)
 q()
 
 
