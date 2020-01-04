@@ -174,8 +174,6 @@ if(file.exists("From_R_01.csv"))
     print(prevData)
     df15 <- prevData
     
-
-    
 } else {
     print("Trying to continue")
     df14 <- t                                                             # Add time stamp
@@ -186,16 +184,6 @@ if(file.exists("From_R_01.csv"))
     write.table(df15, file = "From_R_01.csv", sep = ",", row.names = FALSE, col.names = TRUE)
     # We now have a 1 x 2 dataframe called df15 with some timestamp data in it, with column name BLANK after the first iteration, only.
 }
-
-# Now to create our new data column:
-df9 <- data.frame(placeholder_name = 1)
-names(df9)[names(df9) == "placeholder_name"] <- currBatNameChar
-print("This below should now have column names:")
-df9
-# Now try and replace the placeholder with num_audio_events:
-df9["1", currBatNameChar] <- num_audio_events
-print("Now we have our new dataframe with some useful data:")
-df9
 
 print("This will add the new data column to the old ones if we want to:")
 # we've already written a csv of size at least 1 x2.
@@ -215,7 +203,7 @@ if(file.exists("From_R_01.csv"))
     # print(as.numeric(Sys.time())*1000, digits=15)
     # as.numeric(format(Sys.time(), "%OS3")) * 1000
 
-    if( timeInterval > 6000)
+    if( timeInterval > 600)                                              # 600 seconds = 10 minutes !!
     {
         df16 <- data.frame(tMillisCurrent,zero,zero)                     # The number of zeros must fit the csv dataframe !!!!
         # Firstly, duplicate the last row:
@@ -250,14 +238,9 @@ if(file.exists("From_R_01.csv"))
         print("This is the number of rows in the dataframe:")
         print(nrow(prevData))
         
-        
-        
         # Why are we not inserting direct into prevData????
         prevData["1", currBatNameChar] <- newValue                                  # This is where a new value is inserted into a cell.
-        print("Now we have our new prevData dataframe with some useful data:")
-        print(prevData)
 
-        
         # df11 <- cbind(prevData, df9)                                   # ... And replace it with the new one.
         # print(df11)
     } else {
@@ -268,6 +251,28 @@ if(file.exists("From_R_01.csv"))
     }
 } else { df11 <- df10 }
 
+if(currBatNameChar %in% colnames(prevData))
+{
+  print("Check the bat name is there ... YES !!!")
+} else {
+
+print("The bat name was not there!")
+# Now to create our new data column:
+df9 <- data.frame(placeholder_name = 1)
+names(df9)[names(df9) == "placeholder_name"] <- currBatNameChar
+print("This below should now have column names:")
+df9
+# Now try and replace the placeholder with num_audio_events:
+df9["1", currBatNameChar] <- num_audio_events
+print("Now we have our new dataframe with some useful data:")
+df9
+print(df9)
+
+prevData <- cbind(prevData, df9) 
+}
+
+print("Now we have our new prevData dataframe with some useful data:")
+print(prevData)
 
 print("END")
 
