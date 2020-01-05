@@ -287,15 +287,6 @@ if(file.exists("From_R_01.csv"))
         df9 <- data.frame(placeholder_name = 1)
         names(df9)[names(df9) == "placeholder_name"] <- currBatNameChar
 
-
-        # Now insert a new value for num_audio_events into row 1, the new column:
-        df9["1", currBatNameChar] <- num_audio_events
-        # print("Now we have our new dataframe with some useful data:")
-        df9
-        # print(df9)
-        # Now add the new column:
-        prevData <- cbind(prevData, df9) 
-
         # Now insert a new value for num_audio_events into row 1:
         df9["1", currBatNameChar] <- num_audio_events
         print("Now we have our new dataframe with some useful data:")

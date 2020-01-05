@@ -18,6 +18,7 @@ sudo chmod 775 /home/pi/Desktop/deploy_classifier/helpers/toggled_01.txt
 cd /home/pi/Desktop/deploy_classifier/
 
 sh ./battery_info.sh &                                                        # Get battery information.
+rm /home/pi/Desktop/deploy_classifier/From_R_01.csv
 rm Final_result.txt
 rm Final_result_copy.txt
 cd /home/pi/Desktop/deploy_classifier/helpers/
