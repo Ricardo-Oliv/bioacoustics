@@ -18,6 +18,7 @@ from gi.repository import Gtk, Gdk, GdkPixbuf, GLib
 
 class ButtonWindow(Gtk.Window):
     spectoFile= "/home/pi/Desktop/deploy_classifier/images/spectograms/specto.png"
+    graphFile = '/home/pi/Desktop/deploy_classifier/images/graphical_results/graph.png'
 
     battery = "whatever"
 
@@ -45,6 +46,20 @@ class ButtonWindow(Gtk.Window):
         grid_06 = Gtk.Grid()
         
 ###########################################################################
+		# open_some_files(self)
+        # self.open_some_files()
+        print("opening some files ..... ")
+        file = "/home/pi/Desktop/deploy_classifier/helpers/toggled_01.txt"
+        with open(file) as fp:
+            textToggled = fp.read()
+        fp.close()
+        print(textToggled)
+        file = "/home/pi/Desktop/deploy_classifier/helpers/toggled_02.txt"
+        with open(file) as fp:
+            textToggled2 = fp.read()
+        fp.close()
+        print(textToggled2)
+##########################################################################
 
         vboxCombo = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
         
@@ -260,14 +275,24 @@ class ButtonWindow(Gtk.Window):
         # self.specto_image.set_from_pixbuf(self.pixbuf2)
         # self.specto_box.add(self.specto_image)
         # self.specto_box.connect("button_press_event",self.hello1)
-        
-        specto_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-        self.image = GdkPixbuf.Pixbuf.new_from_file(self.spectoFile)
-        self.image_renderer = Gtk.Image.new_from_pixbuf(self.image)
-        buttonSpecto = Gtk.Button(label='Change')
-        buttonSpecto.connect('clicked', self.editPixbuf)
-        specto_box.pack_start(self.image_renderer, True, True, 0)
-        specto_box.pack_start(buttonSpecto, True, True, 0)
+      
+        if (textToggled2 == "spectogram"):  
+            specto_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+            self.image = GdkPixbuf.Pixbuf.new_from_file(self.spectoFile)
+            self.image_renderer = Gtk.Image.new_from_pixbuf(self.image)
+            buttonSpecto = Gtk.Button(label='Change')
+            buttonSpecto.connect('clicked', self.editPixbuf)
+            specto_box.pack_start(self.image_renderer, True, True, 0)
+            specto_box.pack_start(buttonSpecto, True, True, 0)
+
+        if (textToggled2 == "graph"):
+            graph_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+            self.image = GdkPixbuf.Pixbuf.new_from_file(self.graphFile)
+            self.image_renderer = Gtk.Image.new_from_pixbuf(self.image)
+            buttonGraph = Gtk.Button(label='Change')
+            buttonGraph.connect('clicked', self.editPixbuf)
+            graph_box.pack_start(self.image_renderer, True, True, 0)
+            graph_box.pack_start(buttonGraph, True, True, 0)
         
 #######################################################################################################################
 #######################################################################################################################
@@ -296,7 +321,7 @@ class ButtonWindow(Gtk.Window):
         hbox2.pack_start(buttonW2, False, False, 0)
 
         buttonW3 = Gtk.Button.new_with_mnemonic("_Graphical reporting")
-        buttonW3.connect("clicked", self.text_reporting_clicked)
+        buttonW3.connect("clicked", self.graph_clicked)
         hbox2.pack_start(buttonW3, False, False, 0)
 
         # hbox2.set_position(300)
@@ -344,26 +369,26 @@ class ButtonWindow(Gtk.Window):
         self.label2 = Gtk.Label()
         self.label2.set_width_chars(60)
         box1.pack_start(self.label2, True, True, 0)   
-
-		# open_some_files(self)
-        # self.open_some_files()
-        print("opening some files ..... ")
-        file = "/home/pi/Desktop/deploy_classifier/helpers/toggled_01.txt"
-        with open(file) as fp:
-            textToggled = fp.read()
-        fp.close()
-        print(textToggled)
-        file = "/home/pi/Desktop/deploy_classifier/helpers/toggled_02.txt"
-        with open(file) as fp:
-            textToggled2 = fp.read()
-        fp.close()
-        print(textToggled2)
         # grid_05.add(box1)                               
 #######################################################################################################################
 #######################################################################################################################
+        # if (textToggled == "record") and (textToggled2 == "spectogram"): 
+            # grid_05.add(specto_box)
+        # elif (textToggled == "record") and (textToggled2 == "text"): 
+            # grid_05.add(box1)
+            
         if (textToggled == "record") and (textToggled2 == "spectogram"): 
             grid_05.add(specto_box)
+        elif (textToggled == "record") and (textToggled2 == "graph"): 
+            grid_05.add(graph_box)
         elif (textToggled == "record") and (textToggled2 == "text"): 
+            grid_05.add(box1)
+
+        if (textToggled == "process") and (textToggled2 == "spectogram"): 
+            grid_05.add(specto_box)
+        elif (textToggled == "process") and (textToggled2 == "graph"): 
+            grid_05.add(graph_box)
+        elif (textToggled == "process") and (textToggled2 == "text"): 
             grid_05.add(box1)
 #######################################################################################################################
 #######################################################################################################################
@@ -585,7 +610,8 @@ class ButtonWindow(Gtk.Window):
                 a = 1
             elif (textToggled == "record") and (textToggled2 == "text"):                                          # There exists no stopFile.
                 file = '/home/pi/Desktop/deploy_classifier/Final_result_copy.txt'
-                if os.path.isfile(file):
+                # Is there data in the file?
+                if (os.path.getsize(file) > 0):
                     current_time = time.ctime(os.path.getctime("/home/pi/Desktop/deploy_classifier/Final_result_copy.txt"))
                     newText = ""
                     line2 = ""
@@ -626,7 +652,7 @@ class ButtonWindow(Gtk.Window):
 
             elif (textToggled == "process") and (textToggled2 == "text"):
                 file = '/home/pi/Desktop/deploy_classifier/Final_result_copy.txt'
-                if os.path.isfile(file):
+                if (os.path.getsize(file) > 0):
                     with open(file, "r") as fp:
                         text = fp.read()
                     fp.close()
@@ -650,7 +676,7 @@ class ButtonWindow(Gtk.Window):
                 print("From GUI.py: ... Trying to update spectogram: ....... ",num)
                 waittime=6
                 file = '/home/pi/Desktop/deploy_classifier/images/spectograms/specto.png'
-                if os.path.isfile(file):
+                if (os.path.getsize(file) > 0):
                     print("From GUI.py: ... We found a spectogram: ....... ",num)
                     self.image = GdkPixbuf.Pixbuf.new_from_file(self.spectoFile)
                     self.image_renderer.set_from_pixbuf (self.image)
@@ -666,11 +692,28 @@ class ButtonWindow(Gtk.Window):
                 print("From GUI.py: ... Trying to update spectogram: ....... ",num)
                 waittime=6
                 file = '/home/pi/Desktop/deploy_classifier/images/spectograms/specto.png'
-                if os.path.isfile(file):
+                # if os.path.isfile(file):
+                if (os.path.getsize(file) > 0):
                     print("From GUI.py: ... We found a spectogram: ....... ",num)
                     self.image = GdkPixbuf.Pixbuf.new_from_file(self.spectoFile)
                     self.image_renderer.set_from_pixbuf (self.image)
                     # print(self.spectoFile)
+                while Gtk.events_pending():
+                    Gtk.main_iteration()
+                t.sleep(waittime)
+                
+            elif (textToggled == "process") and (textToggled2 == "graph"):    # /home/pi/Desktop/deploy_classifier/helpers/toggled_02.txt is where "text" or "spectogram" is stored according to button pressed.
+                num=rd.randint(1,60)
+                # print(num)
+                print("From GUI.py: ... Trying to update bar chart: ....... ",num)
+                waittime=6
+                file = '/home/pi/Desktop/deploy_classifier/images/graphical_results/graph.png'
+                # Check the file has data in it:
+                if (os.path.getsize(file) > 0):
+                # if os.path.isfile(file):
+                    print("From GUI.py: ... We found a graph file: ....... ",num)
+                    self.image = GdkPixbuf.Pixbuf.new_from_file(self.graphFile)
+                    self.image_renderer.set_from_pixbuf (self.image)
                 while Gtk.events_pending():
                     Gtk.main_iteration()
                 t.sleep(waittime)
@@ -776,6 +819,14 @@ class ButtonWindow(Gtk.Window):
         
     def spectogram_clicked(self, button):
         name = "spectogram"
+        file = "/home/pi/Desktop/deploy_classifier/helpers/toggled_02.txt"      # TODO: change file name to something better descriptive.
+        f= open(file, "w+")                                                     # Create the file toggled_02.txt
+        f.write(name)
+        f.close()
+        call('./restart_the_app.sh', shell=True)                                # Restart the app for toggle2 to take effect.
+        
+    def graph_clicked(self, button):
+        name = "graph"
         file = "/home/pi/Desktop/deploy_classifier/helpers/toggled_02.txt"      # TODO: change file name to something better descriptive.
         f= open(file, "w+")                                                     # Create the file toggled_02.txt
         f.write(name)

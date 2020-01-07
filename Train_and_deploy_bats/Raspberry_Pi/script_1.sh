@@ -53,17 +53,20 @@ f_create_filtered_wav_file ()
   cp filtered.wav /home/pi/Desktop/deploy_classifier/unknown_bat_audio/
 }
 
-f_create_spectogram ()
+f_create_spectogram_or_graph ()
 {
   # Create spectogram:
   ##############################################################################
   sleep 2
-  value2=`cat /home/pi/Desktop/deploy_classifier/helpers/toggled_02.txt`         # Options include 'text' and 'spectogram'. It's not from a toggled button any more!
+  value2=`cat /home/pi/Desktop/deploy_classifier/helpers/toggled_02.txt`         # Options include 'text' and 'spectogram' and 'graph'. BEWARE: It's not actually from a toggled button any more!
   echo "bash_app reports: Value2 = "$value2
   if [ ${value2} = "spectogram" ]; then
     echo "bash_app reports: Spectogram now being created in python3 create_spectogram.py....."
     python3 /home/pi/Desktop/deploy_classifier/create_spectogram.py &            # Creates a spectogram from filtered.wav which lives in 'unknown_bat_audio folder.
   # else taskset 0x3 sh ./script_2.sh &                                          # Only run script_2 and classifier with no spectogram.
+  elif [ ${value2} = "graph" ]; then
+    echo "bash_app reports: Graph now being created in python3 create_barchart.py....."
+    python3 /home/pi/Desktop/deploy_classifier/create_barchart.py &              # Creates a barchart from filtered.wav which lives in 'unknown_bat_audio folder.
   fi
   ##############################################################################
 }
@@ -116,7 +119,7 @@ do
 #################################################
     sh ./battery_info.sh &                                                        # Get battery information.
     f_create_filtered_wav_file &
-    f_create_spectogram &                                                         # Create spectogram - or do classification.
+    f_create_spectogram_or_graph  &                                                         # Create spectogram - or do classification.
     
     value2=`cat /home/pi/Desktop/deploy_classifier/helpers/toggled_02.txt`        # Options include 'text' and 'spectogram'. It's not from a toggled button any more!
     echo "bash_app reports: Value2 = "$value2
@@ -136,10 +139,18 @@ do
 
     # echo $counter > /home/pi/Desktop/deploy_classifier/helpers/counter.txt
   elif [ "$value" == "process" ]; then
-    echo "bash_app reports: Processing! ...."
+    # echo "bash_app reports: Processing! ...."
+    printf "${GREEN}script_1 reports: Processing! .... ${NC}\n"
     sleep 2
     cd /home/pi/Desktop/deploy_classifier/
+    
+    
+    
+    
     python3 process_audio_files.py             # Adding a '&' to this causes lock up!
+    # Create_barchart is called within process_audio_files.py !!!!!
+    
+    
     # Does create_spectogram.py go here?
     # Why are the following 3 lines here?
     cd /home/pi/Desktop/deploy_classifier/helpers/

@@ -9,6 +9,7 @@ import numpy as np
 import pandas as pd
 import time
 import re
+from PIL import Image
 
 # infile = '/home/pi/Desktop/deploy_classifier/images/graphical_results/test5.csv'
 infile = '/home/pi/Desktop/deploy_classifier/From_R_01.csv'
@@ -170,7 +171,6 @@ ax.set_xticks (ind + width/2.)
 ax.set_xticklabels( xt, rotation = 45 )                       # This is where the x axis labels are set.
 
 
-
 # fig.legend( (p0[0], p1[0], p2[0], p3[0]), ('c_pip', 's_pip', 'n_pip', 'noctule') )
 # fig.legend( (p0[0], p1[0], p2[0]), (bat_names[0,1], bat_names[0,2], bat_names[0,3]) )
 
@@ -180,9 +180,42 @@ ax.set_xticklabels( xt, rotation = 45 )                       # This is where th
 fig.legend( (p0[0], p1[0], p2[0], p3[0] , p4[0], p5[0], p6[0], p7[0], p8[0], p9[0]  ), 
            (new_bat_names[1], new_bat_names[2], new_bat_names[3], new_bat_names[4], new_bat_names[5], new_bat_names[6] , new_bat_names[7] , new_bat_names[8] , new_bat_names[9] , new_bat_names[10] ) )
 
+# plt.rcParams["figure.figsize"] = [6.8,3.2]
+# plt.rcParams["figure.figsize"] = [3,2]
 
+# plt.figure(figsize=(3,4))
+
+# plt.rcParams['figure.figsize'] = [6.5, 5.5]
+# plt.rcParams['figure.figsize'] = [3, 2]
+
+# plt.subplot(211)
+# plt.show()
 fig.legend(loc=(1.15, 0.6))
-figsize=(10,8)
-fig.tight_layout()
+# figsize=(3,2)
+
+
+# fig.tight_layout()
 # fig.show()
-plt.savefig('/home/pi/Desktop/deploy_classifier/images/graphical_results/graph.png', bbox_inches='tight')
+# plt.show()
+
+# plt.figure(figsize=(3,2))
+
+# plt.savefig('/home/pi/Desktop/deploy_classifier/images/graphical_results/graph.png', bbox_inches='tight', figsize=(3,2))
+fig.savefig('/home/pi/Desktop/deploy_classifier/images/graphical_results/graph.png', bbox_inches='tight', figsize=(3,2))
+
+
+# Rezize the image:
+quality_val = 100
+filename = '/home/pi/Desktop/deploy_classifier/images/graphical_results/graph.png'
+img = Image.open(filename)
+new_img = img.resize((580,230), Image.ANTIALIAS)
+# new_img = img.resize((500,500), Image.ANTIALIAS)
+new_img.save(filename, "png", quality=quality_val)
+
+
+
+# fig = plt.figure(figsize=(4,3))
+# ax = fig.add_subplot(111)
+# ax.plot(list1, list2)
+# fig.savefig('fig1.png', dpi = 300)
+# fig.close()

@@ -27,6 +27,7 @@ command_python = "python3"
 command_bash = "bash"
 
 path_to_create_spectogram = "/home/pi/Desktop/deploy_classifier/create_spectogram.py"
+path_to_create_graph = "/home/pi/Desktop/deploy_classifier/create_barchart.py"
 path_to_battery = "/home/pi/Desktop/deploy_classifier/battery_info.sh"
 
 
@@ -39,9 +40,9 @@ n = 1
 line = [1, 2, 3, 4, 5]
 
 f = open(file5)
-text_or_spectogram = f.readline()
-print("Is it text or spectogram?")
-print(text_or_spectogram )
+text_or_graph_or_spectogram = f.readline()
+print("From process_audio_files.py: Is it text or graph or spectogram?")
+print(text_or_graph_or_spectogram )
 f.close()
 
 
@@ -145,9 +146,14 @@ for file in os.listdir(directory):                                       # This 
                 detected = "Something was detected:"
                 
 ##############################################################################################################
-                if text_or_spectogram == "spectogram":
+                if text_or_graph_or_spectogram == "spectogram":
                     # Build subprocess command
                     cmd = [command_python, path_to_create_spectogram]
+                    print(cmd)
+                    x = subprocess.Popen(cmd).wait()                              # This is where the create spectogram program is called.
+                if text_or_graph_or_spectogram == "graph":
+                    # Build subprocess command
+                    cmd = [command_python, path_to_create_graph]
                     print(cmd)
                     x = subprocess.Popen(cmd).wait()                              # This is where the create spectogram program is called.
 ######################################################################################################################
