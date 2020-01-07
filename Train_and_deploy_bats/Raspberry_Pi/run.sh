@@ -91,7 +91,7 @@ done
 printf "${GREEN}Services have been checked and stopped.${NC}\n"
 sleep 2
 printf "${GREEN}Now try to run GUI.py ......${NC}\n"
-python GUI.py &
+python3 GUI.py &
 bash ./script_1.sh &
 printf "${GREEN}script_1 has been started.${NC}\n"
 sleep 2

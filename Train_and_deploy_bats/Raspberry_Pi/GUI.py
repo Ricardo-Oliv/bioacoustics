@@ -610,8 +610,7 @@ class ButtonWindow(Gtk.Window):
                 a = 1
             elif (textToggled == "record") and (textToggled2 == "text"):                                          # There exists no stopFile.
                 file = '/home/pi/Desktop/deploy_classifier/Final_result_copy.txt'
-                # Is there data in the file?
-                if (os.path.getsize(file) > 0):
+                if os.path.isfile(file):
                     current_time = time.ctime(os.path.getctime("/home/pi/Desktop/deploy_classifier/Final_result_copy.txt"))
                     newText = ""
                     line2 = ""
