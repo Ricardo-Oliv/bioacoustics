@@ -10,6 +10,9 @@ import re
 from datetime import datetime
 import os.path, time
 from subprocess import call
+import colorama
+from colorama import Fore, Back, Style
+import sys
 
 
 gi.require_version('Gtk', '3.0')
@@ -719,7 +722,7 @@ class ButtonWindow(Gtk.Window):
             elif (textToggled == "process") and (textToggled2 == "graph"):    # /home/pi/Desktop/deploy_classifier/helpers/toggled_02.txt is where "text" or "spectogram" is stored according to button pressed.
                 num=rd.randint(1,60)
                 # print(num)
-                print("From GUI.py: ... Trying to update bar chart: ....... ",num)
+                print("From GUI.py .... Updating the Bar chart .....",num)
                 waittime=6
                 file = '/home/pi/Desktop/deploy_classifier/images/graphical_results/graph.png'
                 # Check the file has data in it:

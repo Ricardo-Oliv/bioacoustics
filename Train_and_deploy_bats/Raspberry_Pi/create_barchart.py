@@ -13,6 +13,19 @@ import time
 import re
 from PIL import Image
 import os
+import colorama
+from colorama import Fore, Back, Style
+import sys
+
+end = "\n"
+RED = "\x1b[1;31m"
+BLUE='\e[44m'
+F_LightGreen = "\x1b[92m"
+F_Green = "\x1b[32m"
+F_LightBlue = "\x1b[94m"
+B_White = "\x1b[107m"
+NC = "\x1b[0m" # No Color
+Blink = "\x1b[5m"
 
 # file = "/home/pi/Desktop/deploy_classifier/my_audio/noctula_Oct_31_2019_01.wav"
 file = "/home/pi/Desktop/deploy_classifier/my_audio/11_oct_2019_01.wav"                # 110 Mb
@@ -40,7 +53,11 @@ line = [1, 2, 3, 4, 5]
 
 f = open(file5)             # toggled_02.txt
 text_or_graph_or_spectogram = f.readline()
-print("From process_audio_files.py: Is it text or graph or spectogram?")
+
+sys.stderr.write('\x1b[1;31m' + "Start of create_barchart.py !!!!" + '\x1b[0m' + end)
+
+print(Fore.CYAN)
+print("From create_barchart.py: Is it text or graph or spectogram?")
 print(text_or_graph_or_spectogram )
 f.close()
 
@@ -56,6 +73,7 @@ while True:
         break
 f.close()
 
+print(Fore.MAGENTA)
 if (line[1] == "UK_Bats\n"):
 	print ("UK_Bats was selected")
 elif (line[1] == "Rodents\n" ):
@@ -93,7 +111,7 @@ elif ((line[1] == "UK_Bats\n" ) and (line[2] == "Level3:_Order\n" )):
 else:
 	print ("No valid combo box selection was made")
 
-
+print(Style.RESET_ALL)
 
 
 #####################################################################
@@ -187,12 +205,37 @@ data = np.delete(data, (0), axis=1)                    # Delete first column.
 ########################################################################
 # Dont forget the data is transposed!
 
-print("\n col_count:  ",col_count)
+# sys.stderr.write('\x1b[1;31m\x1b[5m' + "Hello Two !!!!!" + '\x1b[0m' + end)
+# sys.stderr.write(RED + "Hello Three !!!!!" + NC + end)
+# sys.stderr.write(F_LightGreen + "Hello Four !!!!!" + NC + end)
+# sys.stderr.write(F_LightGreen + Blink + "Hello Five !!!!!" + NC + end)
+
+
+print(Fore.CYAN)
+print("\ncol_count:  ",col_count)
 print("row_count:  ",row_count,"\n")
+print(Style.RESET_ALL)
+
+# print(Fore.RED + 'some red text')
+# print(Back.GREEN + 'and with a green background')
+# print(Style.DIM + 'and in dim text')
+# print(Style.RESET_ALL)
+
+# print(Fore.BLUE + "Hello World")
+# print(Back.WHITE + "Hello World")
 
 data = data.transpose()
 
-b = np.zeros((12, row_count))                                # row, columns .... Increase columns rather than rows since the data has been transposed.
+# print(Style.RESET_ALL)
+
+
+
+if (row_count >10):
+    b = np.zeros((12, (row_count -1)))                                # row, columns .... Increase columns rather than rows since the data has been transposed.
+else:
+    b = np.zeros((12, (10)))
+
+
 # columns, rows
 b[:col_count-1, :row_count-1] = data
 # ERROR: ValueError: could not broadcast input array from shape (5,8) into shape (4,5)
@@ -203,8 +246,23 @@ data = b
 # print("\n This is b below: ")
 # print(b)
 
-print("\n This is array data after being transposed: ")
+# print(Fore.BLUE + "Hello World")
+# print(Back.WHITE + "Hello World")
+# print(Style.RESET_ALL)
+
+
+
+print("This is matrix 'data' after being transposed: " )
+# print(Back.WHITE)
+# print("\n This is matrix 'data' after being transposed: ")
+# print(Style.RESET_ALL)
+
+print(Fore.GREEN)
 print(data)
+print(Style.RESET_ALL)
+
+
+
 # TODO : Data matrix needs to be expanded to accept more columns !!!!!!
 #######################################################################
 # print("\n")
@@ -287,3 +345,5 @@ fig.legend(loc=(1.11, 0.4))
 
 # The graph.png image size is a combination of the dpi and figsize.
 fig.savefig('/home/pi/Desktop/deploy_classifier/images/graphical_results/graph.png', bbox_inches='tight', dpi=80)
+
+sys.stderr.write('\x1b[1;31m' + "End of create_barchart.py !!!!" + '\x1b[0m' + end)

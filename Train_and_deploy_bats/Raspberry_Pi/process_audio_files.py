@@ -10,16 +10,31 @@ import os
 import datetime
 import re
 import time
+import colorama
+from colorama import Fore, Back, Style
+import sys
+
+end = "\n"
+RED = "\x1b[1;31m"
+BLUE='\e[44m'
+F_LightGreen = "\x1b[92m"
+F_Green = "\x1b[32m"
+F_LightBlue = "\x1b[94m"
+B_White = "\x1b[107m"
+NC = "\x1b[0m" # No Color
+Blink = "\x1b[5m"
 
 # file = "/home/pi/Desktop/deploy_classifier/my_audio/noctula_Oct_31_2019_01.wav"
 file = "/home/pi/Desktop/deploy_classifier/my_audio/11_oct_2019_01.wav"                # 110 Mb
 file2 = "/home/pi/Desktop/deploy_classifier/Final_result.txt"
 file3 = "/home/pi/Desktop/deploy_classifier/Final_result_copy.txt"
-file5 = "/home/pi/Desktop/deploy_classifier/helpers/toggled_02.txt"                   # text or spectigram.
+file4='/home/pi/Desktop/deploy_classifier/helpers/combo_01.txt'
+file5 = "/home/pi/Desktop/deploy_classifier/helpers/toggled_02.txt"                    # text or spectigram or graph.
 folder1 = "/home/pi/Desktop/deploy_classifier/"
 folder2 = "/home/pi/Desktop/deploy_classifier/processed_audio/"
 folder3 = "/home/pi/Desktop/deploy_classifier/unknown_bat_audio/"
 folder4 = "/home/pi/Desktop/deploy_classifier/my_audio"
+directory = os.fsencode("/home/pi/Desktop/deploy_classifier/my_audio")
 
 # Define command and arguments
 command = 'Rscript'
@@ -30,24 +45,18 @@ path_to_create_spectogram = "/home/pi/Desktop/deploy_classifier/create_spectogra
 path_to_create_graph = "/home/pi/Desktop/deploy_classifier/create_barchart.py"
 path_to_battery = "/home/pi/Desktop/deploy_classifier/battery_info.sh"
 
-
-directory = os.fsencode("/home/pi/Desktop/deploy_classifier/my_audio")
-
-
-file4='/home/pi/Desktop/deploy_classifier/helpers/combo_01.txt'
-
 n = 1
 line = [1, 2, 3, 4, 5]
 
-f = open(file5)
+sys.stderr.write('\x1b[1;31m' + "Start of process_audio_files.py !!!!" + '\x1b[0m' + end)
+
+f = open(file5)             # toggled_02.txt
 text_or_graph_or_spectogram = f.readline()
 print("From process_audio_files.py: Is it text or graph or spectogram?")
 print(text_or_graph_or_spectogram )
 f.close()
 
-
-f = open(file4)
-
+f = open(file4)             # combo_01.txt
 while True:
     # read line
     x = f.readline()
@@ -101,6 +110,7 @@ print("Starting .....")
 
 for file in os.listdir(directory):                                       # This loop will carry on going as long as there are more files to process.
     filename = os.fsdecode(file)
+    sys.stderr.write('\x1b[1;31m' + "Processing new wav file ...." + '\x1b[0m' + end)
     if filename.endswith(".wav"):
         # print(filename)
         # print(os.path.join(directory, filename))
@@ -114,7 +124,7 @@ for file in os.listdir(directory):                                       # This 
         #Export all of the individual chunks as wav files
 
         for i, chunk in enumerate(chunks):
-
+            sys.stderr.write('\x1b[1;31m' + "Processing audio chunk ...." + '\x1b[0m' + end)
             # if Final_result.txt" exists ......
             if Path(folder1 + "Final_result.txt").is_file():
                 # print (i," File exists")
@@ -133,8 +143,8 @@ for file in os.listdir(directory):                                       # This 
             # chunk.export(folder3 + filtered, format="wav")             # folder3 is "unknown_bat_audio". There is no actual filter applied .... yet !!
             
             # Build subprocess command
-            cmd = [command_bash, path_to_battery]
-            x = subprocess.Popen(cmd).wait()                              # This is where the battery volts program is called.
+            # cmd = [command_bash, path_to_battery]
+            # x = subprocess.Popen(cmd).wait()                              # This is where the battery volts program is called.
             
             # Build subprocess command
             cmd = [command, path2script]
@@ -195,7 +205,7 @@ for file in os.listdir(directory):                                       # This 
                 newText = ""
 
         #for i, chunk in enumerate(chunks):
-            print("")
+            # sys.stderr.write('\x1b[1;31m' + "Process audio chunk ...." + '\x1b[0m' + end)
             # print(file_to_process)
             # print(filename)
             # print ("Processing ", chunk_name)
@@ -219,3 +229,4 @@ f= open(file, "w+")
 f.write(message)
 f.close()
 # time.sleep(5)         # Allows GUI to catch up.
+sys.stderr.write('\x1b[1;31m' + "End of process_audio_files.py !!!!" + '\x1b[0m' + end)
