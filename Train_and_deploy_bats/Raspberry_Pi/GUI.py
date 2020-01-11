@@ -283,7 +283,7 @@ class ButtonWindow(Gtk.Window):
             buttonSpecto = Gtk.Button(label='Change')
             buttonSpecto.connect('clicked', self.editPixbuf)
             specto_box.pack_start(self.image_renderer, True, True, 0)
-            specto_box.pack_start(buttonSpecto, True, True, 0)
+            # specto_box.pack_start(buttonSpecto, True, True, 0)
 
         if (textToggled2 == "graph"):
             graph_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
@@ -292,7 +292,7 @@ class ButtonWindow(Gtk.Window):
             buttonGraph = Gtk.Button(label='Change')
             buttonGraph.connect('clicked', self.editPixbuf)
             graph_box.pack_start(self.image_renderer, True, True, 0)
-            graph_box.pack_start(buttonGraph, True, True, 0)
+            # graph_box.pack_start(buttonGraph, True, True, 0)
         
 #######################################################################################################################
 #######################################################################################################################

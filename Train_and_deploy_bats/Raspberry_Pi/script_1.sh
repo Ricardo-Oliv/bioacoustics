@@ -17,7 +17,7 @@ sudo chmod 775 /home/pi/Desktop/deploy_classifier/helpers/toggled_01.txt
 
 cd /home/pi/Desktop/deploy_classifier/
 
-sh ./battery_info.sh &                                                        # Get battery information.
+# sh ./battery_info.sh &                                                        # Get battery information.
 rm /home/pi/Desktop/deploy_classifier/From_R_01.csv
 rm Final_result.txt
 rm Final_result_copy.txt
@@ -122,12 +122,13 @@ do
     f_create_spectogram_or_graph  &                                                         # Create spectogram - or do classification.
     
     value2=`cat /home/pi/Desktop/deploy_classifier/helpers/toggled_02.txt`        # Options include 'text' and 'spectogram'. It's not from a toggled button any more!
+##############################################################
     echo "bash_app reports: Value2 = "$value2
-    if [ ${value2} = "text" ]; then
-      sleep 1
+    # if [ ${value2} = "text" ]; then
+      # sleep 1
       sh ./script_2.sh &                                                          # Only run script_2 and classifier with no spectogram.
-    fi
-
+    # fi
+##############################################################
     printf "${GREEN}Iteration ${iter} audio finished ${NC}\n"
     # rm Final_result.txt
     bat_detected=0

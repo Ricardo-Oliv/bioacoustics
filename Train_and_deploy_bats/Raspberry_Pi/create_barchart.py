@@ -209,16 +209,26 @@ xt = np.loadtxt(infile, dtype='str', delimiter=',', skiprows = 1, usecols = (0,)
 # print("\n This is xt, the x axis time labels:")
 # print(xt)
 # print("\n")
+y = 0
 
 if (row_count == 2):
-    z = int(xt)
-    xt = time.strftime('%H:%M:%S', time.localtime(z))
+    # xt = np.loadtxt(infile, dtype='str', delimiter=',', skiprows = 1, usecols = (0,))
+    # z = int(xt)
+    # xt = time.strftime('%H:%M:%S', time.localtime(z))
+    xt = ""
     # print("Time: ", xt )
 else:
     for x in range(row_count-1):
         z = int(xt[x])
+        # y[x] = int(xt[x])
+        # w = y[0] - y[1]
+        # print("\nWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW = ",w)
+        # period = int(xt[0]) - int(xt[1])
+        # print("Period = ", period)
         xt[x] = time.strftime('%H:%M:%S', time.localtime(z))
-    # print("Time: ", xt[x] )
+        
+
+# print("Time: ", xt[x] )
 # print("\n")
 
 
@@ -238,7 +248,7 @@ ind = np.arange(col_count) + 0.75                             # We need to know 
 # print("data[10]:",data[10])
 # print("data[11]:",data[11])
 
-fig = plt.figure(figsize=(5, 2.7))          # x, y
+fig = plt.figure(figsize=(6.6, 2.5))          # x, y
 
 ax = fig.subplots(1,1)
 
@@ -254,6 +264,10 @@ p8=ax.bar(ind,data[8],width,bottom=data[0]+data[1]+data[2]+data[3]+data[4]+data[
 p9=ax.bar(ind,data[9],width,bottom=data[0]+data[1]+data[2]+data[3]+data[4]+data[5]+data[6]+data[7]+data[8]  ,color='brown')
 p10=ax.bar(ind,data[10],width,bottom=data[0]+data[1]+data[2]+data[3]+data[4]+data[5]+data[6]+data[7]+data[8]+data[9]  ,color='orange')
 
+# fig.title('My title')
+ax.set_title('Number of Bat Calls in Time Period')
+
+
 ax.set_ylabel('frequency (per hour)')
 # ax.set_xlabel('hour of the day')
 
@@ -263,7 +277,7 @@ ax.set_xticklabels( xt, rotation = 45 )                       # This is where th
 fig.legend( (p0[0], p1[0], p2[0], p3[0] , p4[0], p5[0], p6[0], p7[0], p8[0], p9[0]  ), 
            (new_bat_names[1], new_bat_names[2], new_bat_names[3], new_bat_names[4], new_bat_names[5], new_bat_names[6] , new_bat_names[7] , new_bat_names[8] , new_bat_names[9] , new_bat_names[10] ) )
 
-fig.legend(loc=(1.15, 0.6))
+fig.legend(loc=(1.11, 0.4))
 
 # The graph.png image size is a combination of the dpi and figsize.
 fig.savefig('/home/pi/Desktop/deploy_classifier/images/graphical_results/graph.png', bbox_inches='tight', dpi=80)

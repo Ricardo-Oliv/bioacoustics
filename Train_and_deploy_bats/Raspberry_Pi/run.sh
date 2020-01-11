@@ -8,7 +8,7 @@ GREEN='\033[0;32m'
 NC='\033[0m' # No Color
 BLINK='\e[5m'
 
-pivoyager enable low-battery-shutdown
+# pivoyager enable low-battery-shutdown
 
 cd /home/pi/Desktop/deploy_classifier/
 
