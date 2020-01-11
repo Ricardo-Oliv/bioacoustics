@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 # cd /home/pi/Desktop/deploy_classifier/ && python3 create_barchart.py
 # python3 create_barchart.py
 # cd /home/pi/Desktop/deploy_classifier/ && chmod 775 create_barchart.py
@@ -10,7 +12,91 @@ import pandas as pd
 import time
 import re
 from PIL import Image
+import os
 
+# file = "/home/pi/Desktop/deploy_classifier/my_audio/noctula_Oct_31_2019_01.wav"
+file = "/home/pi/Desktop/deploy_classifier/my_audio/11_oct_2019_01.wav"                # 110 Mb
+file2 = "/home/pi/Desktop/deploy_classifier/Final_result.txt"
+file3 = "/home/pi/Desktop/deploy_classifier/Final_result_copy.txt"
+file4='/home/pi/Desktop/deploy_classifier/helpers/combo_01.txt'
+file5 = "/home/pi/Desktop/deploy_classifier/helpers/toggled_02.txt"                    # text or spectigram or graph.
+folder1 = "/home/pi/Desktop/deploy_classifier/"
+folder2 = "/home/pi/Desktop/deploy_classifier/processed_audio/"
+folder3 = "/home/pi/Desktop/deploy_classifier/unknown_bat_audio/"
+folder4 = "/home/pi/Desktop/deploy_classifier/my_audio"
+directory = os.fsencode("/home/pi/Desktop/deploy_classifier/my_audio")
+
+# Define command and arguments
+command = 'Rscript'
+command_python = "python3"
+command_bash = "bash"
+
+path_to_create_spectogram = "/home/pi/Desktop/deploy_classifier/create_spectogram.py"
+path_to_create_graph = "/home/pi/Desktop/deploy_classifier/create_barchart.py"
+path_to_battery = "/home/pi/Desktop/deploy_classifier/battery_info.sh"
+
+n = 1
+line = [1, 2, 3, 4, 5]
+
+f = open(file5)             # toggled_02.txt
+text_or_graph_or_spectogram = f.readline()
+print("From process_audio_files.py: Is it text or graph or spectogram?")
+print(text_or_graph_or_spectogram )
+f.close()
+
+f = open(file4)             # combo_01.txt
+while True:
+    # read line
+    x = f.readline()
+    line[n] = x
+    n = n + 1
+    # print(x)
+    # check if line is not empty
+    if not x:
+        break
+f.close()
+
+if (line[1] == "UK_Bats\n"):
+	print ("UK_Bats was selected")
+elif (line[1] == "Rodents\n" ):
+	print ("Rodents was selected")
+elif (line[1] == "Mechanical_Bearings"):
+	print ("Mechanical_Bearings was selected")
+
+if (line[2] == "Level1:_Species\n"):
+	print ("Level1:_Species was selected")
+elif (line[2] == "Level2:_Genera\n" ):
+	print ("Level2:_Genera was selected")
+elif (line[2] == "Level3:_Order\n"):
+	print("Level3:_Order was selected")
+elif (line[2] == "Bicycle_Wheel\n" ):
+	print ("Bicycle_Wheel was selected")
+
+if (line[3] ==  "All_Calls"):
+	print("All_Calls was selected")
+elif (line[3] == "Echolocation_Only" ):
+	print("Echolocation was selected")
+elif (line[3] == "Socials_Only" ):
+	print("Socials was selected")
+elif (line[3] == "NULL" ):
+	print("NULL was selected")
+
+if ((line[1] == "UK_Bats\n") and (line[2] == "Level1:_Species\n")):
+	path2script = '/home/pi/Desktop/deploy_classifier/Deploy_bats_pi.R'
+	print ("Level 1 was deployed")
+elif ((line[1] == "UK_Bats\n" ) and (line[2] == "Level2:_Genera\n" )):
+	path2script = '/home/pi/Desktop/deploy_classifier/Deploy_bats_pi_Level2.R'
+	print ("Level 2 was deployed")
+elif ((line[1] == "UK_Bats\n" ) and (line[2] == "Level3:_Order\n" )):
+	path2script = '/home/pi/Desktop/deploy_classifier/Deploy_bats_pi_Level3.R'
+	print ("Level 3 was deployed")
+else:
+	print ("No valid combo box selection was made")
+
+
+
+
+#####################################################################
 # infile = '/home/pi/Desktop/deploy_classifier/images/graphical_results/test5.csv'
 infile = '/home/pi/Desktop/deploy_classifier/From_R_01.csv'
 
@@ -144,7 +230,7 @@ col_count = data.shape[1]  # gives number of col count
 width = 0.55
 # ind = np.arange(11) + 0.75
 ind = np.arange(col_count) + 0.75                             # We need to know the number of rows of data!
-
+# ind = np.arange(col_count) + 0.75 + 20.0                             # We need to know the number of rows of data!
 
 # print("data[2]:",data[2])
 # print("data[3]:",data[3])
@@ -152,7 +238,10 @@ ind = np.arange(col_count) + 0.75                             # We need to know 
 # print("data[10]:",data[10])
 # print("data[11]:",data[11])
 
-fig, ax = plt.subplots(1,1)
+fig = plt.figure(figsize=(5, 2.7))          # x, y
+
+ax = fig.subplots(1,1)
+
 p0 = ax.bar(ind, data[0], width, color = 'cyan')
 p1 = ax.bar(ind, data[1], width, bottom = data[0], color = 'violet')
 p2 = ax.bar(ind, data[2], width, bottom = data[0] + data[1], color = 'green')
@@ -167,55 +256,14 @@ p10=ax.bar(ind,data[10],width,bottom=data[0]+data[1]+data[2]+data[3]+data[4]+dat
 
 ax.set_ylabel('frequency (per hour)')
 # ax.set_xlabel('hour of the day')
+
 ax.set_xticks (ind + width/2.)
 ax.set_xticklabels( xt, rotation = 45 )                       # This is where the x axis labels are set.
-
-
-# fig.legend( (p0[0], p1[0], p2[0], p3[0]), ('c_pip', 's_pip', 'n_pip', 'noctule') )
-# fig.legend( (p0[0], p1[0], p2[0]), (bat_names[0,1], bat_names[0,2], bat_names[0,3]) )
-
-# fig.legend( (p0[0], p1[0], p2[0], p3[0]), (new_bat_names[1],
-#                new_bat_names[2], new_bat_names[3], new_bat_names[4]) )
 
 fig.legend( (p0[0], p1[0], p2[0], p3[0] , p4[0], p5[0], p6[0], p7[0], p8[0], p9[0]  ), 
            (new_bat_names[1], new_bat_names[2], new_bat_names[3], new_bat_names[4], new_bat_names[5], new_bat_names[6] , new_bat_names[7] , new_bat_names[8] , new_bat_names[9] , new_bat_names[10] ) )
 
-# plt.rcParams["figure.figsize"] = [6.8,3.2]
-# plt.rcParams["figure.figsize"] = [3,2]
-
-# plt.figure(figsize=(3,4))
-
-# plt.rcParams['figure.figsize'] = [6.5, 5.5]
-# plt.rcParams['figure.figsize'] = [3, 2]
-
-# plt.subplot(211)
-# plt.show()
 fig.legend(loc=(1.15, 0.6))
-# figsize=(3,2)
 
-
-# fig.tight_layout()
-# fig.show()
-# plt.show()
-
-# plt.figure(figsize=(3,2))
-
-# plt.savefig('/home/pi/Desktop/deploy_classifier/images/graphical_results/graph.png', bbox_inches='tight', figsize=(3,2))
-fig.savefig('/home/pi/Desktop/deploy_classifier/images/graphical_results/graph.png', bbox_inches='tight', figsize=(3,2))
-
-
-# Rezize the image:
-quality_val = 100
-filename = '/home/pi/Desktop/deploy_classifier/images/graphical_results/graph.png'
-img = Image.open(filename)
-new_img = img.resize((580,230), Image.ANTIALIAS)
-# new_img = img.resize((500,500), Image.ANTIALIAS)
-new_img.save(filename, "png", quality=quality_val)
-
-
-
-# fig = plt.figure(figsize=(4,3))
-# ax = fig.add_subplot(111)
-# ax.plot(list1, list2)
-# fig.savefig('fig1.png', dpi = 300)
-# fig.close()
+# The graph.png image size is a combination of the dpi and figsize.
+fig.savefig('/home/pi/Desktop/deploy_classifier/images/graphical_results/graph.png', bbox_inches='tight', dpi=80)

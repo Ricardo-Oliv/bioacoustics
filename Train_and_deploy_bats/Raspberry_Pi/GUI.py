@@ -124,7 +124,7 @@ class ButtonWindow(Gtk.Window):
         hbox = Gtk.Box(spacing=6)
         hbox.set_orientation(Gtk.Orientation.VERTICAL)
 
-        buttonZ1 = Gtk.RadioButton.new_with_label_from_widget(None, "Record some live audio")
+        buttonZ1 = Gtk.RadioButton.new_with_label_from_widget(None, "Record and classify")
         #buttonZ1.set_label("record")
         buttonZ1.connect("toggled", self.on_button_toggled, "record")
         hbox.pack_start(buttonZ1, False, False, 0)
@@ -134,7 +134,7 @@ class ButtonWindow(Gtk.Window):
         buttonZ2.connect("toggled", self.on_button_toggled, "process")
         hbox.pack_start(buttonZ2, False, False, 0)
 
-        buttonZ3 = Gtk.RadioButton.new_with_label_from_widget(buttonZ1, "Button 3")
+        buttonZ3 = Gtk.RadioButton.new_with_label_from_widget(buttonZ1, "Basic record")
         buttonZ3.connect("toggled", self.on_button_toggled, "empty 1")
         hbox.pack_start(buttonZ3, False, False, 0)
 ############################################################################################
@@ -609,6 +609,7 @@ class ButtonWindow(Gtk.Window):
                 print("stopFile detected !!!!")
                 a = 1
             elif (textToggled == "record") and (textToggled2 == "text"):                                          # There exists no stopFile.
+                # print("\n\ntextToggled = record and textToggled2 = record\n\n")
                 file = '/home/pi/Desktop/deploy_classifier/Final_result_copy.txt'
                 if os.path.isfile(file):
                     current_time = time.ctime(os.path.getctime("/home/pi/Desktop/deploy_classifier/Final_result_copy.txt"))
@@ -680,6 +681,20 @@ class ButtonWindow(Gtk.Window):
                     self.image = GdkPixbuf.Pixbuf.new_from_file(self.spectoFile)
                     self.image_renderer.set_from_pixbuf (self.image)
                     # print(self.spectoFile)
+                while Gtk.events_pending():
+                    Gtk.main_iteration()
+                t.sleep(waittime)
+                
+            elif (textToggled == "record") and (textToggled2 == "graph"):    # /home/pi/Desktop/deploy_classifier/helpers/toggled_02.txt is where "text" or "spectogram" is stored according to button pressed.
+                num=rd.randint(1,60)
+                # print(num)
+                print("From GUI.py: ... Trying to update barchart: ....... ",num)
+                waittime=6
+                file = '/home/pi/Desktop/deploy_classifier/images/graphical_results/graph.png'
+                if (os.path.getsize(file) > 0):
+                    print("From GUI.py: ... We found a bar chart: ....... ",num)
+                    self.image = GdkPixbuf.Pixbuf.new_from_file(self.graphFile)
+                    self.image_renderer.set_from_pixbuf (self.image)
                 while Gtk.events_pending():
                     Gtk.main_iteration()
                 t.sleep(waittime)
@@ -845,6 +860,7 @@ class ButtonWindow(Gtk.Window):
     
 win = ButtonWindow()
 win.set_position(Gtk.WindowPosition.CENTER)
+# win.fullscreen()
 win.connect("destroy", Gtk.main_quit)
 win.show_all()
 Gtk.main()
