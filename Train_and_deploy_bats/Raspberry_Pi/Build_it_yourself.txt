@@ -1,0 +1,37 @@
+Build it yourself!
+
+Lastly, if anybody wants to build this system themselves:
+
+    Connect up a Pi4 with 4Gb RAM to a 800 x 480 touchscreen. Don't forget the USB connection!
+    Plug in the UltraMic 384K to a spare USB port and
+    Download and extract the following .zip file to the Pi desktop:
+    Manually download bzip2-1.0.6 from soundforge website. It should now be in the 'downloads' folder.
+    To install the main dependancies, firstly download the installation script to the 'Downloads' directory: https://drive.google.com/open?id=11nguiy2DDM0r69UDGAxEdrAeZ0TVejR_
+    Then run the script:
+
+    cd && cd /home/pi/Downloads/
+    bash bat_detector_dependancies.sh
+
+    Now download the actual app files .zip file to 'Downloads': https://drive.google.com/open?id=1NhGbmzra_S6SRSEwLf4tVsrRwY38I1S6
+    Install the 'unzip' software:
+
+    sudo apt-get install unzip​
+
+     Extract the file to the desktop:
+
+    ​cd && cd /home/pi/Downloads/
+    unzip Pi4_Bat_detector.zip -d /home/pi/Desktop/
+
+    Install the R dependancies - open a terminal and run each of the following lines:
+
+    R
+    install.packages("randomForest")
+    install.packages("audio")
+    install.packages("rstudioapi")
+    install.packages("bioacoustics")​
+
+     If trying to view folders does not work properly, use:
+
+    sudo apt-get install --reinstall pcmanfm​
+
+    There should now be two items on the desktop - an image of a bat and a folder called 'deploy_classifier'. Double click the bat icon to run the app.
