@@ -183,24 +183,30 @@ data = np.delete(data, (0), axis=1)                    # Delete first column.
     # print(data)
 
 # data = np.loadtxt(infile, delimiter=',', skiprows = 1, usecols = None )
+
+########################################################################
+# Dont forget the data is transposed!
+
+print("\n col_count:  ",col_count)
+print("row_count:  ",row_count,"\n")
+
 data = data.transpose()
 
-########################################################
-b = np.zeros((15, 10))
+b = np.zeros((12, row_count))                                # row, columns .... Increase columns rather than rows since the data has been transposed.
 # columns, rows
 b[:col_count-1, :row_count-1] = data
 # ERROR: ValueError: could not broadcast input array from shape (5,8) into shape (4,5)
 # This is the total number of columns: 6
 # This is the total number of rows: 9 
 data = b
-########################################################
 
 # print("\n This is b below: ")
 # print(b)
 
-
-# print("\n This is array data after being transposed: ")
-# print(data)
+print("\n This is array data after being transposed: ")
+print(data)
+# TODO : Data matrix needs to be expanded to accept more columns !!!!!!
+#######################################################################
 # print("\n")
 # df = pd.DataFrame(np.arange(12).reshape(4,3))
 
