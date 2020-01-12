@@ -310,7 +310,7 @@ class ButtonWindow(Gtk.Window):
             spinLabel_01 = Gtk.Label()
             spinLabel_01.set_text(" Detection threshold:")
             settings_box_1.pack_start(spinLabel_01, True, True, 0)
-            adjustment = Gtk.Adjustment(0, value, 100, 1, 10, 0)
+            adjustment = Gtk.Adjustment(value, 0, 100, 1, 10, 0)
             self.spinbutton_01 = Gtk.SpinButton()
             self.spinbutton_01.set_adjustment(adjustment)
             self.spinbutton_01.connect("value-changed", self.spin_selected_1)
@@ -325,7 +325,7 @@ class ButtonWindow(Gtk.Window):
             spinLabel_02 = Gtk.Label()
             spinLabel_02.set_text("Bar chart update time:")
             settings_box_1.pack_start(spinLabel_02, True, True, 0)
-            adjustment = Gtk.Adjustment(0, value, 10000, 1, 10, 0)
+            adjustment = Gtk.Adjustment(value, 0, 10000, 1, 10, 0)
             self.spinbutton_02 = Gtk.SpinButton()
             self.spinbutton_02.set_adjustment(adjustment)
             self.spinbutton_02.connect("value-changed", self.spin_selected_2)
@@ -370,6 +370,41 @@ class ButtonWindow(Gtk.Window):
             self.spinbutton_06.set_adjustment(adjustment)
             self.spinbutton_06.connect("value-changed", self.spin_selected_1)
             settings_box_3.pack_start(self.spinbutton_06, True, True, 0)
+            
+            settings_box_4 = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+            
+            file = "/home/pi/Desktop/deploy_classifier/helpers/chunk_size_record.txt"
+            if os.path.isfile(file):
+                with open(file, "r") as fp:
+                    value = fp.read()
+                fp.close()
+            value = int(value)
+            spinLabel_07 = Gtk.Label()
+            spinLabel_07.set_text(" Audio chunk size (recording) secs:")
+            settings_box_4.pack_start(spinLabel_07, True, True, 0)
+            adjustment = Gtk.Adjustment(value, 0, 10000, 1, 10, 0)
+            self.spinbutton_07 = Gtk.SpinButton()
+            self.spinbutton_07.set_adjustment(adjustment)
+            self.spinbutton_07.connect("value-changed", self.spin_selected_7)
+            settings_box_4.pack_start(self.spinbutton_07, True, True, 0)
+            
+            settings_box_5 = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+            
+            file = "/home/pi/Desktop/deploy_classifier/helpers/chunk_size_process.txt"
+            if os.path.isfile(file):
+                with open(file, "r") as fp:
+                    value = fp.read()
+                fp.close()
+            value = int(value)
+            spinLabel_08 = Gtk.Label()
+            spinLabel_08.set_text(" Audio chunk size (processing) secs:")
+            settings_box_5.pack_start(spinLabel_08, True, True, 0)
+            adjustment = Gtk.Adjustment(value, 0, 10000, 1, 10, 0)
+            self.spinbutton_08 = Gtk.SpinButton()
+            self.spinbutton_08.set_adjustment(adjustment)
+            self.spinbutton_08.connect("value-changed", self.spin_selected_8)
+            settings_box_5.pack_start(self.spinbutton_08, True, True, 0)
+
 #######################################################################################################################
 #######################################################################################################################
         hbox2 = Gtk.Box(spacing=6)
@@ -472,6 +507,8 @@ class ButtonWindow(Gtk.Window):
             grid_05.add(settings_box_1)
             grid_05.attach(settings_box_2, 0, 1, 1, 1)
             grid_05.attach(settings_box_3, 0, 2, 1, 1)
+            grid_05.attach(settings_box_4, 0, 3, 1, 1)
+            grid_05.attach(settings_box_5, 0, 4, 1, 1)
 #######################################################################################################################
 #######################################################################################################################
         # self.add(vboxCombo)
@@ -518,6 +555,26 @@ class ButtonWindow(Gtk.Window):
         print(value)
         # self.spinLabel.set_text("Threshold value selected is: " + value + ".")
         file = "/home/pi/Desktop/deploy_classifier/helpers/barchart_time.txt"
+        f= open(file, "w+")                                 # Create the file threshold.txt
+        f.write(value)
+        f.close()
+        
+    def spin_selected_7(self, event):
+        print("Tried to update spin file !!!!!")
+        value = str(self.spinbutton_07.get_value_as_int())
+        print(value)
+        # self.spinLabel.set_text("Threshold value selected is: " + value + ".")
+        file = "/home/pi/Desktop/deploy_classifier/helpers/chunk_size_record.txt"
+        f= open(file, "w+")                                 # Create the file threshold.txt
+        f.write(value)
+        f.close()
+        
+    def spin_selected_8(self, event):
+        print("Tried to update spin file !!!!!")
+        value = str(self.spinbutton_08.get_value_as_int())
+        print(value)
+        # self.spinLabel.set_text("Threshold value selected is: " + value + ".")
+        file = "/home/pi/Desktop/deploy_classifier/helpers/chunk_size_process.txt"
         f= open(file, "w+")                                 # Create the file threshold.txt
         f.write(value)
         f.close()
