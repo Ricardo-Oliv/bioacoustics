@@ -301,43 +301,75 @@ class ButtonWindow(Gtk.Window):
         if (textToggled2 == "settings"):
             settings_box_1 = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
 
+            file = '/home/pi/Desktop/deploy_classifier/helpers/threshold.txt'
+            if os.path.isfile(file):
+                with open(file, "r") as fp:
+                    value = fp.read()
+                fp.close()
+            value = int(value)
             spinLabel_01 = Gtk.Label()
-            spinLabel_01.set_text("Detection threshold:")
+            spinLabel_01.set_text(" Detection threshold:")
             settings_box_1.pack_start(spinLabel_01, True, True, 0)
-            adjustment = Gtk.Adjustment(0, 50, 100, 1, 10, 0)
+            adjustment = Gtk.Adjustment(0, value, 100, 1, 10, 0)
             self.spinbutton_01 = Gtk.SpinButton()
             self.spinbutton_01.set_adjustment(adjustment)
             self.spinbutton_01.connect("value-changed", self.spin_selected_1)
             settings_box_1.pack_start(self.spinbutton_01, True, True, 0)
-            
+
+            file = '/home/pi/Desktop/deploy_classifier/helpers/barchart_time.txt'
+            if os.path.isfile(file):
+                with open(file, "r") as fp:
+                    value = fp.read()
+                fp.close()
+            value = int(value)
             spinLabel_02 = Gtk.Label()
             spinLabel_02.set_text("Bar chart update time:")
             settings_box_1.pack_start(spinLabel_02, True, True, 0)
-            adjustment = Gtk.Adjustment(0, 100, 200, 1, 10, 0)
+            adjustment = Gtk.Adjustment(0, value, 10000, 1, 10, 0)
             self.spinbutton_02 = Gtk.SpinButton()
             self.spinbutton_02.set_adjustment(adjustment)
-            self.spinbutton_02.connect("value-changed", self.spin_selected_1)
+            self.spinbutton_02.connect("value-changed", self.spin_selected_2)
             settings_box_1.pack_start(self.spinbutton_02, True, True, 0)
             
             settings_box_2 = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
 
             spinLabel_03 = Gtk.Label()
-            spinLabel_03.set_text("Detection threshold 2:")
+            spinLabel_03.set_text("Recording start time. Hours:")
             settings_box_2.pack_start(spinLabel_03, True, True, 0)
-            adjustment = Gtk.Adjustment(0, 50, 100, 1, 10, 0)
+            adjustment = Gtk.Adjustment(0, 0, 24, 1, 10, 0)
             self.spinbutton_03 = Gtk.SpinButton()
             self.spinbutton_03.set_adjustment(adjustment)
             self.spinbutton_03.connect("value-changed", self.spin_selected_1)
             settings_box_2.pack_start(self.spinbutton_03, True, True, 0)
             
             spinLabel_04 = Gtk.Label()
-            spinLabel_04.set_text("Bar chart update time 2:")
+            spinLabel_04.set_text("Minutes:")
             settings_box_2.pack_start(spinLabel_04, True, True, 0)
-            adjustment = Gtk.Adjustment(0, 100, 200, 1, 10, 0)
+            adjustment = Gtk.Adjustment(0, 0, 60, 1, 10, 0)
             self.spinbutton_04 = Gtk.SpinButton()
             self.spinbutton_04.set_adjustment(adjustment)
             self.spinbutton_04.connect("value-changed", self.spin_selected_1)
             settings_box_2.pack_start(self.spinbutton_04, True, True, 0)
+            
+            settings_box_3 = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+
+            spinLabel_05 = Gtk.Label()
+            spinLabel_05.set_text("  Recording end time. Hours:")
+            settings_box_3.pack_start(spinLabel_05, True, True, 0)
+            adjustment = Gtk.Adjustment(0, 0, 24, 1, 10, 0)
+            self.spinbutton_05 = Gtk.SpinButton()
+            self.spinbutton_05.set_adjustment(adjustment)
+            self.spinbutton_05.connect("value-changed", self.spin_selected_1)
+            settings_box_3.pack_start(self.spinbutton_05, True, True, 0)
+            
+            spinLabel_06 = Gtk.Label()
+            spinLabel_06.set_text("Minutes:")
+            settings_box_3.pack_start(spinLabel_06, True, True, 0)
+            adjustment = Gtk.Adjustment(0, 0, 60, 1, 10, 0)
+            self.spinbutton_06 = Gtk.SpinButton()
+            self.spinbutton_06.set_adjustment(adjustment)
+            self.spinbutton_06.connect("value-changed", self.spin_selected_1)
+            settings_box_3.pack_start(self.spinbutton_06, True, True, 0)
 #######################################################################################################################
 #######################################################################################################################
         hbox2 = Gtk.Box(spacing=6)
@@ -439,7 +471,7 @@ class ButtonWindow(Gtk.Window):
             # print("Try to view the settings spin buttons.")
             grid_05.add(settings_box_1)
             grid_05.attach(settings_box_2, 0, 1, 1, 1)
-
+            grid_05.attach(settings_box_3, 0, 2, 1, 1)
 #######################################################################################################################
 #######################################################################################################################
         # self.add(vboxCombo)
@@ -468,6 +500,27 @@ class ButtonWindow(Gtk.Window):
 
         self.timeout_id = GLib.timeout_add(5000, self.on_timeout, None)
         self.activity_mode = False
+        
+    # callback function: the signal of the spinbutton is used to change the text of the label
+    def spin_selected_1(self, event):
+        print("Tried to update spin file !!!!!")
+        value = str(self.spinbutton_01.get_value_as_int())
+        print(value)
+        # self.spinLabel.set_text("Threshold value selected is: " + value + ".")
+        file = "/home/pi/Desktop/deploy_classifier/helpers/threshold.txt"
+        f= open(file, "w+")                                 # Create the file threshold.txt
+        f.write(value)
+        f.close()
+        
+    def spin_selected_2(self, event):
+        print("Tried to update spin file !!!!!")
+        value = str(self.spinbutton_02.get_value_as_int())
+        print(value)
+        # self.spinLabel.set_text("Threshold value selected is: " + value + ".")
+        file = "/home/pi/Desktop/deploy_classifier/helpers/barchart_time.txt"
+        f= open(file, "w+")                                 # Create the file threshold.txt
+        f.write(value)
+        f.close()
         
     def on_timeout(self, user_data):
         """
@@ -790,18 +843,6 @@ class ButtonWindow(Gtk.Window):
 
     def getTime(self):
         return time.strftime("%c")
-
-    # callback function: the signal of the spinbutton is used to change the text of the label
-    def spin_selected_1(self, event):
-        print("Tried to update spin file !!!!!")
-        value = str(self.spinbutton_01.get_value_as_int())
-        print(value)
-        # self.spinLabel.set_text("Threshold value selected is: " + value + ".")
-        file = "/home/pi/Desktop/deploy_classifier/helpers/threshold.txt"
-        f= open(file, "w+")                                 # Create the file threshold.txt
-        f.write(value)
-        f.close()
-
 
     def on_click_me_clicked(self, button):
         print("\"Click me\" button was clicked")
