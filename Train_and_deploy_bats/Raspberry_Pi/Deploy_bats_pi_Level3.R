@@ -64,7 +64,9 @@ TDs <- TDs[lapply(TDs, function(x) length(x$data)) > 0]
 
 # Keep the extracted feature and merge in a single data frame for further analysis
 Event_data_test <- do.call("rbind", c(lapply(TDs, function(x) x$data$event_data), list(stringsAsFactors = FALSE)))
+
 nrow(Event_data_test)
+num_audio_events <- nrow(Event_data_test)
 
 # To look at the predictions 
 # print("Is the unknown wav a c_pip?")
@@ -107,9 +109,222 @@ print(Final_result)
 
 #importance(rf_c_pip_file)
 
-write.table(Final_result, file = "Final_result.txt", sep = "\t",
-            row.names = TRUE, col.names = NA)
 
+##################################################################################################################################
+##################################################################################################################################
+
+# print("This, below, gives nice new set of row labels:")
+df99 <- cbind(rownames(Final_result), data.frame(Final_result, row.names=NULL))
+
+# Then we can get variables such as batName:
+# print("This is the bat name from the new data:")
+currBatName <- df99[c(1),c(1)]
+currBatName
+currBatNameChar <- sapply(currBatName, as.character)                       # Convert to a character vector.
+
+t = as.integer( as.POSIXct( Sys.time()))
+
+tMillisCurrent = as.integer( as.POSIXct( Sys.time()))
+num_species = 1                                                            # This get overwritten if csv file is found.
+n = num_species
+blank = "blank"
+time_limit = 100
+
+##################################################################################################################################
+
+if(file.exists("From_R_01.csv"))
+{
+    prevData <- read.csv("From_R_01.csv")
+    # Read the previous time cell:
+    newValue <- prevData[c(1),c(1)]
+    tMillisPrevious = newValue
+    
+    # Calculate time interval:
+    timeInterval = tMillisCurrent - tMillisPrevious
+    print("Time interval: ")
+    print(timeInterval)
+
+###########################################################################################################################
+    # 1.This is for the case where there is a species name AND we're within the time limit:
+    if((currBatNameChar %in% colnames(prevData)) & (timeInterval < time_limit))
+    {
+        # print("Yep, it's in there!")
+        # Lets add the new data bat frequency integer ,num_audio_events, to the old:
+        prevValue <- prevData["1", currBatNameChar]
+        newValue = prevValue + num_audio_events
+        
+        # print("This is the number of rows in the dataframe:")
+        # print(nrow(prevData))
+
+        prevData["1", currBatNameChar] <- newValue                                  # This is where a new value is inserted into a cell.
+
+##########################################################################################################################
+    # 2.This is for the case where there is no species name AND we've passed the time limit:
+    } else if (( timeInterval > time_limit) & !(currBatNameChar %in% colnames(prevData))) {
+
+        # print("The bat name was not there!")
+        
+        # Firstly, duplicate row 1, which is the latest row, dataFrame[1,]:
+        prevData <- rbind(prevData[1,], prevData)
+        # print("Did this dupicate the rows ... YES !!!!")
+        # print(prevData)
+
+        # Now set all the values of row 1 to zero:
+        value = 0                                                         # (num_audio_events = 0)
+        prevData["1",] <- value                                # All rows in species column
+        # print("What does the new dataframe look like? .... TWO ")
+        # print(prevData)
+
+        # Now to create our new data column:
+        df9 <- data.frame(placeholder_name = 1)
+        names(df9)[names(df9) == "placeholder_name"] <- currBatNameChar
+        # print("This below should now have column names:")
+        # df9
+
+        # Now try and replace the placeholder with num_audio_events:
+        # But, initially, set all the new num_audio_events cells to something temporary:
+        # ferrets = 99
+        # df9["1", currBatNameChar] <- ferrets
+        # print("What does the ferrets dataframe look like?")
+        # print(df9)
+
+        # Now insert a new value for num_audio_events into row 1, the new column:
+        df9["1", currBatNameChar] <- num_audio_events
+        # print("Now we have our new dataframe with some useful data:")
+        # df9
+        # print(df9)
+        
+        # Now add the new column:
+        prevData <- cbind(prevData, df9) 
+        
+        # Now set all the values of column bat name to zero:
+        value = "0"                                                         # (num_audio_events = 0)
+        prevData[,currBatNameChar] <- value                                # All rows in species column
+        # print("What does the new dataframe look like? .... TWO ")
+        # print(prevData)
+        
+        # Then set the first row to correct num_audio_events value:
+        value = num_audio_events
+        prevData["1", currBatNameChar] <- value                             # Latest row only
+        # print("What does the new dataframe look like? ...... THREE")
+        # print(prevData)
+
+        # The time cell gets set to zero, so put the time value back into that cell:
+        value = tMillisCurrent 
+        prevData["1", "BLANK"] <- value                             # Latest row only, time column = BLANK
+        # print("What does the new dataframe look like? ...... FOUR")
+        # print(prevData)
+        
+##############################################################################################################
+    # 3.This is for the case where there is a species name AND we're outside the time limit:
+    } else if ((currBatNameChar %in% colnames(prevData)) & ( timeInterval > time_limit))  {
+
+        # Firstly, duplicate row 1, which is the latest row, dataFrame[1,]:
+        prevData <- rbind(prevData[1,], prevData)
+        # print("Did this dupicate the rows ... YES !!!!")
+        # print(prevData)
+
+        # Now insert the new value of time into the new dataframe row:
+        value = t
+        prevData["1", "BLANK"] <- value
+
+        
+        # Now set all the values of row 1 to zero:
+        value = 0                                                         # (num_audio_events = 0)
+        prevData["1",] <- value                                # All rows in species column
+        # print("What does the new dataframe look like? .... TWO ")
+        # print(prevData)
+        
+        
+        # Then set the first row to correct num_audio_events value:
+        value = num_audio_events
+        prevData["1", currBatNameChar] <- value                             # Latest row only
+        # print("What does the new dataframe look like? ...... THREE")
+        # print(prevData)
+
+        # The time cell gets set to zero, so put the time value back into that cell:
+        value = tMillisCurrent 
+        prevData["1", "BLANK"] <- value                             # Latest row only, time column = BLANK
+        # print("What does the new dataframe look like? ...... FOUR")
+        # print(prevData)
+
+##########################################################################################################################
+    # 4.This is for the case where there is no species name AND we're within the time limit:
+    } else if (( timeInterval < time_limit) & !(currBatNameChar %in% colnames(prevData))) {
+
+        # print("The bat name was not there!")
+        # Now to create our new data column:
+        df9 <- data.frame(placeholder_name = 1)
+        names(df9)[names(df9) == "placeholder_name"] <- currBatNameChar
+
+        # Now insert a new value for num_audio_events into row 1:
+        df9["1", currBatNameChar] <- num_audio_events
+        print("Now we have our new dataframe with some useful data:")
+        df9
+        # print(df9)
+        # Now add the new column:
+        prevData <- cbind(prevData, df9) 
+
+        # Set all the values of bat frequency, num_audio_events, of the new species column, into the new dataframe as zero:
+        value = 0                                                         # (num_audio_events = 0)
+        prevData[, currBatNameChar] <- value                                # All rows in species column
+        # print("What does the new dataframe look like? .... FIVE ")
+        # print(prevData)
+
+        # Then set the first row to correct num_audio_events value:
+        value = num_audio_events
+        prevData["1", currBatNameChar] <- value                             # Latest row only
+        # print("What does the new dataframe look like? ...... SIX")
+        # print(prevData)
+
+    }
+
+# 5.This is the case where there is no csv file:
+} else {
+        print("No csv file exists ..... ")
+        df14 <- t                                                             # Add time stamp
+        df15 <- data.frame(df14)
+        colnames(df15) <- c("BLANK")
+        prevData <- df15
+        
+        # print("The bat name was not there!")
+        # Now to create our new data column:
+        df9 <- data.frame(placeholder_name = 1)
+        names(df9)[names(df9) == "placeholder_name"] <- currBatNameChar
+
+        # Now insert a new value for num_audio_events into row 1:
+        df9["1", currBatNameChar] <- num_audio_events
+        # print("Now we have our new dataframe with some useful data:")
+        # print(df9)
+        
+        # Now add the new column:
+        prevData <- cbind(prevData, df9) 
+
+        # Set all the values of bat frequency, num_audio_events, of the new species column, into the new dataframe as zero:
+        value = 0                                                         # (num_audio_events = 0)
+        prevData[, currBatNameChar] <- value                                # All rows in species column
+        # print("What does the new dataframe look like? .... FIVE ")
+        # print(prevData)
+
+        # Then set the first row to correct num_audio_events value:
+        value = num_audio_events
+        prevData["1", currBatNameChar] <- value                             # Latest row only
+        # print("What does the new dataframe look like? ...... SIX")
+        # print(prevData)
+        
+        # print("This should be the new csv file to save?")
+        # print(df15)
+        write.table(df15, file = "From_R_01.csv", sep = ",", row.names = FALSE, col.names = TRUE)
+} # (if(file.exists("From_R_01.csv")))
+
+print("Now we have our new prevData dataframe with some useful data:")
+print(prevData)
+
+# print("END")
+
+write.table(Final_result, file = "Final_result.txt", sep = "\t", row.names = TRUE, col.names = NA)
+# write.table(df11, file = "From_R_01.csv", sep = ",", row.names = FALSE, col.names = TRUE)
+write.table(prevData, file = "From_R_01.csv", sep = ",", row.names = FALSE, col.names = TRUE)
 q()
 
 
