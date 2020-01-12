@@ -150,8 +150,8 @@ class ButtonWindow(Gtk.Window):
         self.label3.set_text("Battery")
         hbox.pack_start(self.label3, False, False, 0)
 ############################################################################################
-        button1 = Gtk.Button.new_with_label("Take dog for a walk")
-        button1.connect("clicked", self.on_click_me_clicked)
+        button1 = Gtk.Button.new_with_label("Settings")
+        button1.connect("clicked", self.on_settings_clicked)
 
         button2 = Gtk.Button.new_with_mnemonic("_Restart the App")               # Restart the app. Working if desktop icon not clicked.
         button2.connect("clicked", self.text_reporting_clicked)                  # Defaults to text reporting.
@@ -174,14 +174,14 @@ class ButtonWindow(Gtk.Window):
         button8 = Gtk.Button.new_with_label("Self destruct")
         button8.connect("clicked", self.on_click_me_clicked)
         
-        adjustment = Gtk.Adjustment(0, 50, 100, 1, 10, 0)
-        self.spinbutton_01 = Gtk.SpinButton()
-        self.spinbutton_01.set_adjustment(adjustment)
+        # adjustment = Gtk.Adjustment(0, 50, 100, 1, 10, 0)
+        # self.spinbutton_01 = Gtk.SpinButton()
+        # self.spinbutton_01.set_adjustment(adjustment)
 
         # a label
-        self.label = Gtk.Label()
-        self.label.set_text("Choose an audio indicator threshold value!")
-        self.spinbutton_01.connect("value-changed", self.spin_selected)
+        # self.label = Gtk.Label()
+        # self.label.set_text("Choose an audio indicator threshold value!")
+        # self.spinbutton_01.connect("value-changed", self.spin_selected)
   
         check_numeric_01 = Gtk.CheckButton("Numeric")
         check_numeric_01.connect("toggled", self.on_numeric_toggled)
@@ -228,7 +228,7 @@ class ButtonWindow(Gtk.Window):
         grid_01.attach_next_to(button3, button2, Gtk.PositionType.RIGHT, 1, 1)         # Shutdown the pi.
 
         grid_01.attach(button5, 0, 2, 1, 1)         # Threshold
-        grid_01.attach_next_to(self.spinbutton_01, button5, Gtk.PositionType.RIGHT, 1, 1)
+        grid_01.attach_next_to(button1, button5, Gtk.PositionType.RIGHT, 1, 1)
         # grid_01.attach(self.label, 0, 3, 1, 1)
         
         grid_02.add(button7)
@@ -296,7 +296,48 @@ class ButtonWindow(Gtk.Window):
             buttonGraph.connect('clicked', self.editPixbuf)
             graph_box.pack_start(self.image_renderer, True, True, 0)
             # graph_box.pack_start(buttonGraph, True, True, 0)
-        
+            
+
+        if (textToggled2 == "settings"):
+            settings_box_1 = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+
+            spinLabel_01 = Gtk.Label()
+            spinLabel_01.set_text("Detection threshold:")
+            settings_box_1.pack_start(spinLabel_01, True, True, 0)
+            adjustment = Gtk.Adjustment(0, 50, 100, 1, 10, 0)
+            self.spinbutton_01 = Gtk.SpinButton()
+            self.spinbutton_01.set_adjustment(adjustment)
+            self.spinbutton_01.connect("value-changed", self.spin_selected_1)
+            settings_box_1.pack_start(self.spinbutton_01, True, True, 0)
+            
+            spinLabel_02 = Gtk.Label()
+            spinLabel_02.set_text("Bar chart update time:")
+            settings_box_1.pack_start(spinLabel_02, True, True, 0)
+            adjustment = Gtk.Adjustment(0, 100, 200, 1, 10, 0)
+            self.spinbutton_02 = Gtk.SpinButton()
+            self.spinbutton_02.set_adjustment(adjustment)
+            self.spinbutton_02.connect("value-changed", self.spin_selected_1)
+            settings_box_1.pack_start(self.spinbutton_02, True, True, 0)
+            
+            settings_box_2 = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+
+            spinLabel_03 = Gtk.Label()
+            spinLabel_03.set_text("Detection threshold 2:")
+            settings_box_2.pack_start(spinLabel_03, True, True, 0)
+            adjustment = Gtk.Adjustment(0, 50, 100, 1, 10, 0)
+            self.spinbutton_03 = Gtk.SpinButton()
+            self.spinbutton_03.set_adjustment(adjustment)
+            self.spinbutton_03.connect("value-changed", self.spin_selected_1)
+            settings_box_2.pack_start(self.spinbutton_03, True, True, 0)
+            
+            spinLabel_04 = Gtk.Label()
+            spinLabel_04.set_text("Bar chart update time 2:")
+            settings_box_2.pack_start(spinLabel_04, True, True, 0)
+            adjustment = Gtk.Adjustment(0, 100, 200, 1, 10, 0)
+            self.spinbutton_04 = Gtk.SpinButton()
+            self.spinbutton_04.set_adjustment(adjustment)
+            self.spinbutton_04.connect("value-changed", self.spin_selected_1)
+            settings_box_2.pack_start(self.spinbutton_04, True, True, 0)
 #######################################################################################################################
 #######################################################################################################################
         hbox2 = Gtk.Box(spacing=6)
@@ -393,6 +434,12 @@ class ButtonWindow(Gtk.Window):
             grid_05.add(graph_box)
         elif (textToggled == "process") and (textToggled2 == "text"): 
             grid_05.add(box1)
+            
+        if (textToggled2 == "settings"):
+            # print("Try to view the settings spin buttons.")
+            grid_05.add(settings_box_1)
+            grid_05.attach(settings_box_2, 0, 1, 1, 1)
+
 #######################################################################################################################
 #######################################################################################################################
         # self.add(vboxCombo)
@@ -745,9 +792,11 @@ class ButtonWindow(Gtk.Window):
         return time.strftime("%c")
 
     # callback function: the signal of the spinbutton is used to change the text of the label
-    def spin_selected(self, event):
+    def spin_selected_1(self, event):
+        print("Tried to update spin file !!!!!")
         value = str(self.spinbutton_01.get_value_as_int())
-        self.label.set_text("Threshold value selected is: " + value + ".")
+        print(value)
+        # self.spinLabel.set_text("Threshold value selected is: " + value + ".")
         file = "/home/pi/Desktop/deploy_classifier/helpers/threshold.txt"
         f= open(file, "w+")                                 # Create the file threshold.txt
         f.write(value)
@@ -844,6 +893,14 @@ class ButtonWindow(Gtk.Window):
         
     def graph_clicked(self, button):
         name = "graph"
+        file = "/home/pi/Desktop/deploy_classifier/helpers/toggled_02.txt"      # TODO: change file name to something better descriptive.
+        f= open(file, "w+")                                                     # Create the file toggled_02.txt
+        f.write(name)
+        f.close()
+        call('./restart_the_app.sh', shell=True)                                # Restart the app for toggle2 to take effect.
+        
+    def on_settings_clicked(self, button):
+        name = "settings"
         file = "/home/pi/Desktop/deploy_classifier/helpers/toggled_02.txt"      # TODO: change file name to something better descriptive.
         f= open(file, "w+")                                                     # Create the file toggled_02.txt
         f.write(name)
