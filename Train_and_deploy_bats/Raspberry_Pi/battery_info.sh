@@ -10,11 +10,11 @@ BLINK='\e[5m'
 
 f_read_line()
 {
-  battery=$(pivoyager status)
+  # battery=$(pivoyager status)
   # printf "${BLUE}${battery}${NC}\n"
 
-  var=`echo "${battery}" | head -3 | tail -1`
-    
+  # var=`echo "${battery}" | head -3 | tail -1`
+  var=""
   printf "battery volts:  ${RED}${var}${NC}\n"
 
   echo -n "$var" > /home/pi/Desktop/deploy_classifier/helpers/battery_info.txt   # Overwrite file with new variable using > rather than >>.
@@ -28,4 +28,5 @@ f_read_line()
   f_read_line
   # sleep 5
   # done
+
 sh ./read_pi_temp.sh

@@ -7,6 +7,11 @@
 RED='\e[41m'
 BLUE='\e[44m'
 GREEN='\033[0;32m'
+CYAN='\e[36m'
+MAGENTA='\e[45m'
+GREY='\e[100m'
+YELLOW='\e[93m'
+
 NC='\033[0m' # No Color
 BLINK='\e[5m'
 
@@ -76,6 +81,7 @@ f_main_loop ()
 ############################################################ Loop start
 # counter=`cat /home/pi/Desktop/deploy_classifier/helpers/counter.txt`
 counter=0
+chunk_time=`cat /home/pi/Desktop/deploy_classifier/helpers/chunk_size_record.txt` 
 until [ $counter -gt ${iterations} ]
 do
 	while [ -e "$1/home/pi/Desktop/deploy_classifier/helpers/stop.txt" ]; do          # This loop will block the classifier and recorder whilst waiting for a 'stop.txt' file to appear in 'helpers' folder.
@@ -117,11 +123,13 @@ do
 #################################################
     wait
 #################################################
-    sh ./battery_info.sh &                                                        # Get battery information.
+    chunk_time=`cat /home/pi/Desktop/deploy_classifier/helpers/chunk_size_record.txt`           # Update record audio chunk size in seconds
+    printf "${GREY}Update record audio chunk size in seconds = ${chunk_time}${NC}\n"
+    sh ./battery_info.sh &                                                                      # Get battery and CPU temperature information.
     f_create_filtered_wav_file &
-    f_create_spectogram_or_graph  &                                                         # Create spectogram - or do classification.
+    f_create_spectogram_or_graph  &                                                             # Create spectogram - or do classification.
     
-    value2=`cat /home/pi/Desktop/deploy_classifier/helpers/toggled_02.txt`        # Options include 'text' and 'spectogram'. It's not from a toggled button any more!
+    value2=`cat /home/pi/Desktop/deploy_classifier/helpers/toggled_02.txt`                       # Options include 'text' and 'spectogram'. It's not from a toggled button any more!
 ##############################################################
     echo "bash_app reports: Value2 = "$value2
     # if [ ${value2} = "text" ]; then
