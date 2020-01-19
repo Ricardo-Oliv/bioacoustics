@@ -29,10 +29,10 @@ sudo make install
 
 printf "${GREEN}bzip2 installed! ${NC}\n"
 
-	
-wget ftp://ftp.alsa-project.org/pub/lib/alsa-lib-1.1.7.tar.bz2
-tar xvjf alsa-lib-1.1.7.tar.bz2
-cd alsa-lib-1.1.7
+sudo apt-get install libncurses5-dev libncursesw5-dev
+wget ftp://ftp.alsa-project.org/pub/utils/alsa-utils-1.1.7.tar.bz2
+tar xvjf alsa-utils-1.1.7.tar.bz2
+cd alsa-utils-1.1.7
 ./configure
 make && sudo make install
 
