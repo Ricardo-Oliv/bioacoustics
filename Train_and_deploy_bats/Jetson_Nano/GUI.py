@@ -307,25 +307,30 @@ class ButtonWindow(Gtk.Window):
                     value = fp.read()
                 fp.close()
             value = int(value)
+            print("From GUI.py .... settings ... one value: .....",value)
             spinLabel_01 = Gtk.Label()
             spinLabel_01.set_text(" Detection threshold:")
             settings_box_1.pack_start(spinLabel_01, True, True, 0)
-            adjustment = Gtk.Adjustment(value, 0, 100, 1, 10, 0)
+
+            adjustment = Gtk.Adjustment(value=value, lower=1, upper=100, step_incr=1, page_incr=1)
+
             self.spinbutton_01 = Gtk.SpinButton()
             self.spinbutton_01.set_adjustment(adjustment)
             self.spinbutton_01.connect("value-changed", self.spin_selected_1)
             settings_box_1.pack_start(self.spinbutton_01, True, True, 0)
-
+            
+            print("From GUI.py .... settings ... two value: .....",value)
             file = '/home/tegwyn/ultrasonic_classifier/helpers/barchart_time.txt'
             if os.path.isfile(file):
                 with open(file, "r") as fp:
                     value = fp.read()
+                    print("From GUI.py .... settings ... three value: .....",value)
                 fp.close()
             value = int(value)
             spinLabel_02 = Gtk.Label()
             spinLabel_02.set_text("Bar chart update time:")
             settings_box_1.pack_start(spinLabel_02, True, True, 0)
-            adjustment = Gtk.Adjustment(value, 0, 10000, 1, 10, 0)
+            adjustment = Gtk.Adjustment(value=value, lower=1, upper=10000, step_incr=1, page_incr=1)
             self.spinbutton_02 = Gtk.SpinButton()
             self.spinbutton_02.set_adjustment(adjustment)
             self.spinbutton_02.connect("value-changed", self.spin_selected_2)
@@ -336,7 +341,7 @@ class ButtonWindow(Gtk.Window):
             spinLabel_03 = Gtk.Label()
             spinLabel_03.set_text("Recording start time. Hours:")
             settings_box_2.pack_start(spinLabel_03, True, True, 0)
-            adjustment = Gtk.Adjustment(0, 0, 24, 1, 10, 0)
+            adjustment = Gtk.Adjustment(value=13, lower=1, upper=100, step_incr=1, page_incr=1)
             self.spinbutton_03 = Gtk.SpinButton()
             self.spinbutton_03.set_adjustment(adjustment)
             self.spinbutton_03.connect("value-changed", self.spin_selected_1)
@@ -345,7 +350,7 @@ class ButtonWindow(Gtk.Window):
             spinLabel_04 = Gtk.Label()
             spinLabel_04.set_text("Minutes:")
             settings_box_2.pack_start(spinLabel_04, True, True, 0)
-            adjustment = Gtk.Adjustment(0, 0, 60, 1, 10, 0)
+            adjustment = Gtk.Adjustment(value=23, lower=1, upper=100, step_incr=1, page_incr=1)
             self.spinbutton_04 = Gtk.SpinButton()
             self.spinbutton_04.set_adjustment(adjustment)
             self.spinbutton_04.connect("value-changed", self.spin_selected_1)
@@ -356,7 +361,7 @@ class ButtonWindow(Gtk.Window):
             spinLabel_05 = Gtk.Label()
             spinLabel_05.set_text("  Recording end time. Hours:")
             settings_box_3.pack_start(spinLabel_05, True, True, 0)
-            adjustment = Gtk.Adjustment(0, 0, 24, 1, 10, 0)
+            adjustment = Gtk.Adjustment(value=17, lower=1, upper=100, step_incr=1, page_incr=1)
             self.spinbutton_05 = Gtk.SpinButton()
             self.spinbutton_05.set_adjustment(adjustment)
             self.spinbutton_05.connect("value-changed", self.spin_selected_1)
@@ -365,7 +370,7 @@ class ButtonWindow(Gtk.Window):
             spinLabel_06 = Gtk.Label()
             spinLabel_06.set_text("Minutes:")
             settings_box_3.pack_start(spinLabel_06, True, True, 0)
-            adjustment = Gtk.Adjustment(0, 0, 60, 1, 10, 0)
+            adjustment = Gtk.Adjustment(value=46, lower=1, upper=100, step_incr=1, page_incr=1)
             self.spinbutton_06 = Gtk.SpinButton()
             self.spinbutton_06.set_adjustment(adjustment)
             self.spinbutton_06.connect("value-changed", self.spin_selected_1)
@@ -382,7 +387,7 @@ class ButtonWindow(Gtk.Window):
             spinLabel_07 = Gtk.Label()
             spinLabel_07.set_text(" Audio chunk size (recording) secs:")
             settings_box_4.pack_start(spinLabel_07, True, True, 0)
-            adjustment = Gtk.Adjustment(value, 0, 10000, 1, 10, 0)
+            adjustment = Gtk.Adjustment(value=value, lower=1, upper=100000, step_incr=1, page_incr=1)
             self.spinbutton_07 = Gtk.SpinButton()
             self.spinbutton_07.set_adjustment(adjustment)
             self.spinbutton_07.connect("value-changed", self.spin_selected_7)
@@ -399,7 +404,7 @@ class ButtonWindow(Gtk.Window):
             spinLabel_08 = Gtk.Label()
             spinLabel_08.set_text(" Audio chunk size (processing) secs:")
             settings_box_5.pack_start(spinLabel_08, True, True, 0)
-            adjustment = Gtk.Adjustment(value, 0, 10000, 1, 10, 0)
+            adjustment = Gtk.Adjustment(value=value, lower=1, upper=100000, step_incr=1, page_incr=1)
             self.spinbutton_08 = Gtk.SpinButton()
             self.spinbutton_08.set_adjustment(adjustment)
             self.spinbutton_08.connect("value-changed", self.spin_selected_8)
@@ -535,9 +540,15 @@ class ButtonWindow(Gtk.Window):
 #######################################################################################################################
         # selected_folder = "/home/tegwyn/ultrasonic_classifier/my_audio"
 
+        # The following 2 lines are from progressbar_example.py and update the battery and temperature info:
         self.timeout_id = GLib.timeout_add(5000, self.on_timeout, None)
         self.activity_mode = False
-        
+
+        # waittime = 3
+        # while Gtk.events_pending():
+            # Gtk.main_iteration()
+        # t.sleep(waittime)
+
     # callback function: the signal of the spinbutton is used to change the text of the label
     def spin_selected_1(self, event):
         print("Tried to update spin file !!!!!")
