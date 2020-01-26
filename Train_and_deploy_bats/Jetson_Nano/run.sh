@@ -2,6 +2,9 @@
 # cd /home/tegwyn/ultrasonic_classifier/ && bash run.sh
 # sudo chmod u+x run.sh
 
+echo whales | sudo -S jetson_clocks
+
+
 RED='\e[41m'
 BLUE='\e[44m'
 GREEN='\033[0;32m'
@@ -91,6 +94,8 @@ done
 printf "${GREEN}Services have been checked and stopped.${NC}\n"
 sleep 2
 printf "${GREEN}Now try to run GUI.py ......${NC}\n"
+# python3 test.py &
+
 python3 GUI.py &
 bash ./script_1.sh &
 printf "${GREEN}script_1 has been started.${NC}\n"
