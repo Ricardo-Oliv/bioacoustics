@@ -16,13 +16,17 @@ NC='\033[0m' # No Color
 BLINK='\e[5m'
 
 amixer sset PCM 100%
-aplay --device=hw:0,0 /home/tegwyn/ultrasonic_classifier/alert_sounds/Go_for_Deploy.wav
+
+# **** List of PLAYBACK Hardware Devices ****
+# card 0: tegrahda [tegra-hda], device 3: HDMI 0 [HDMI 0]
+aplay --device=hw:0,3 /home/tegwyn/ultrasonic_classifier/alert_sounds/Go_for_Deploy.wav
+# aplay --device=hw:0,0 /home/tegwyn/ultrasonic_classifier/alert_sounds/Go_for_Deploy.wav
 
 # sudo chmod 775 /home/tegwyn/ultrasonic_classifier/helpers/toggled_01.txt
 
 cd /home/tegwyn/ultrasonic_classifier/
 
-# sh ./battery_info.sh &                                                        # Get battery information.
+# python3 batteryAndTempMonitoring.py &                                                        # Get battery information.
 rm /home/tegwyn/ultrasonic_classifier/From_R_01.csv
 rm Final_result.txt
 rm Final_result_copy.txt
@@ -63,6 +67,7 @@ f_create_spectogram_or_graph ()
   # Create spectogram:
   ##############################################################################
   sleep 2
+  python3 batteryAndTempMonitoring.py
   value2=`cat /home/tegwyn/ultrasonic_classifier/helpers/toggled_02.txt`         # Options include 'text' and 'spectogram' and 'graph'. BEWARE: It's not actually from a toggled button any more!
   echo "bash_app reports: Value2 = "$value2
   if [ ${value2} = "spectogram" ]; then
@@ -87,7 +92,7 @@ do
 	while [ -e "$1/home/tegwyn/ultrasonic_classifier/helpers/stop.txt" ]; do          # This loop will block the classifier and recorder whilst waiting for a 'stop.txt' file to appear in 'helpers' folder.
     printf "bash_app reports: ${RED}stop.txt${NC} file exists\n"
     sleep 2
-    sh ./battery_info.sh                                                            # Get battery information.
+    python3 batteryAndTempMonitoring.py                                                            # Get battery information.
     if [ -e "$1/home/tegwyn/ultrasonic_classifier/helpers/shutDown.txt" ]; then     # Waiting for a 'shutDown.txt' file to appear in 'helpers' folder.
       echo "bash_app reports: shutDown.txt file exists"
       sleep 10
@@ -127,7 +132,7 @@ do
 #################################################
     chunk_time=`cat /home/tegwyn/ultrasonic_classifier/helpers/chunk_size_record.txt`           # Update record audio chunk size in seconds
     printf "${GREY}Update record audio chunk size in seconds = ${chunk_time}${NC}\n"
-    sh ./battery_info.sh &                                                                      # Get battery and CPU temperature information.
+    python3 batteryAndTempMonitoring.py &                                                                      # Get battery and CPU temperature information.
     f_create_filtered_wav_file &
     f_create_spectogram_or_graph  &                                                             # Create spectogram - or do classification.
     
@@ -152,15 +157,12 @@ do
   elif [ "$value" == "process" ]; then
     # echo "bash_app reports: Processing! ...."
     printf "${GREEN}script_1 reports: Processing! .... ${NC}\n"
+    python3 batteryAndTempMonitoring.py
     sleep 2
     cd /home/tegwyn/ultrasonic_classifier/
     
-    
-    
-    
     python3 process_audio_files.py             # Adding a '&' to this causes lock up!
     # Create_barchart is called within process_audio_files.py !!!!!
-    
     
     # Does create_spectogram.py go here?
     # Why are the following 3 lines here?
