@@ -594,7 +594,7 @@ class ButtonWindow(Gtk.Window):
         """
         Update battery and temperature info
         """
-        print("Update the battery info .... ")
+        print("From GUI.py: Update the battery info .... ")
         file = '/home/tegwyn/ultrasonic_classifier/helpers/battery_info.txt'
         if os.path.isfile(file):
             with open(file, "r") as fp:

@@ -8,7 +8,7 @@ NC='\033[0m' # No Color
 BLINK='\e[5m'
 
 # /opt/vc/bin/vcgencmd measure_temp
-
+# sh ./battery_info.sh
 # echo $(($(date +%s%N)/1000000))
 
 cd /home/tegwyn/ultrasonic_classifier/
@@ -85,6 +85,7 @@ fi
 
 printf "${BLUE}Iteration ${iter} classifier has finished! ${NC}\n"
 
+# TODO: $FILE below seems to be the wrong file !!!!!!
 if [ -f "$FILE" ]; then
   bat_detected=1
   cd /home/tegwyn/ultrasonic_classifier/
@@ -151,19 +152,19 @@ conf=50
 
 if [ $batConfidence3 -gt $conf ]; then
   if [ ${batName} = "HOUSE_KEYS" ]; then
-    aplay --device=hw:0,0 /home/tegwyn/ultrasonic_classifier/alert_sounds/keys.wav
+    aplay --device=hw:0,3 /home/tegwyn/ultrasonic_classifier/alert_sounds/keys.wav
   elif [ ${batName} = "NOCTULA" ]; then
-    aplay --device=hw:0,0 /home/tegwyn/ultrasonic_classifier/alert_sounds/noctule.wav
+    aplay --device=hw:0,3 /home/tegwyn/ultrasonic_classifier/alert_sounds/noctule.wav
   elif [ ${batName} = "NATTERERI" ]; then
-    aplay --device=hw:0,0 /home/tegwyn/ultrasonic_classifier/alert_sounds/nattereri.wav
+    aplay --device=hw:0,3 /home/tegwyn/ultrasonic_classifier/alert_sounds/nattereri.wav
   elif [ ${batName} = "PLECOTUS" ]; then
-    aplay --device=hw:0,0 /home/tegwyn/ultrasonic_classifier/alert_sounds/plecotus.wav
+    aplay --device=hw:0,3 /home/tegwyn/ultrasonic_classifier/alert_sounds/plecotus.wav
   elif [ ${batName} = "NATTERERI" ]; then
-    aplay --device=hw:0,0 /home/tegwyn/ultrasonic_classifier/alert_sounds/nattereri.wav
+    aplay --device=hw:0,3 /home/tegwyn/ultrasonic_classifier/alert_sounds/nattereri.wav
   elif [ ${batName} = "C_PIP" ]; then
-    aplay --device=hw:0,0 /home/tegwyn/ultrasonic_classifier/alert_sounds/c_pip.wav
+    aplay --device=hw:0,3 /home/tegwyn/ultrasonic_classifier/alert_sounds/c_pip.wav
   elif [ ${batName} = "S_PIP" ]; then
-    aplay --device=hw:0,0 /home/tegwyn/ultrasonic_classifier/alert_sounds/s_pip.wav
+    aplay --device=hw:0,3 /home/tegwyn/ultrasonic_classifier/alert_sounds/s_pip.wav
   fi
 fi
 

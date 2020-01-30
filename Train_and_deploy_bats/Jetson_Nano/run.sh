@@ -17,7 +17,7 @@ cd /home/tegwyn/ultrasonic_classifier/
 
 printf "${RED}${BLINK}Hello !!!!!${NC}\n"
 # printf "${RED}Running from destop icon seems to kill run.sh !!!! Why ????${NC}\n"
-
+rm /home/tegwyn/ultrasonic_classifier/helpers/batteryAlert.txt                           # Remove this file if previously there was battery fault.
 
 # Kill some shells if they are still running from previous session:
 
@@ -112,7 +112,42 @@ do
     # echo "close_app.txt file does not exist"
     # echo "base name = " $(basename $0)
   fi
-  sleep 4
+  python3 batteryAndTempMonitoring.py
+  if [ -e "$1/home/tegwyn/ultrasonic_classifier/helpers/batteryAlert.txt" ]; then     # Look for batteryAlert.txt in 'helpers' folder.
+    printf  "${RED}The battery is in trouble !!!!!!${NC}\n"
+    
+  count=0
+  chunk_time=`cat /home/tegwyn/ultrasonic_classifier/helpers/chunk_size_record.txt` 
+  printf  "${BLUE}chunk_time: .. ${chunk_time} ${NC}\n"
+  
+  shutDownDelay=$(( 3*chunk_time +10 ))
+  count=$shutDownDelay
+  printf  "${BLUE}shutDownDelay: .. ${shutDownDelay} ${NC}\n"
+  
+  sleep 10
+  aplay --device=hw:0,3 /home/tegwyn/ultrasonic_classifier/alert_sounds/main_Computers_are_in_Control.wav
+
+    while [ "$count" -gt 1 ]; do
+      python3 batteryAndTempMonitoring.py
+      printf  "${RED}The battery is in trouble .. ${shutDownDelay} ${NC}\n"
+      counter=$((count-1))
+      count=$counter
+      printf  "${BLUE}Countdown to shutdown: .. ${count} ${NC}\n"
+      sleep 1
+
+    done
+    SERVICE="GUI.py"
+    f_service_check "$SERVICE"                            # Kill the GUI.
+    SERVICE="script_1.sh"
+    f_service_check "$SERVICE"
+
+    aplay --device=hw:0,3 /home/tegwyn/ultrasonic_classifier/alert_sounds/main_APU_Shutdown.wav
+
+    # echo whales | sudo halt                              # This does not turn off fan and green LED.
+    echo whales | sudo shutdown
+    sleep 1000                                             # Wait for shutdown to complete.
+  fi
+  sleep 10
 done
 
 printf "${RED}Will not start the GUI !!!!${NC}\n"

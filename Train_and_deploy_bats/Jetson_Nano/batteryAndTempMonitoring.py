@@ -18,6 +18,7 @@ from __future__ import absolute_import, division, print_function, \
                                                     unicode_literals
 import time
 import os
+import sys
 
 try:
 	from ADCPi import ADCPi
@@ -31,7 +32,18 @@ except ImportError:
 	except ImportError:
 		raise ImportError(
 			"Failed to import library from parent folder")
+end = "\n"
+RED = "\x1b[1;31m"
+BLUE='\e[44m'
+F_LightGreen = "\x1b[92m"
+F_Green = "\x1b[32m"
+F_LightBlue = "\x1b[94m"
+B_White = "\x1b[107m"
+NC = "\x1b[0m" # No Color
+Blink = "\x1b[5m"
 
+stopFile = "/home/tegwyn/ultrasonic_classifier/helpers/stop.txt"
+startFile = "/home/tegwyn/ultrasonic_classifier/helpers/start.txt"
 
 def main():
 	'''
@@ -91,13 +103,43 @@ def main():
 	# wait 0.2 seconds before reading the pins again
 	# time.sleep(2)
 
-	message = 'CPU: ' + str(round((int(text1) + int(text2) + int(text3) + int(text5))  /400) /10) + ' °C' + '  Bat: ' + str(round(batteryPackRead *100)/100) + ' V' + ' Sup: ' + str(round(switcherOutRead *100)/100) + ' V' 
-	print(message)
+	message = 'CPU:   ' + str(round((int(text1) + int(text2) + int(text3) + int(text5))  /400) /10) + ' °C' + '\nBattery:   ' + str(round(batteryPackRead *100)/100) + ' V' + '\nSupply:   ' + str(round(switcherOutRead *100)/100) + ' V' 
+	# print(message)
+	sys.stderr.write(F_LightBlue + message + NC + end)
 
 	file6 = '/home/tegwyn/ultrasonic_classifier/helpers/battery_info.txt'
 	f= open(file6, "w+")
 	f.write(message)
 	f.close()
+	
+	if (batteryPackRead > 2) and (batteryPackRead < 10):                                 # Create alert file if battery pack is running low.
+		file7 = '/home/tegwyn/ultrasonic_classifier/helpers/batteryAlert.txt'
+		f= open(file7, "w+")
+		f.write(message)
+		f= open(stopFile, "w+")
+		if os.path.isfile(startFile):
+			os.remove(startFile)
+			print("start file removed")
+		print("stop file created !!")
+		f.close()
+
+	if (switcherOutRead > 2) and (switcherOutRead < 5):                                  # Create alert file if output from switching regulator is too low.
+		file7 = '/home/tegwyn/ultrasonic_classifier/helpers/batteryAlert.txt'
+		f= open(file7, "w+")
+		f.write(message)
+		f= open(stopFile, "w+")
+		if os.path.isfile(startFile):
+			os.remove(startFile)
+			print("start file removed")
+		print("stop file created !!")
+		f.close()
+		
+		
+
+
+
+
+		
 
 	exit
 

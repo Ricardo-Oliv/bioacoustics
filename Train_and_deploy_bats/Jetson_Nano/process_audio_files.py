@@ -44,7 +44,7 @@ command_bash = "bash"
 path_to_create_spectogram = "/home/tegwyn/ultrasonic_classifier/create_spectogram.py"
 # path_to_create_spectogram = "/home/tegwyn/ultrasonic_classifier/create_spectogram_batch_process.py"       # Use this for experiments with spectograpghs.
 path_to_create_graph = "/home/tegwyn/ultrasonic_classifier/create_barchart.py"
-path_to_battery = "/home/tegwyn/ultrasonic_classifier/battery_info.sh"
+path_to_battery = "/home/tegwyn/ultrasonic_classifier/battery_info.sh"                      # Not used anymore.
 
 n = 1
 line = [1, 2, 3, 4, 5]
