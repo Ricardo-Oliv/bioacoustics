@@ -3,6 +3,7 @@
 # sudo chmod u+x run.sh
 
 echo whales | sudo -S jetson_clocks
+# xrandr -o inverted                                                                    # Rotate screen 180 degrees.
 
 
 RED='\e[41m'

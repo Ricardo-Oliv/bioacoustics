@@ -5,7 +5,7 @@
 # cd /home/tegwyn/ultrasonic_classifier/ && chmod 775 create_barchart.py
 # /home/tegwyn/ultrasonic_classifier/create_barchart.py
 
-
+import subprocess
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -112,8 +112,6 @@ else:
 	print ("No valid combo box selection was made")
 
 print(Style.RESET_ALL)
-
-
 #####################################################################
 # infile = '/home/tegwyn/ultrasonic_classifier/images/graphical_results/test5.csv'
 infile = '/home/tegwyn/ultrasonic_classifier/From_R_01.csv'

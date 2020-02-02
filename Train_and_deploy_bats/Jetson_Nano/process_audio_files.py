@@ -146,10 +146,6 @@ for file in os.listdir(directory):                                       # This 
             # chunk.export(folder3 + filtered, format="wav")             # folder3 is "unknown_bat_audio". There is no actual filter applied .... yet !!
             
             # Build subprocess command
-            # cmd = [command_bash, path_to_battery]
-            # x = subprocess.Popen(cmd).wait()                              # This is where the battery volts program is called.
-            
-            # Build subprocess command
             cmd = [command, path2script]
             x = subprocess.Popen(cmd).wait()                              # This is where the classifier program is called. Not script_2.sh !!
 
