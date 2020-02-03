@@ -21,13 +21,15 @@ library(crayon)
 
 setwd("/home/tegwyn/ultrasonic_classifier/")
 wd <- getwd()         # Working directory
-wd
+# wd
+cat(magenta$bold(wd))
+cat('\n')
 
 # cat(green('I am a green line ' %+% blue$underline$bold('with a blue substring') %+% yellow$italic(' that becomes yellow and italicised!\n')))
-# cat(yellow$bgMagenta$bold('Hello world!\n'))
+# cat(magenta$bold('Hello world!\n'))
 
 # print("From the R file: Read into memory all the .rds files ..... ")
-cat(yellow$bgMagenta$bold('From the R file: Read into memory all the .rds files ..... !\n'))
+cat(magenta$bold('From the R file: Firstly, read into memory all the .rds files ..... \n'))
 cat("\n")
 # Read all the .rds files into RAM or zRAM, once only:
 ############################################################################
@@ -43,19 +45,19 @@ rf_house_keys_file <- readRDS('rf_house_keys.rds')
 while (file.exists("/home/tegwyn/ultrasonic_classifier/helpers/start.txt"))
 {
 	# print("From the R file: start.txt exists !")
-	cat(yellow$bgMagenta$bold('From the R file: start.txt exists !\n'))
+	cat(magenta$bold('From the R file: start.txt exists !\n'))
 	if (file.exists("/home/tegwyn/ultrasonic_classifier/helpers/classification_finished.txt"))
 	{
 		# print("From the R file: classification_finished.txt exists!")
-		cat(yellow$bgMagenta$bold('From the R file: classification_finished.txt exists!!\n'))
+		cat(magenta$bold('From the R file: classification_finished.txt exists!!\n'))
 	} else {
-		cat(yellow$bgMagenta$bold('From the R file: classification_finished.txt DOES NOT exist!\n'))
+		cat(magenta$bold('From the R file: classification_finished.txt DOES NOT exist!\n'))
 		# print("From the R file: classification_finished.txt DOES NOT exist!")
 	}
 	if ((file.exists("/home/tegwyn/ultrasonic_classifier/unknown_bat_audio/filtered.wav")) && (!file.exists("/home/tegwyn/ultrasonic_classifier/helpers/classification_finished.txt")))
 	{
 		# print("From the R file: filtered.wav exists!")
-		cat(yellow$bgMagenta$bold('From the R file: filtered.wav exists!\n'))
+		cat(magenta$bold('From the R file: filtered.wav exists!\n'))
 		# print("From the R file: Delete Final_result.txt:")
 
 		# delete a file
@@ -202,7 +204,8 @@ while (file.exists("/home/tegwyn/ultrasonic_classifier/helpers/start.txt"))
 			{
 				value <- read.table("/home/tegwyn/ultrasonic_classifier/helpers/barchart_time.txt")
 				time_limit <- value[c(1),c(1)]
-				print("Imported time_limit:")
+				# print("Imported time_limit:")
+				cat(magenta$bold('From the R file: Imported time_limit:\n'))
 				print(time_limit)
 			}
 
@@ -217,7 +220,8 @@ while (file.exists("/home/tegwyn/ultrasonic_classifier/helpers/start.txt"))
 				
 				# Calculate time interval:
 				timeInterval = tMillisCurrent - tMillisPrevious
-				print("Time interval: ")
+				# print("Time interval: ")
+				cat(magenta$bold('From the R file: Time interval:\n'))
 				print(timeInterval)
 
 			###########################################################################################################################
@@ -393,7 +397,8 @@ while (file.exists("/home/tegwyn/ultrasonic_classifier/helpers/start.txt"))
 					write.table(df15, file = "From_R_01.csv", sep = ",", row.names = FALSE, col.names = TRUE)
 			} # (if(file.exists("From_R_01.csv")))
 
-			print("Now we have our new prevData dataframe with some useful data:")
+			# print("Now we have our new prevData dataframe with some useful data:")
+			cat(magenta$bold('Now we have our new prevData dataframe with some useful data:\n'))
 			print(prevData)
 
 			# print("END")
@@ -404,13 +409,13 @@ while (file.exists("/home/tegwyn/ultrasonic_classifier/helpers/start.txt"))
 			write.table("", file = "/home/tegwyn/ultrasonic_classifier/helpers/classification_finished.txt")
 		} else {                                    # if (num_audio_events >1)
 		# print("Although a filtered.wav file was found, it did not have any audio events in it !!!!")
-		cat(yellow$bgMagenta$bold('From the R file: Although a filtered.wav file was found, it did not have any audio events in it !!!!\n'))
+		cat(magenta$bold('From the R file: Although a filtered.wav file was found, it did not have any audio events in it !!!!\n'))
 		Sys.sleep(5)
 		}
 	} else {                                        # if (file.exists("/home/tegwyn/ultrasonic_classifier/unknown_bat_audio/filtered.wav"))
 
 		# print("No filtered.wav was detected in unknown_bat_audio folder OR classification_finished.txt might exist")
-		cat(yellow$bgMagenta$bold('From the R file: No filtered.wav was detected in unknown_bat_audio folder OR classification_finished.txt might exist!\n'))
+		cat(magenta$bold('From the R file: No filtered.wav was detected in unknown_bat_audio folder OR classification_finished.txt might exist!\n'))
 		cat("\n")
 		Sys.sleep(5)
 	}
