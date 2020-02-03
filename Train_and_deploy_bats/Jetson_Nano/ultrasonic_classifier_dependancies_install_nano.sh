@@ -8,11 +8,16 @@
 # To run this script, type following line into command line:
 # cd /home/tegwyn/ultrasonic_classifier/ && bash ultrasonic_classifier_dependancies_install_nano.sh
 
-
-RED='\033[0;31m'
-BLUE='\033[0;34m'
+RED='\e[41m'
+BLUE='\e[44m'
 GREEN='\033[0;32m'
+CYAN='\e[36m'
+MAGENTA='\e[45m'
+GREY='\e[100m'
+YELLOW='\e[93m'
+
 NC='\033[0m' # No Color
+BLINK='\e[5m'
 
 printf "${GREEN}Here we go ..... Fingers crossed! ${NC}\n"
 
@@ -72,11 +77,24 @@ pip3 install colorama
 
 # pip3 install py2exe
 # pip3 install timerange
-#sudo pip3 install --upgrade matplotlib
+# sudo pip3 install --upgrade matplotlib
 
 # curl -O https://www.omzlo.com/downloads/pivoyager.tar.gz
 # tar xvf pivoyager.tar.gz
 # sudo mv pivoyager /usr/local/bin/
+
+
+# Install stuff for AB electronics ADC Pi / nano shield:
+sudo apt-get install python-smbus
+sudo apt-get install i2c-tools
+sudo pip3 install smbus2
+
+git clone https://github.com/abelectronicsuk/ABElectronics_Python_Libraries.git
+cd /home/tegwyn/ABElectronics_Python_Libraries
+sudo python3 setup.py install
+
+printf "${MAGENTA} Install stuff for AB electronics ADC Pi / nano shield done! ${NC}\n"
+
 
 sudo apt install -y python3-scipy
 #pip3 install scipy
