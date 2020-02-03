@@ -21,6 +21,7 @@ setwd("/home/tegwyn/ultrasonic_classifier/")
 wd <- getwd()         # Working directory
 wd
 
+# print("From the R file: Read into memory all the .rds files: ")
 # Read all the .rds files into RAM or zRAM, once only:
 ############################################################################
 rf_c_pip_file <- readRDS('rf_c_pip.rds')
@@ -32,18 +33,21 @@ rf_rhino_hippo_file <- readRDS('rf_rhino_hippo.rds')
 rf_house_keys_file <- readRDS('rf_house_keys.rds')
 ############################################################################
 
+# print("From the R file: Delete Final_result.txt:")
+
 # delete a file
 unlink("Final_result.txt")
 ############################################
 # Predict on one unknown wav file:
+# print("From the R file: find the unknown bat for prediction:")
 data_dir_test <- file.path(wd, "unknown_bat_audio")
 # print(data_dir_test)
 
 #The unknown test file is located in a specific directory:
 files_test <- dir(data_dir_test, recursive = TRUE, full.names = TRUE, pattern = "[.]wav$")
 
-print("From the R file: This is the name of the current audio file being processed:")
-files_test
+# print("From the R file: This is the name of the current audio file being processed:")
+# files_test
 
 # Detect and extract audio events from our unknown test file:
 TDs <- setNames(

@@ -4,6 +4,11 @@
 RED='\e[41m'
 BLUE='\e[44m'
 GREEN='\033[0;32m'
+CYAN='\e[36m'
+MAGENTA='\e[45m'
+GREY='\e[100m'
+YELLOW='\e[93m'
+
 NC='\033[0m' # No Color
 BLINK='\e[5m'
 

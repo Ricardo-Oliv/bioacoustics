@@ -4,11 +4,17 @@
 RED='\e[41m'
 BLUE='\e[44m'
 GREEN='\033[0;32m'
+CYAN='\e[36m'
+MAGENTA='\e[45m'
+GREY='\e[100m'
+YELLOW='\e[93m'
+
 NC='\033[0m' # No Color
 BLINK='\e[5m'
 
 # /opt/vc/bin/vcgencmd measure_temp
 # echo $(($(date +%s%N)/1000000))
+printf "${MAGENTA} ${BLINK} script_3.sh has started ${NC}\n"
 
 cd /home/tegwyn/ultrasonic_classifier/
 
@@ -23,9 +29,9 @@ if [ -f "$FILE" ]; then
   exec 6< Final_result.txt
   read line1 <&6
   read line2 <&6
-  # printf "${GREEN} $line2 ${NC}\n"
+  printf "${GREEN} $line2 ${NC}\n"
   batName=$(echo "$line2" | sed 's|[.",]||g')                                # remove some " characters
-  # printf "${GREEN} $batName ${NC}\n"
+  printf "${GREEN} $batName ${NC}\n"
   batName=$(printf '%s' "$batName" | sed 's/[0-9]//g')                       # remove digits
   batName=$(printf '%s' "$batName" | sed 's/ //g')                           # remove white spaces.
   batName=$(printf '%s' "$batName" | sed 's/[[:blank:]]//g')                 # remove tab spaces.
@@ -38,9 +44,9 @@ if [ -f "$FILE" ]; then
   batConfidence3=$(echo "$batConfidence2" | sed 's/[.].*$//')
 
   # printf "${GREEN}Bat confidence2 value is: $batConfidence2 ${NC}\n"
-  # printf "${GREEN}Bat confidence3 value is: $batConfidence3 ${NC}\n"
+  printf "${GREEN}Bat confidence3 value is: $batConfidence3 ${NC}\n"
 
-  # printf "${GREEN}Bat detected was a $batName ${NC}\n"
+  printf "${GREEN}Bat detected was a $batName ${NC}\n"
   exec 6<&-
 
   cd /home/tegwyn/ultrasonic_classifier/temp/
@@ -102,5 +108,8 @@ if [ $bat_detected -gt 0 ]; then
 fi
 
 cd /home/tegwyn/ultrasonic_classifier/
+# sleep 10
+printf "${MAGENTA} ${BLINK} script_3.sh has finished ${NC}\n"
+# sleep 10
 
-
+exit
