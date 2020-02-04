@@ -25,6 +25,8 @@ wd <- getwd()         # Working directory
 cat(magenta$bold(wd))
 cat('\n')
 
+unlink("/home/tegwyn/ultrasonic_classifier/helpers/classification_finished.txt")
+
 # cat(green('I am a green line ' %+% blue$underline$bold('with a blue substring') %+% yellow$italic(' that becomes yellow and italicised!\n')))
 # cat(magenta$bold('Hello world!\n'))
 
@@ -54,13 +56,14 @@ while (file.exists("/home/tegwyn/ultrasonic_classifier/helpers/start.txt"))
 		cat(magenta$bold('From the R file: classification_finished.txt DOES NOT exist!\n'))
 		# print("From the R file: classification_finished.txt DOES NOT exist!")
 	}
-	if ((file.exists("/home/tegwyn/ultrasonic_classifier/unknown_bat_audio/filtered.wav")) && (!file.exists("/home/tegwyn/ultrasonic_classifier/helpers/classification_finished.txt")))
+	if ((file.exists("/home/tegwyn/ultrasonic_classifier/helpers/filtered_wav_ready.txt")) && (!file.exists("/home/tegwyn/ultrasonic_classifier/helpers/classification_finished.txt")))
 	{
 		# print("From the R file: filtered.wav exists!")
 		cat(magenta$bold('From the R file: filtered.wav exists!\n'))
 		# print("From the R file: Delete Final_result.txt:")
 
-		# delete a file
+		# delete some files:
+		unlink("/home/tegwyn/ultrasonic_classifier/helpers/filtered_wav_ready.txt")
 		unlink("Final_result.txt")
 		############################################
 		# Predict on one unknown wav file:
@@ -179,6 +182,8 @@ while (file.exists("/home/tegwyn/ultrasonic_classifier/helpers/start.txt"))
 			# print(num_audio_events)
 
 			##################################################################################################################################
+			# Classification has finished.
+			write.table("", file = "/home/tegwyn/ultrasonic_classifier/helpers/classification_finished.txt")
 			##################################################################################################################################
 
 			# print("This, below, gives nice new set of row labels:")
@@ -406,18 +411,19 @@ while (file.exists("/home/tegwyn/ultrasonic_classifier/helpers/start.txt"))
 			write.table(Final_result, file = "Final_result.txt", sep = "\t", row.names = TRUE, col.names = NA)
 			# write.table(df11, file = "From_R_01.csv", sep = ",", row.names = FALSE, col.names = TRUE)
 			write.table(prevData, file = "From_R_01.csv", sep = ",", row.names = FALSE, col.names = TRUE)
-			write.table("", file = "/home/tegwyn/ultrasonic_classifier/helpers/classification_finished.txt")
+			# write.table("", file = "/home/tegwyn/ultrasonic_classifier/helpers/classification_finished.txt")
 		} else {                                    # if (num_audio_events >1)
 		# print("Although a filtered.wav file was found, it did not have any audio events in it !!!!")
 		cat(magenta$bold('From the R file: Although a filtered.wav file was found, it did not have any audio events in it !!!!\n'))
-		Sys.sleep(5)
+		write.table("", file = "/home/tegwyn/ultrasonic_classifier/helpers/classification_finished.txt")
+		Sys.sleep(0.5)
 		}
 	} else {                                        # if (file.exists("/home/tegwyn/ultrasonic_classifier/unknown_bat_audio/filtered.wav"))
 
 		# print("No filtered.wav was detected in unknown_bat_audio folder OR classification_finished.txt might exist")
 		cat(magenta$bold('From the R file: No filtered.wav was detected in unknown_bat_audio folder OR classification_finished.txt might exist!\n'))
 		cat("\n")
-		Sys.sleep(5)
+		Sys.sleep(0.5)
 	}
 }                                                   #  while (file.exists("/home/tegwyn/ultrasonic_classifier/helpers/start.txt")) 
 q()

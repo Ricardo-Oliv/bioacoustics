@@ -21,6 +21,9 @@ f_create_filtered_wav_file ()
   cd /home/tegwyn/ultrasonic_classifier/temp/
   sox new.wav filtered.wav highpass 1k # highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k highpass 15k 
   cp filtered.wav /home/tegwyn/ultrasonic_classifier/unknown_bat_audio/
+  
+  # Now tell the other programs that the filter.wav is ready for classification:
+  touch /home/tegwyn/ultrasonic_classifier/helpers/filtered_wav_ready.txt
 }
 
 chunk_time=`cat /home/tegwyn/ultrasonic_classifier/helpers/chunk_size_record.txt` 
@@ -28,6 +31,7 @@ printf "${GREY}Update record audio chunk size in seconds = ${chunk_time}${NC}\n"
 
 #while true
 #do
+	rm /home/tegwyn/ultrasonic_classifier/helpers/classification_finished.txt
     cd /home/tegwyn/ultrasonic_classifier/
 
     printf "${GREEN}${BLINK}record_and_filter.sh  reports: Now recording iteration ${iter} audio: ${NC}\n"

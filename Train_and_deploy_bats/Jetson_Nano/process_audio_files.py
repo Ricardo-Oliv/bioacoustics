@@ -35,6 +35,7 @@ folder2 = "/home/tegwyn/ultrasonic_classifier/processed_audio/"
 folder3 = "/home/tegwyn/ultrasonic_classifier/unknown_bat_audio/"
 folder4 = "/home/tegwyn/ultrasonic_classifier/my_audio"
 folder5 = "/home/tegwyn/ultrasonic_classifier/temp/"
+folder6 = "/home/tegwyn/ultrasonic_classifier/helpers/"
 directory = os.fsencode("/home/tegwyn/ultrasonic_classifier/my_audio")
 
 # Define command and arguments
@@ -49,6 +50,7 @@ path_to_battery = "/home/tegwyn/ultrasonic_classifier/battery_info.sh"          
 
 n = 1
 line = [1, 2, 3, 4, 5]
+newText = ""
 
 sys.stderr.write('\x1b[1;31m' + "Start of process_audio_files.py !!!!" + '\x1b[0m' + end)
 
@@ -96,16 +98,26 @@ elif (line[3] == "NULL" ):
 	print("NULL was selected")
 
 if ((line[1] == "UK_Bats\n") and (line[2] == "Level1:_Species\n")):
-	path2script = '/home/tegwyn/ultrasonic_classifier/Deploy_bats_pi.R'
+	path2script = '/home/tegwyn/ultrasonic_classifier/deploy_classifier_async_01.R'
 	print ("Level 1 was deployed")
 elif ((line[1] == "UK_Bats\n" ) and (line[2] == "Level2:_Genera\n" )):
+	# TODO: deploy_classifier_async_
 	path2script = '/home/tegwyn/ultrasonic_classifier/Deploy_bats_pi_Level2.R'
 	print ("Level 2 was deployed")
 elif ((line[1] == "UK_Bats\n" ) and (line[2] == "Level3:_Order\n" )):
+	# TODO: deploy_classifier_async_
 	path2script = '/home/tegwyn/ultrasonic_classifier/Deploy_bats_pi_Level3.R'
 	print ("Level 3 was deployed")
 else:
 	print ("No valid combo box selection was made")
+
+# Build subprocess command for running classifier:
+# cmd = [command, path2script]
+# x = subprocess.Popen(cmd).wait()                              # This is where the classifier program is called.
+
+# Build subprocess command for running classifier:
+cmd = [command, path2script]
+x = subprocess.Popen(cmd)                                       # This is where the classifier program is called.
 
 
 print("Starting .....")
@@ -120,14 +132,18 @@ for file in os.listdir(directory):                                       # This 
         print(file_to_process)
 
         myaudio = AudioSegment.from_file(file_to_process , "wav") 
-        # chunk_length_ms = 5000                         # pydub calculates in millisec ....... 5 seconds
+        # chunk_length_ms = 5000                           # pydub calculates in millisec ....... 5 seconds
         # chunk_length_ms = 500                            # pydub calculates in millisec ..... 1/2 second
-        chunk_length_ms = 125                            # pydub calculates in millisec
+        # chunk_length_ms = 125                            # pydub calculates in millisec
+        chunk_length_ms = 1000                             # pydub calculates in millisec
         chunks = make_chunks(myaudio, chunk_length_ms)
 
         #Export all of the individual chunks as wav files
 
         for i, chunk in enumerate(chunks):
+			
+            # time.sleep(5)
+			
             # sys.stderr.write('\x1b[1;31m' + "Processing audio chunk ...." + '\x1b[0m' + end)
             # if Final_result.txt" exists ......
             if Path(folder1 + "Final_result.txt").is_file():
@@ -150,16 +166,27 @@ for file in os.listdir(directory):                                       # This 
             # TODO: Should not need to copy filtered.wav files to both these folders below:
             chunk.export(folder3 + filtered, format="wav")             # folder3 is "unknown_bat_audio". There is no actual filter applied .... yet !!
             chunk.export(folder5 + filtered, format="wav")             # folder5 is "temp". There is no actual filter applied .... yet !!
-          
-            # Build subprocess command for running classifier:
-            cmd = [command, path2script]
-            x = subprocess.Popen(cmd).wait()                              # This is where the classifier program is called. Not script_2.sh !!
-
+            
+            # Now that a new filter.wav has been exported, we can allow the classification to process it:
+            file = "/home/tegwyn/ultrasonic_classifier/helpers/filtered_wav_ready.txt"
+            f= open(file, "w+")
+            f.write("nothing")
+            f.close()
+            print("From processing_audio.py: A new filtered.wav should now be ready for classification !!")
+           
+            # Now wait for the classification to finish before continuing to rename and store the new wav file:
+            while not (Path(folder6 + "classification_finished.txt").is_file()):
+                print("From processing_audio.py: waiting for classification to finish ...... ")
+                time.sleep(0.5)
+            if Path(folder6 + "classification_finished.txt").is_file():
+                os.unlink(folder6 + "classification_finished.txt")
+            # time.sleep(5)
+            
             # if Final_result.txt" exists ......
             if Path(folder1 + "Final_result.txt").is_file():
                 # print (i," Detected!")
                 detected = "Something was detected:"
-                
+##############################################################################################################
                 path2script_3 = '/home/tegwyn/ultrasonic_classifier/script_3.sh'
                 # Build subprocess command for running script_3.sh:
                 cmd = [command_bash, path2script_3]
