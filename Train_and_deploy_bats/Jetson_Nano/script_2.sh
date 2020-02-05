@@ -13,7 +13,7 @@ NC='\033[0m' # No Color
 BLINK='\e[5m'
 
 cd /home/tegwyn/ultrasonic_classifier/
-printf "${BLUE}Now run iteration ${iter} classifier: ${NC}\n"
+printf "${BLUE}Now assigning an R script ...... ${NC}\n"
 
 file='/home/tegwyn/ultrasonic_classifier/helpers/combo_01.txt'
 

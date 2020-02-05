@@ -177,6 +177,9 @@ for file in os.listdir(directory):                                       # This 
             # Now wait for the classification to finish before continuing to rename and store the new wav file:
             while not (Path(folder6 + "classification_finished.txt").is_file()):
                 print("From processing_audio.py: waiting for classification to finish ...... ")
+                if Path(folder6 + "stop.txt").is_file():
+                    print ("stop.txt file exists !!!")
+                    sys.exit()
                 time.sleep(0.5)
             if Path(folder6 + "classification_finished.txt").is_file():
                 os.unlink(folder6 + "classification_finished.txt")

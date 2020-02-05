@@ -47,13 +47,14 @@ rf_house_keys_file <- readRDS('rf_house_keys.rds')
 while (file.exists("/home/tegwyn/ultrasonic_classifier/helpers/start.txt"))
 {
 	# print("From the R file: start.txt exists !")
-	cat(magenta$bold('From the R file: start.txt exists !\n'))
+	cat(magenta$bold('... '))                                                                                       # Heart beat.
+	# cat(magenta$bold('From the R file: start.txt exists !\n'))
 	if (file.exists("/home/tegwyn/ultrasonic_classifier/helpers/classification_finished.txt"))
 	{
 		# print("From the R file: classification_finished.txt exists!")
-		cat(magenta$bold('From the R file: classification_finished.txt exists!!\n'))
+		# cat(magenta$bold('From the R file: classification_finished.txt exists!!\n'))
 	} else {
-		cat(magenta$bold('From the R file: classification_finished.txt DOES NOT exist!\n'))
+		# cat(magenta$bold('From the R file: classification_finished.txt DOES NOT exist!\n'))
 		# print("From the R file: classification_finished.txt DOES NOT exist!")
 	}
 	if ((file.exists("/home/tegwyn/ultrasonic_classifier/helpers/filtered_wav_ready.txt")) && (!file.exists("/home/tegwyn/ultrasonic_classifier/helpers/classification_finished.txt")))
@@ -441,14 +442,14 @@ while (file.exists("/home/tegwyn/ultrasonic_classifier/helpers/start.txt"))
 			
 		} else {                                    # if (num_audio_events >1)
 		# print("Although a filtered.wav file was found, it did not have any audio events in it !!!!")
-		cat(magenta$bold('From the R file: Although a filtered.wav file was found, it did not have any audio events in it !!!!\n'))
+		# cat(magenta$bold('From the R file: Although a filtered.wav file was found, it did not have any audio events in it !!!!\n'))
 		write.table("", file = "/home/tegwyn/ultrasonic_classifier/helpers/classification_finished.txt")
 		Sys.sleep(0.5)
 		}
 	} else {                                        # if (file.exists("/home/tegwyn/ultrasonic_classifier/unknown_bat_audio/filtered.wav"))
 		# print("No filtered.wav was detected in unknown_bat_audio folder OR classification_finished.txt might exist")
-		cat(magenta$bold('From the R file: No filtered.wav was detected in unknown_bat_audio folder OR classification_finished.txt might exist!\n'))
-		cat("\n")
+		# cat(magenta$bold('From the R file: No filtered.wav was detected in unknown_bat_audio folder OR classification_finished.txt might exist!\n'))
+		# cat("\n")
 		Sys.sleep(0.5)
 	}
 }                                                   #  while (file.exists("/home/tegwyn/ultrasonic_classifier/helpers/start.txt"))
