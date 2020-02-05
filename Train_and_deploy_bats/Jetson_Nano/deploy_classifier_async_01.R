@@ -412,6 +412,33 @@ while (file.exists("/home/tegwyn/ultrasonic_classifier/helpers/start.txt"))
 			# write.table(df11, file = "From_R_01.csv", sep = ",", row.names = FALSE, col.names = TRUE)
 			write.table(prevData, file = "From_R_01.csv", sep = ",", row.names = FALSE, col.names = TRUE)
 			# write.table("", file = "/home/tegwyn/ultrasonic_classifier/helpers/classification_finished.txt")
+			
+			# Since we have a positive classification result, we can now run the renamimg script, script_3.sh:
+			path = "/home/tegwyn/ultrasonic_classifier/script_3.sh"
+			cat(magenta$bold('Now try to run script_3.sh:\n'))
+			system(path)
+			cat(magenta$bold('Did script_3.sh work?:\n'))
+			
+            # Now run create_spectogram.py or create_graph.py:
+            # TODO: Can we remove all references to Final_result.txt in script_3.sh ???
+            
+            # TODO: we can move this next if section to the set up section later on:
+            if(file.exists("/home/tegwyn/ultrasonic_classifier/helpers/toggled_02.txt"))
+			{
+				value <- read.table("/home/tegwyn/ultrasonic_classifier/helpers/toggled_02.txt")
+				text_or_graph_or_spectogram <- value[c(1),c(1)]
+				# print("Imported time_limit:")
+				cat(magenta$bold('From the R file: text_or_graph_or_spectogram:\n'))
+				print(text_or_graph_or_spectogram)
+				
+				if (text_or_graph_or_spectogram == "spectogram")
+				{
+					system('python3 /home/tegwyn/ultrasonic_classifier/create_spectogram.py')
+				} else if (text_or_graph_or_spectogram == "graph") {
+					system('python3 /home/tegwyn/ultrasonic_classifier/create_barchart.py')
+				}
+			}
+			
 		} else {                                    # if (num_audio_events >1)
 		# print("Although a filtered.wav file was found, it did not have any audio events in it !!!!")
 		cat(magenta$bold('From the R file: Although a filtered.wav file was found, it did not have any audio events in it !!!!\n'))
@@ -419,13 +446,12 @@ while (file.exists("/home/tegwyn/ultrasonic_classifier/helpers/start.txt"))
 		Sys.sleep(0.5)
 		}
 	} else {                                        # if (file.exists("/home/tegwyn/ultrasonic_classifier/unknown_bat_audio/filtered.wav"))
-
 		# print("No filtered.wav was detected in unknown_bat_audio folder OR classification_finished.txt might exist")
 		cat(magenta$bold('From the R file: No filtered.wav was detected in unknown_bat_audio folder OR classification_finished.txt might exist!\n'))
 		cat("\n")
 		Sys.sleep(0.5)
 	}
-}                                                   #  while (file.exists("/home/tegwyn/ultrasonic_classifier/helpers/start.txt")) 
+}                                                   #  while (file.exists("/home/tegwyn/ultrasonic_classifier/helpers/start.txt"))
 q()
 
 

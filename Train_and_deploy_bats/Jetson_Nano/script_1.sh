@@ -50,21 +50,16 @@ printf "Iterations: $iterations\n"
 
 export FILE=/home/tegwyn/ultrasonic_classifier/Final_result.txt
 
-f_create_spectogram_or_graph ()
+f_service_check()                                              # Use this function to kill the R scripts.
 {
-  # Create spectogram:
-  ##############################################################################
-  sleep 2
-  value2=`cat /home/tegwyn/ultrasonic_classifier/helpers/toggled_02.txt`         # Options include 'text' and 'spectogram' and 'graph'. BEWARE: It's not actually from a toggled button any more!
-  echo "script_1 reports: Value2 = "$value2
-  if [ ${value2} = "spectogram" ]; then
-    echo "script_1 reports: Spectogram now being created in python3 create_spectogram.py....."
-    python3 /home/tegwyn/ultrasonic_classifier/create_spectogram.py &            # Creates a spectogram from filtered.wav which lives in 'unknown_bat_audio folder.
-  elif [ ${value2} = "graph" ]; then
-    echo "script_1 reports: Graph now being created in python3 create_barchart.py....."
-    python3 /home/tegwyn/ultrasonic_classifier/create_barchart.py &              # Creates a barchart from filtered.wav which lives in 'unknown_bat_audio folder.
-  fi
-  ##############################################################################
+  if pgrep -f "$SERVICE" >/dev/null
+	then
+		echo "$SERVICE is running"
+		kill $(pgrep -f $SERVICE)
+		sleep 2
+	else
+		echo "$SERVICE is NOT running"
+	fi
 }
 
 f_main_loop ()
@@ -105,41 +100,21 @@ do
 		# echo "script_1 reports: Recording! ....."
 
 		# counter=`cat /home/tegwyn/ultrasonic_classifier/helpers/counter.txt`
-		export iter=$counter
+		# export iter=$counter
 		cd /home/tegwyn/ultrasonic_classifier/
-		# iter2=$((iter-2))
 
 		# printf "${GREEN}${BLINK}Script_1  reports: Now recording iteration ${iter} audio: ${NC}\n"
 		printf "${GREEN}Script_1 chunk_time: ${chunk_time} ${NC}\n"
-		# arecord -f S16 -r 384000 -d ${chunk_time} -c 1 --device=plughw:r0,0 /home/tegwyn/ultrasonic_classifier/temp/new_${iter}.wav &
-		sh ./record_and_filter.sh
-		#################################################
-		# TODO: wait seems not to be working !!!!!
-		# wait
-		#################################################
-		chunk_time=`cat /home/tegwyn/ultrasonic_classifier/helpers/chunk_size_record.txt`           # Update record audio chunk size in seconds
-		# printf "${GREY}Update record audio chunk size in seconds = ${chunk_time}${NC}\n"
-		# f_create_filtered_wav_file &
-		f_create_spectogram_or_graph  &                                                             # Create spectogram or graph.
+		sh ./script_2.sh &                                                          # Select an R script.
+		sh ./record_and_filter.sh                                                   # This is a while loop.
 
-		value2=`cat /home/tegwyn/ultrasonic_classifier/helpers/toggled_02.txt`                       # Options include 'text' and 'spectogram'. It's not from a toggled button any more!
-		##############################################################
-		echo "Script_1 reports: Value2 = "$value2
-		# if [ ${value2} = "text" ]; then
-		  # sleep 1
-		  sh ./script_2.sh &                                                          # Only run script_2 and classifier with no spectogram.
-		# fi
-		##############################################################
-		printf "${GREEN}Iteration ${iter} audio finished ${NC}\n"
-		# rm Final_result.txt
+		# printf "${GREEN}Iteration ${iter} audio finished ${NC}\n"
+
 		bat_detected=0
 		cd /home/tegwyn/ultrasonic_classifier/
 
-		#printf "${GREEN}Counter before = ${counter} ${NC}\n"
-		counter=$((counter + 1))
-		#printf "${GREEN}Counter after = ${counter} ${NC}\n"
+		# counter=$((counter + 1))
 
-		# echo $counter > /home/tegwyn/ultrasonic_classifier/helpers/counter.txt
 	elif [ "$value" == "process" ]; then
 		# echo "script_1 reports: Processing! ...."
 		printf "${GREEN}script_1 reports: Processing! .... ${NC}\n"
@@ -155,6 +130,14 @@ do
 		rm start.txt
 		touch stop.txt
 	fi
+	
+	# Try and terminate whatever R script is running .... Seems not to be necessary due to while exists start.txt in R scripts !!!
+	# printf "${GREY}script_1 reports: Now terminate the R script .... ${NC}\n"
+	# SERVICE="deploy_classifier_async_01.R"
+	# f_service_check "$SERVICE"
+	
+	# TODO: remove this sleep?
+	sleep 5
   
 done
 ############################################################ Loop end
@@ -162,7 +145,7 @@ done
 
 cd /home/tegwyn/ultrasonic_classifier/
 # taskset 0x1  python GUI.py &                                  # The GUI app is on its own thread, core 0x1.
-f_main_loop &
+f_main_loop
 
 
 exit

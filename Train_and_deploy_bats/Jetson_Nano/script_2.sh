@@ -12,13 +12,7 @@ YELLOW='\e[93m'
 NC='\033[0m' # No Color
 BLINK='\e[5m'
 
-# /opt/vc/bin/vcgencmd measure_temp
-# sh ./battery_info.sh
-# echo $(($(date +%s%N)/1000000))
-
 cd /home/tegwyn/ultrasonic_classifier/
-
-# echo $(($(date +%s%N)/1000000))
 printf "${BLUE}Now run iteration ${iter} classifier: ${NC}\n"
 
 file='/home/tegwyn/ultrasonic_classifier/helpers/combo_01.txt'
@@ -70,12 +64,9 @@ elif [ ${result} = "NULL" ]; then
 fi
 choice3=$result
 
-# && [ ${value2} = "text" ]                                   # This can be "text" or "spectogram"
-# if [ ${value2} = "spectogram" ]; then
-
 # This is where the R classifier is deployed:
 if [ ${choice1} = "UK_Bats" ] && [ ${choice2} = "Level1:_Species" ]; then
-  Rscript Deploy_bats_pi.R
+  Rscript deploy_classifier_async_01.R
   echo "Level 1 was deployed"
 elif [ ${choice1} = "UK_Bats" ] && [ ${choice2} = "Level2:_Genera" ]; then
   Rscript Deploy_bats_pi_Level2.R
@@ -91,8 +82,6 @@ fi
 printf "${BLUE}Iteration ${iter} classifier has finished! ${NC}\n"
 
 
-# Now do the re-naming etc:
-sh ./script_3.sh
 
 
 

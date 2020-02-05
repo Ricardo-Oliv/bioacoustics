@@ -70,6 +70,8 @@ fi
 
 conf=50
 
+f_alert_sounds ()
+{
 if [ $batConfidence3 -gt $conf ]; then
   if [ ${batName} = "HOUSE_KEYS" ]; then
     aplay --device=hw:0,3 /home/tegwyn/ultrasonic_classifier/alert_sounds/keys.wav
@@ -87,6 +89,7 @@ if [ $batConfidence3 -gt $conf ]; then
     aplay --device=hw:0,3 /home/tegwyn/ultrasonic_classifier/alert_sounds/s_pip.wav
   fi
 fi
+}
 
 # printf "${GREEN}Is there still a  ./script_2.sh: 79: [: -gt: unexpected operator error? ${NC}\n"
 directory_to_search_inside="/home/tegwyn/ultrasonic_classifier/detected_bat_audio"

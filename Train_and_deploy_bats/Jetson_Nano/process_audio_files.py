@@ -187,23 +187,27 @@ for file in os.listdir(directory):                                       # This 
                 # print (i," Detected!")
                 detected = "Something was detected:"
 ##############################################################################################################
-                path2script_3 = '/home/tegwyn/ultrasonic_classifier/script_3.sh'
+                # The renaming script, script_3.sh is now called from the R scripts:
+                
+                # path2script_3 = '/home/tegwyn/ultrasonic_classifier/script_3.sh'
                 # Build subprocess command for running script_3.sh:
-                cmd = [command_bash, path2script_3]
-                x = subprocess.Popen(cmd).wait()
+                # cmd = [command_bash, path2script_3]
+                # x = subprocess.Popen(cmd).wait()
                 
                 os.unlink(file2)                                           # delete "Final_result.txt"
 ##############################################################################################################
-                if text_or_graph_or_spectogram == "spectogram":
+                 # Can we call the following 2 scripts from R ?:
+
+                # if text_or_graph_or_spectogram == "spectogram":
                     # Build subprocess command
-                    cmd = [command_python, path_to_create_spectogram]
-                    print(cmd)
-                    x = subprocess.Popen(cmd).wait()                              # This is where the create spectogram program is called.
-                if text_or_graph_or_spectogram == "graph":
+                    # cmd = [command_python, path_to_create_spectogram]
+                    # print(cmd)
+                    # x = subprocess.Popen(cmd).wait()                              # This is where the create spectogram program is called.
+                # if text_or_graph_or_spectogram == "graph":
                     # Build subprocess command
-                    cmd = [command_python, path_to_create_graph]
-                    print(cmd)
-                    x = subprocess.Popen(cmd).wait()                              # This is where the create spectogram program is called.
+                    # cmd = [command_python, path_to_create_graph]
+                    # print(cmd)
+                    # x = subprocess.Popen(cmd).wait()                              # This is where the create spectogram program is called.
 
             else:
                 # print (i," Nothing detected")
