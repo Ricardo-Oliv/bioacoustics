@@ -149,8 +149,9 @@ do
 
     aplay --device=hw:0,3 /home/tegwyn/ultrasonic_classifier/alert_sounds/main_APU_Shutdown.wav
 
+    printf  "${BLUE}Now shutdown .. ${count} ${NC}\n"
     # echo whales | sudo halt                              # This does not turn off fan and green LED.
-    echo whales | sudo shutdown
+    echo whales | sudo -S shutdown
     sleep 1000                                             # Wait for shutdown to complete.
   fi
   sleep 10
