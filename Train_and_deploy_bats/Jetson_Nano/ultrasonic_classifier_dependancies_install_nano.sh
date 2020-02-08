@@ -138,6 +138,8 @@ printf "${GREEN}  To install packages, type 'R' in command line and then, one by
 printf "${GREEN}  install.packages("audio") ${NC}\n"
 printf "${GREEN}  install.packages("randomForest") ${NC}\n"
 printf "${GREEN}  install.packages("bioacoustics") ${NC}\n"
+printf "${GREEN}  install.packages("crayon") ${NC}\n"
+
 
 
 
